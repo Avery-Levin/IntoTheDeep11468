@@ -1,6 +1,8 @@
-package dev.anygenericname
+package org.baylorschool.intothedeep.vision
 
-import nu.pattern.OpenCV
+//import nu.pattern.OpenCV
+import android.graphics.Canvas
+import android.graphics.Paint
 import org.opencv.core.*
 import org.opencv.imgcodecs.Imgcodecs
 import org.opencv.imgproc.Imgproc
@@ -55,6 +57,19 @@ class Sample(val topLeft: Point, val topRight: Point, val bottomLeft: Point, val
 		Imgproc.line(mat, middle, middleBottom, Scalar(0.0, 255.0, 0.0), 10)
 		println("mid:${middle.x}, ${middle.y} midTop: ${middleBottom.x}, ${middleBottom.y}, angle: $angle")
 	}
+	fun drawDirections(mat: Canvas) {
+		val middleTop = Point((topLeft.x + topRight.x) / 2, (topLeft.y + topRight.y) / 2)
+		val middleBottom = Point((bottomLeft.x + bottomRight.x) / 2, (bottomLeft.y + bottomRight.y) / 2)
+		val middle = Point((middleTop.x + middleBottom.x) / 2, (middleTop.y + middleBottom.y) / 2)
+		val angle = findAngle(middle.x, middleBottom.x, middle.y, middleBottom.y)
+		val paint = Paint()
+		paint.color = android.graphics.Color.rgb(0, 255, 0)
+		paint.strokeWidth = 3F
+		mat.drawCircle(middle.x.toFloat(), middle.y.toFloat(), 25.0F, paint)
+		//Idk what start and end are
+		mat.drawText(angle.toString(), 0, 4, middle.x.toFloat() + 25.0F, middle.y.toFloat() + 25.0F, paint)
+		mat.drawLine(middle.x.toFloat(), middle.y.toFloat(), middleBottom.x.toFloat(), middleBottom.y.toFloat(), paint)
+	}
 
 	/**
 	 * Dark magic. Do not touch if at all possible.
@@ -69,12 +84,13 @@ class Sample(val topLeft: Point, val topRight: Point, val bottomLeft: Point, val
 		}
 		return (180 - x * (180 / Math.PI).toInt().toDouble()) + 180
 	}
+
 }
 
 //Note: png is exact, jpg is lossy
 fun main() {
 	//Red: 228, 67, 56. 241, 67, 78
-	OpenCV.loadLocally()
+	//OpenCV.loadLocally()
 	File("imagesIn").mkdir()
 	File("imagesOut").mkdir()
 	for (i in File("imagesIn").listFiles()!!) {
