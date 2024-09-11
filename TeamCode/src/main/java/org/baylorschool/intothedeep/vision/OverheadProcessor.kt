@@ -11,6 +11,7 @@ class OverheadProcessor(val color: Color, val telemetry: Telemetry): VisionProce
         //Nothing to do here :) (I think)
     }
     var lastDetection = listOf<Sample>()
+    var lastFrame = Mat()
     override fun processFrame(frame: Mat?, captureTimeNanos: Long): List<Sample> {
         if (frame != null) {
             //p = private
@@ -23,14 +24,17 @@ class OverheadProcessor(val color: Color, val telemetry: Telemetry): VisionProce
             }
             lastDetection = plastDetection.toList()
             //telemetry.update()
+            lastFrame = frame
             return lastDetection
         }
         return listOf()
     }
 
     override fun onDrawFrame(canvas: Canvas?, onscreenWidth: Int, onscreenHeight: Int, scaleBmpPxToCanvasPx: Float, scaleCanvasDensity: Float, userContext: Any?) {
-        lastDetection.forEach {
-            it.drawDirections(canvas!!)
+        for (x in 0 until lastFrame.width()) {
+            for (y in 0 until lastFrame.height()) {
+                //canvas.drawLine(x, y, x, y, )
+            }
         }
     }
 }

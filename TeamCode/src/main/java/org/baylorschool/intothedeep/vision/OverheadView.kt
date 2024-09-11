@@ -86,7 +86,9 @@ class Sample(val topLeft: Point, val topRight: Point, val bottomLeft: Point, val
 
 }
 const val log = true
-fun process(frame: Mat, color: Color, draw: Boolean = true, telemetry: Telemetry): List<Sample> {
+fun process(frame0: Mat, color: Color, draw: Boolean = true, telemetry: Telemetry): List<Sample> {
+	val frame = Mat()
+	Imgproc.blur(frame0, frame, org.opencv.core.Size(7.0, 7.0))
 	if (log) telemetry.addData("Processing color:", color)
 	//24 4 0
 	if (log) telemetry.addData("Imagetype", "type:${frame.type()},channels:${frame.channels()},depth:${frame.depth()}")
@@ -98,15 +100,15 @@ fun process(frame: Mat, color: Color, draw: Boolean = true, telemetry: Telemetry
 		Color.RED -> Core.inRange(
 				//BGR
 				frame,
-				Scalar(160.0, 0.0, 0.0, 0.0),
-				Scalar(255.0, 120.0, 120.0, 256.0),
+				Scalar(90.0, 0.0, 0.0, 0.0),
+				Scalar(256.0, 150.0, 150.0, 256.0),
 				out
 		)
 		Color.BLUE -> Core.inRange(
 				//BGR
 				frame,
-				Scalar(0.0, 0.0, 160.0, 0.0),
-				Scalar(130.0, 130.0, 255.0, 256.0),
+				Scalar(0.0, 0.0, 150.0, 0.0),
+				Scalar(150.0, 150.0, 255.0, 256.0),
 				out
 		)
 		Color.YELLOW -> Core.inRange(
@@ -114,8 +116,8 @@ fun process(frame: Mat, color: Color, draw: Boolean = true, telemetry: Telemetry
 				//214, 163, 45
 				//198, 137, 42
 				frame,
-				Scalar(190.0, 130.0, 35.0, 0.0),
-				Scalar(250.0, 200.0, 70.0, 256.0),
+				Scalar(120.0, 100.0, 0.0, 0.0),
+				Scalar(256.0, 230.0, 105.0, 256.0),
 				out
 		)//.also { Imgcodecs.imwrite("imagesOut/y${i.nameWithoutExtension}.png", out) }
 	}
@@ -132,7 +134,7 @@ fun process(frame: Mat, color: Color, draw: Boolean = true, telemetry: Telemetry
 	)
 	if (log) telemetry.addData("# Contours", contours.size)
 	//filter out small contours. These are false positives.
-	val samples = contours.filter { Imgproc.contourArea(it) > 1000 }
+	val samples = contours.filter { Imgproc.contourArea(it) > 500 }
 			.also { if (log) telemetry.addData("# Samples", it.size) }
 			.map {
 				//find the four corners of the contour. These are the corners of the sample.

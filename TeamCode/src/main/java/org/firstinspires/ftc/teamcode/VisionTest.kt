@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode
 
+import com.acmerobotics.dashboard.FtcDashboard
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.baylorschool.intothedeep.vision.Color
@@ -13,7 +15,7 @@ import org.firstinspires.ftc.vision.VisionPortal
 @TeleOp(name = "Overhead Vision Test", group = "Concept")
 class VisionTest : LinearOpMode() {
     override fun runOpMode() {
-        //val telemetryMultiple = MultipleTelemetry(telemetry, FtcDashboard.getInstance().telemetry)
+        val telemetry = MultipleTelemetry(telemetry, FtcDashboard.getInstance().telemetry)
         telemetry.addData("data", "ok")
         telemetry.update()
         val overheadProcessor = OverheadProcessor(Color.RED, telemetry)
