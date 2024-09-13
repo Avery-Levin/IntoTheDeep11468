@@ -88,7 +88,7 @@ class Sample(val topLeft: Point, val topRight: Point, val bottomLeft: Point, val
 const val log = true
 fun process(frame0: Mat, color: Color, draw: Boolean = true, telemetry: Telemetry): List<Sample> {
 	val frame = Mat()
-	Imgproc.blur(frame0, frame, org.opencv.core.Size(7.0, 7.0))
+	Imgproc.blur(frame0, frame, org.opencv.core.Size(2.0, 2.0))
 	if (log) telemetry.addData("Processing color:", color)
 	//24 4 0
 	if (log) telemetry.addData("Imagetype", "type:${frame.type()},channels:${frame.channels()},depth:${frame.depth()}")
@@ -100,15 +100,15 @@ fun process(frame0: Mat, color: Color, draw: Boolean = true, telemetry: Telemetr
 		Color.RED -> Core.inRange(
 				//BGR
 				frame,
-				Scalar(90.0, 0.0, 0.0, 0.0),
-				Scalar(256.0, 150.0, 150.0, 256.0),
+				Scalar(160.0, 0.0, 0.0, 0.0),
+				Scalar(255.0, 120.0, 120.0, 256.0),
 				out
 		)
 		Color.BLUE -> Core.inRange(
 				//BGR
 				frame,
-				Scalar(0.0, 0.0, 150.0, 0.0),
-				Scalar(150.0, 150.0, 255.0, 256.0),
+				Scalar(0.0, 0.0, 160.0, 0.0),
+				Scalar(120.0, 140.0, 255.0, 256.0),
 				out
 		)
 		Color.YELLOW -> Core.inRange(
@@ -116,8 +116,8 @@ fun process(frame0: Mat, color: Color, draw: Boolean = true, telemetry: Telemetr
 				//214, 163, 45
 				//198, 137, 42
 				frame,
-				Scalar(120.0, 100.0, 0.0, 0.0),
-				Scalar(256.0, 230.0, 105.0, 256.0),
+				Scalar(170.0, 110.0, 0.0, 0.0),
+				Scalar(256.0, 225.0, 90.0, 256.0),
 				out
 		)//.also { Imgcodecs.imwrite("imagesOut/y${i.nameWithoutExtension}.png", out) }
 	}
@@ -164,6 +164,13 @@ fun process(frame0: Mat, color: Color, draw: Boolean = true, telemetry: Telemetr
 					Sample(topMost, rightMost, leftMost, bottomMost)
 				}
 			}
+			.map {
+				if (dist(it.topLeft, it.topRight) > dist(it.topLeft, it.bottomLeft)) {
+					Sample(it.topRight, it.bottomRight, it.topLeft, it.bottomLeft)
+				} else {
+					it
+				}
+			}
 			.filter {
 				//how "square" is this sample identification?
 				val distL = sqrt(sq(it.topLeft.x - it.bottomLeft.x) + sq(it.topLeft.y - it.bottomLeft.y))
@@ -193,7 +200,7 @@ fun findClosest(samples: List<Sample>, width: Int, height: Int): Sample? {
 	var closest: Sample? = null
 	var closestDist = Int.MAX_VALUE
 	samples.forEach {
-		val dist = sqrt((centerx - it.middle.x).pow(2) + (centery - it.middle.y).pow(2))
+		val dist = dist(Point(centerx.toDouble(), centery.toDouble()), it.middle)
 		if (dist < closestDist) {
 			closestDist = dist.toInt()
 			closest = it
@@ -201,3 +208,4 @@ fun findClosest(samples: List<Sample>, width: Int, height: Int): Sample? {
 	}
 	return closest
 }
+fun dist(a: Point, b: Point) = sqrt(sq(a.x - b.x) + sq(a.y - b.y))

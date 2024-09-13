@@ -21,6 +21,7 @@ class VisionTest : LinearOpMode() {
         val overheadProcessor = OverheadProcessor(Color.RED, telemetry)
         val visionPortal = VisionPortal.easyCreateWithDefaults(
                 hardwareMap[WebcamName::class.java, "Webcam 1"], overheadProcessor)
+        FtcDashboard.getInstance().startCameraStream(visionPortal, 0.0)
         //visionPortal.resumeLiveView() ???
         //visionPortal.resumeStreaming() ???
         while (!isStarted) {
