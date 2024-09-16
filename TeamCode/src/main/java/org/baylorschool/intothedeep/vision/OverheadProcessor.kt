@@ -31,10 +31,8 @@ class OverheadProcessor(val color: Color, val telemetry: Telemetry): VisionProce
     }
 
     override fun onDrawFrame(canvas: Canvas?, onscreenWidth: Int, onscreenHeight: Int, scaleBmpPxToCanvasPx: Float, scaleCanvasDensity: Float, userContext: Any?) {
-        for (x in 0 until lastFrame.width()) {
-            for (y in 0 until lastFrame.height()) {
-                //canvas.drawLine(x, y, x, y, )
-            }
+        for (sample in lastDetection) {
+            sample.drawDirections(canvas!!)
         }
     }
 }

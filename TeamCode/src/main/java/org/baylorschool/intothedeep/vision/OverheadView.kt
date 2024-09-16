@@ -66,7 +66,10 @@ class Sample(val topLeft: Point, val topRight: Point, val bottomLeft: Point, val
 		paint.strokeWidth = 3F
 		mat.drawCircle(middle.x.toFloat(), middle.y.toFloat(), 25.0F, paint)
 		//Idk what start and end are
-		mat.drawText(angle.toString(), 0, 4, middle.x.toFloat() + 25.0F, middle.y.toFloat() + 25.0F, paint)
+		try {
+			mat.drawText(angle.toString(), 0, 4, middle.x.toFloat() + 25.0F, middle.y.toFloat() + 25.0F, paint)
+		} catch (e: Exception) {
+		}
 		mat.drawLine(middle.x.toFloat(), middle.y.toFloat(), middleBottom.x.toFloat(), middleBottom.y.toFloat(), paint)
 	}
 
@@ -86,29 +89,22 @@ class Sample(val topLeft: Point, val topRight: Point, val bottomLeft: Point, val
 
 }
 const val log = true
-fun process(frame0: Mat, color: Color, draw: Boolean = true, telemetry: Telemetry): List<Sample> {
-	val frame = Mat()
-	Imgproc.blur(frame0, frame, org.opencv.core.Size(2.0, 2.0))
-	if (log) telemetry.addData("Processing color:", color)
-	//24 4 0
-	if (log) telemetry.addData("Imagetype", "type:${frame.type()},channels:${frame.channels()},depth:${frame.depth()}")
-	if (log) telemetry.addData("Central color", frame[frame.width()/2, frame.height()/2].contentToString())
+fun process(frame: Mat, color: Color, draw: Boolean = true, telemetry: Telemetry): List<Sample> {
 	//Convert to binary image 1 is target color, 0 is not target color.
 	val out = Mat()
 	when (color) {
-		//RGBA is on robot!
 		Color.RED -> Core.inRange(
 				//BGR
 				frame,
-				Scalar(160.0, 0.0, 0.0, 0.0),
-				Scalar(255.0, 120.0, 120.0, 256.0),
+				Scalar(0.0, 0.0, 160.0),
+				Scalar(120.0, 120.0, 255.0),
 				out
 		)
 		Color.BLUE -> Core.inRange(
 				//BGR
 				frame,
-				Scalar(0.0, 0.0, 160.0, 0.0),
-				Scalar(120.0, 140.0, 255.0, 256.0),
+				Scalar(160.0, 0.0, 0.0),
+				Scalar(255.0, 140.0, 120.0),
 				out
 		)
 		Color.YELLOW -> Core.inRange(
@@ -116,10 +112,10 @@ fun process(frame0: Mat, color: Color, draw: Boolean = true, telemetry: Telemetr
 				//214, 163, 45
 				//198, 137, 42
 				frame,
-				Scalar(170.0, 110.0, 0.0, 0.0),
-				Scalar(256.0, 225.0, 90.0, 256.0),
+				Scalar(0.0, 110.0, 170.0),
+				Scalar(90.0, 225.0, 256.0),
 				out
-		)//.also { Imgcodecs.imwrite("imagesOut/y${i.nameWithoutExtension}.png", out) }
+		)
 	}
 
 	//find the contours, that is, contiguous areas of 1s (the target color)
@@ -132,10 +128,11 @@ fun process(frame0: Mat, color: Color, draw: Boolean = true, telemetry: Telemetr
 			Imgproc.RETR_TREE,
 			Imgproc.CHAIN_APPROX_SIMPLE
 	)
-	if (log) telemetry.addData("# Contours", contours.size)
+	//Imgproc.drawContours(frame, contours, 0, Scalar(0.0, 255.0, 0.0))
+	println("size0: ${contours.size}")
 	//filter out small contours. These are false positives.
-	val samples = contours.filter { Imgproc.contourArea(it) > 500 }
-			.also { if (log) telemetry.addData("# Samples", it.size) }
+	val samples = contours.filter { Imgproc.contourArea(it) > 1000 }
+			.also { println("size1: ${it.size}") }
 			.map {
 				//find the four corners of the contour. These are the corners of the sample.
 				//Warning: This is a very expensive operation, as it is preformed in kotlin instead of C++ like "findContours" and other such methods
@@ -171,6 +168,7 @@ fun process(frame0: Mat, color: Color, draw: Boolean = true, telemetry: Telemetr
 					it
 				}
 			}
+			.also { println("size2: ${it.size}") }
 			.filter {
 				//how "square" is this sample identification?
 				val distL = sqrt(sq(it.topLeft.x - it.bottomLeft.x) + sq(it.topLeft.y - it.bottomLeft.y))
@@ -179,8 +177,10 @@ fun process(frame0: Mat, color: Color, draw: Boolean = true, telemetry: Telemetr
 				val distB = sqrt(sq(it.bottomLeft.x - it.bottomRight.x) + sq(it.bottomLeft.y - it.bottomRight.y))
 				val q = abs(distL - distR) + abs(distT - distB)
 				q < 50 && distL / distT > 2 && distL / distT < 5
+				//println("q:${q}, distL / distT: ${distL / distT}")
+				//true
 			}
-			.also { if (log) telemetry.addData("# Rectangles", it.size) }
+			.also { println("size3: ${it.size}") }
 	//Draw the samples, so we can see them
 	if (draw) {
 		samples.forEach { sample ->
