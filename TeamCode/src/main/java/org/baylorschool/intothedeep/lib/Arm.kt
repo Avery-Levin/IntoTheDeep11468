@@ -14,12 +14,14 @@ import org.firstinspires.ftc.teamcode.lib.armPIDConfig.p
 
 @Config
 object armPIDConfig {
-    @JvmField var p: Double = 0.0
-    @JvmField var fg: Double = 0.0
+    @JvmField var p: Double = 0.015
+    @JvmField var fg: Double = 0.25
     @JvmField var target: Double = 0.0
 }
 class Arm(hardwareMap: HardwareMap) {
 
+    val ticks_per_degree =  537.7 / 360.0
+    var correctedValue = target/ticks_per_degree
     val armMotor: DcMotorEx
     var armPos: Double = 0.0
     private val pControl = PIDCoefficients(p)
@@ -35,24 +37,25 @@ class Arm(hardwareMap: HardwareMap) {
     }
 
     fun telemetry(telemetry: Telemetry) {
-
         telemetry.addData("arm Motor Position", armPos)
         telemetry.addData("Target Position", target)
         telemetry.addData("power",armMotor.power)
     }
 
     fun update() {
+        correctedValue = target / ticks_per_degree
         armPos = armMotor.currentPosition.toDouble() - offset
         controller.targetPosition = target
         armPower = controller.update(armPos) + fg
     }
 
     private fun increaseTarget() {
-        target += 15.0
+
+        target += .5
     }
 
     private fun decreaseTarget() {
-        target -= 15.0
+        target -= .5
     }
 
     fun armLoop(gamepad: Gamepad) {
