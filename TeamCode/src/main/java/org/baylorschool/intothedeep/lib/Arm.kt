@@ -46,7 +46,7 @@ class Arm(hardwareMap: HardwareMap) {
         correctedValue = target / ticks_per_degree
         armPos = armMotor.currentPosition.toDouble() - offset
         controller.targetPosition = target
-        armPower = controller.update(armPos) + fg
+        armPower = controller.update(armPos) + (Math.cos(Math.toRadians(target / ticks_per_degree)) * fg)
     }
 
     private fun increaseTarget() {
