@@ -91,29 +91,32 @@ class Sample(val topLeft: Point, val topRight: Point, val bottomLeft: Point, val
 const val log = true
 fun process(frame: Mat, color: Color, draw: Boolean = true, telemetry: Telemetry): List<Sample> {
 	//Convert to binary image 1 is target color, 0 is not target color.
+	//Imgproc.cvtColor(frame, frame, Imgproc.COLOR_RGBA2BGR)
 	val out = Mat()
 	when (color) {
 		Color.RED -> Core.inRange(
-				//BGR
+				//Robot in RGBA now????
 				frame,
-				Scalar(0.0, 0.0, 160.0),
-				Scalar(120.0, 120.0, 255.0),
+				//Scalar(0.0, 0.0, 160.0),//BGR
+				//Scalar(120.0, 120.0, 255.0),
+				Scalar(160.0, 0.0, 0.0, 0.0),//RGBA
+				Scalar(255.0, 120.0, 120.0, 255.0),
 				out
 		)
 		Color.BLUE -> Core.inRange(
-				//BGR
 				frame,
-				Scalar(160.0, 0.0, 0.0),
-				Scalar(255.0, 140.0, 120.0),
+				//Scalar(160.0, 0.0, 0.0),
+				//Scalar(255.0, 140.0, 120.0),
+				Scalar(0.0, 0.0, 160.0, 255.0),
+				Scalar(120.0, 140.0, 255.0, 255.0),
 				out
 		)
 		Color.YELLOW -> Core.inRange(
-				//BGR
-				//214, 163, 45
-				//198, 137, 42
 				frame,
-				Scalar(0.0, 110.0, 170.0),
-				Scalar(90.0, 225.0, 256.0),
+				//Scalar(0.0, 110.0, 170.0),
+				//Scalar(90.0, 225.0, 256.0),
+				Scalar(170.0, 110.0, 0.0, 255.0),
+				Scalar(255.0, 225.0, 90.0, 255.0),
 				out
 		)
 	}
@@ -128,11 +131,22 @@ fun process(frame: Mat, color: Color, draw: Boolean = true, telemetry: Telemetry
 			Imgproc.RETR_TREE,
 			Imgproc.CHAIN_APPROX_SIMPLE
 	)
+	var t = 0
+	/*for (x in 0 until out.width()) {
+		for (y in 0 until out.height()) {
+			if (out.get(y, x)[0] > 0) {
+				t++
+			}
+		}
+	}*/
+	telemetry.addData("t", t)
+	telemetry.addData("pixel", frame.get(640/2, 480/2).toList().toString())
 	//Imgproc.drawContours(frame, contours, 0, Scalar(0.0, 255.0, 0.0))
 	println("size0: ${contours.size}")
+	telemetry.addData("size0", contours.size)
 	//filter out small contours. These are false positives.
 	val samples = contours.filter { Imgproc.contourArea(it) > 1000 }
-			.also { println("size1: ${it.size}") }
+			.also { telemetry.addData("size1", "${it.size}") }
 			.map {
 				//find the four corners of the contour. These are the corners of the sample.
 				//Warning: This is a very expensive operation, as it is preformed in kotlin instead of C++ like "findContours" and other such methods
@@ -168,19 +182,21 @@ fun process(frame: Mat, color: Color, draw: Boolean = true, telemetry: Telemetry
 					it
 				}
 			}
-			.also { println("size2: ${it.size}") }
-			.filter {
+			.also { telemetry.addData("size2", "${it.size}") }
+			/*.filter {
 				//how "square" is this sample identification?
 				val distL = sqrt(sq(it.topLeft.x - it.bottomLeft.x) + sq(it.topLeft.y - it.bottomLeft.y))
 				val distR = sqrt(sq(it.topRight.x - it.bottomRight.x) + sq(it.topRight.y - it.bottomRight.y))
 				val distT = sqrt(sq(it.topLeft.x - it.topRight.x) + sq(it.topLeft.y - it.topRight.y))
 				val distB = sqrt(sq(it.bottomLeft.x - it.bottomRight.x) + sq(it.bottomLeft.y - it.bottomRight.y))
 				val q = abs(distL - distR) + abs(distT - distB)
+				telemetry.addData("q", q)
+				telemetry.addData("distL / distT", distL / distT)
 				q < 50 && distL / distT > 2 && distL / distT < 5
 				//println("q:${q}, distL / distT: ${distL / distT}")
 				//true
-			}
-			.also { println("size3: ${it.size}") }
+			}*/
+			.also { telemetry.addData("final", "${it.size}") }
 	//Draw the samples, so we can see them
 	if (draw) {
 		samples.forEach { sample ->

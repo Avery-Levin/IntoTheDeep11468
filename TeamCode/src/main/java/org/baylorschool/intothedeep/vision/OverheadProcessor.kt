@@ -16,12 +16,12 @@ class OverheadProcessor(val color: Color, val telemetry: Telemetry): VisionProce
         if (frame != null) {
             //p = private
             val plastDetection = process(frame, color, false, telemetry).toMutableList()
-            if (color != Color.YELLOW) {
+            /*if (color != Color.YELLOW) {
                 process(frame, Color.YELLOW, false, telemetry)
                         .forEach {
                             plastDetection.add(it)
                         }
-            }
+            }*/
             lastDetection = plastDetection.toList()
             //telemetry.update()
             lastFrame = frame
