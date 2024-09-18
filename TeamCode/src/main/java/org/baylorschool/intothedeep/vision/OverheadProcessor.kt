@@ -12,16 +12,20 @@ class OverheadProcessor(val color: Color, val telemetry: Telemetry): VisionProce
     }
     var lastDetection = listOf<Sample>()
     var lastFrame = Mat()
+    var width = 640
+    var height = 480
     override fun processFrame(frame: Mat?, captureTimeNanos: Long): List<Sample> {
         if (frame != null) {
+            width = frame.width()
+            height = frame.height()
             //p = private
-            val plastDetection = process(frame, color, false, telemetry).toMutableList()
-            /*if (color != Color.YELLOW) {
+            val plastDetection = process(frame, color, true, telemetry).toMutableList()
+            if (color != Color.YELLOW) {
                 process(frame, Color.YELLOW, false, telemetry)
                         .forEach {
                             plastDetection.add(it)
                         }
-            }*/
+            }
             lastDetection = plastDetection.toList()
             //telemetry.update()
             lastFrame = frame
@@ -31,8 +35,8 @@ class OverheadProcessor(val color: Color, val telemetry: Telemetry): VisionProce
     }
 
     override fun onDrawFrame(canvas: Canvas?, onscreenWidth: Int, onscreenHeight: Int, scaleBmpPxToCanvasPx: Float, scaleCanvasDensity: Float, userContext: Any?) {
-        for (sample in lastDetection) {
+        /*for (sample in lastDetection) {
             sample.drawDirections(canvas!!)
-        }
+        }*/
     }
 }

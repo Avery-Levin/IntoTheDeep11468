@@ -71,6 +71,11 @@ class Sample(val topLeft: Point, val topRight: Point, val bottomLeft: Point, val
 		} catch (e: Exception) {
 		}
 		mat.drawLine(middle.x.toFloat(), middle.y.toFloat(), middleBottom.x.toFloat(), middleBottom.y.toFloat(), paint)
+
+		mat.drawLine(topLeft.x.toFloat(), topLeft.y.toFloat(), topRight.x.toFloat(), topRight.y.toFloat(), paint)
+		mat.drawLine(topRight.x.toFloat(), topRight.y.toFloat(), bottomRight.x.toFloat(), bottomRight.y.toFloat(), paint)
+		mat.drawLine(bottomRight.x.toFloat(), bottomRight.y.toFloat(), bottomLeft.x.toFloat(), bottomLeft.y.toFloat(), paint)
+		mat.drawLine(bottomLeft.x.toFloat(), bottomLeft.y.toFloat(), topLeft.x.toFloat(), topLeft.y.toFloat(), paint)
 	}
 
 	/**
@@ -87,6 +92,9 @@ class Sample(val topLeft: Point, val topRight: Point, val bottomLeft: Point, val
 		return (180 - x * (180 / Math.PI).toInt().toDouble()) + 180
 	}
 
+	override fun toString(): String {
+		return "Sample(topLeft=$topLeft, topRight=$topRight, bottomLeft=$bottomLeft, bottomRight=$bottomRight)"
+	}
 }
 const val log = true
 fun process(frame: Mat, color: Color, draw: Boolean = true, telemetry: Telemetry): List<Sample> {
@@ -139,7 +147,7 @@ fun process(frame: Mat, color: Color, draw: Boolean = true, telemetry: Telemetry
 			}
 		}
 	}*/
-	telemetry.addData("t", t)
+	//telemetry.addData("t", t)
 	telemetry.addData("pixel", frame.get(640/2, 480/2).toList().toString())
 	//Imgproc.drawContours(frame, contours, 0, Scalar(0.0, 255.0, 0.0))
 	println("size0: ${contours.size}")
@@ -183,7 +191,7 @@ fun process(frame: Mat, color: Color, draw: Boolean = true, telemetry: Telemetry
 				}
 			}
 			.also { telemetry.addData("size2", "${it.size}") }
-			/*.filter {
+			.filter {
 				//how "square" is this sample identification?
 				val distL = sqrt(sq(it.topLeft.x - it.bottomLeft.x) + sq(it.topLeft.y - it.bottomLeft.y))
 				val distR = sqrt(sq(it.topRight.x - it.bottomRight.x) + sq(it.topRight.y - it.bottomRight.y))
@@ -195,15 +203,16 @@ fun process(frame: Mat, color: Color, draw: Boolean = true, telemetry: Telemetry
 				q < 50 && distL / distT > 2 && distL / distT < 5
 				//println("q:${q}, distL / distT: ${distL / distT}")
 				//true
-			}*/
+			}
 			.also { telemetry.addData("final", "${it.size}") }
 	//Draw the samples, so we can see them
 	if (draw) {
 		samples.forEach { sample ->
-			Imgproc.line(frame, sample.topLeft, sample.topRight, Scalar(0.0, 255.0, 0.0), 10)
+			/*Imgproc.line(frame, sample.topLeft, sample.topRight, Scalar(0.0, 255.0, 0.0), 10)
 			Imgproc.line(frame, sample.topRight, sample.bottomRight, Scalar(0.0, 255.0, 0.0), 10)
 			Imgproc.line(frame, sample.bottomRight, sample.bottomLeft, Scalar(0.0, 255.0, 0.0), 10)
-			Imgproc.line(frame, sample.bottomLeft, sample.topLeft, Scalar(0.0, 255.0, 0.0), 10)
+			Imgproc.line(frame, sample.bottomLeft, sample.topLeft, Scalar(0.0, 255.0, 0.0), 10)*/
+			sample.drawDirections(frame)
 		}
 	}
 	telemetry.update()
