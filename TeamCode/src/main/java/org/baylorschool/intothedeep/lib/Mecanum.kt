@@ -17,10 +17,11 @@ class Mecanum(hardwareMap: HardwareMap) {
     private var turn: Float = 0.0F
 
     init {
-        flMotor = hardwareMap.get(DcMotorEx::class.java, "flMotor")
-        blMotor = hardwareMap.get(DcMotorEx::class.java, "blMotor")
-        frMotor = hardwareMap.get(DcMotorEx::class.java, "frMotor")
-        brMotor = hardwareMap.get(DcMotorEx::class.java, "brMotor")
+        val Motor = ""
+        flMotor = hardwareMap.get(DcMotorEx::class.java, "fl$Motor")
+        blMotor = hardwareMap.get(DcMotorEx::class.java, "bl$Motor")
+        frMotor = hardwareMap.get(DcMotorEx::class.java, "fr$Motor")
+        brMotor = hardwareMap.get(DcMotorEx::class.java, "br$Motor")
         frMotor.direction = DcMotorSimple.Direction.REVERSE
         brMotor.direction = DcMotorSimple.Direction.REVERSE
         brMotor.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
@@ -68,4 +69,6 @@ class Mecanum(hardwareMap: HardwareMap) {
         frMotor.power = 0.0
         brMotor.power = 0.0
     }
+
+
 }
