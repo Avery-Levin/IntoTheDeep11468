@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.lib.armPIDConfig.p
 
 @Config
 object armPIDConfig {
-    @JvmField var p: Double = 0.015
+    @JvmField var p: Double = 0.02
     @JvmField var fg: Double = 0.25
     @JvmField var target: Double = 0.0
 }
@@ -46,16 +46,16 @@ class Arm(hardwareMap: HardwareMap) {
         correctedValue = target / ticks_per_degree
         armPos = armMotor.currentPosition.toDouble() - offset
         controller.targetPosition = target
-        armPower = controller.update(armPos) + (Math.cos(Math.toRadians(target / ticks_per_degree)) * fg)
+        armPower = controller.update(armPos) + ((Math.cos(Math.toRadians(target / ticks_per_degree))) * fg)
     }
 
     private fun increaseTarget() {
 
-        target += .5
+        target += .4
     }
 
     private fun decreaseTarget() {
-        target -= .5
+        target -= .4
     }
 
     fun armLoop(gamepad: Gamepad) {

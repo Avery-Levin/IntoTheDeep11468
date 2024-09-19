@@ -24,7 +24,7 @@ class Diffy(hardwareMap: HardwareMap) {
         telemetry.addData("claw pos", claw.position)
     }
     fun openClaw() {
-        claw.position = 0.5
+        claw.position = 0.8
     }
 
     fun closeClaw() {
@@ -32,36 +32,44 @@ class Diffy(hardwareMap: HardwareMap) {
     }
 
     fun diffyLeft() {
-        diffy1.position -= 0.001
-        diffy2.position += 0.001
+        diffy1.position -= 0.005
+        diffy2.position += 0.005
     }
 
-    fun diffyRight() {
-        diffy1.position += 0.001
-        diffy2.position -= 0.001
+        fun diffyRight() {
+        diffy1.position += 0.005
+        diffy2.position -= 0.005
     }
 
     fun diffyUp() {
-        diffy1.position -= 0.001
-        diffy2.position -= 0.001
+        diffy1.position -= 0.005
+        diffy2.position -= 0.005
     }
 
     fun diffyDown() {
-        diffy1.position += 0.001
-        diffy2.position += 0.001
+        diffy1.position += 0.005
+        diffy2.position += 0.005
     }
+
+    fun half() {
+        diffy1.position = 0.5
+        diffy2.position = 0.5
+    }
+
     fun depositLoop(gamepad: Gamepad) {
-        if (gamepad.y)
+        if (gamepad.right_bumper)
             openClaw()
-        else if (gamepad.b)
+        else if (gamepad.left_bumper)
             closeClaw()
         else if (gamepad.dpad_left)
             diffyLeft()
         else if (gamepad.dpad_right)
             diffyRight()
-        else if (gamepad.a)
-            diffyDown()
-        else if (gamepad.y)
+        else if (gamepad.dpad_up)
             diffyUp()
+        else if (gamepad.dpad_down)
+            diffyDown()
+        else if (gamepad.a)
+            half()
     }
 }

@@ -9,7 +9,6 @@ buildscript {
     repositories {
         mavenCentral()
         google()
-
     }
     dependencies {
         // Note for FTC Teams: Do not modify this yourself.

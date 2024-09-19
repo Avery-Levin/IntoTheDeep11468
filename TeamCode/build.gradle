@@ -25,6 +25,11 @@ android {
     }
 }
 
+repositories {
+    maven { url = 'https://jitpack.io' }
+}
+
 dependencies {
     implementation project(':FtcRobotController')
+    implementation 'com.github.Eeshwar-Krishnan:PhotonFTC:v3.0.2-ALPHA'
 }
