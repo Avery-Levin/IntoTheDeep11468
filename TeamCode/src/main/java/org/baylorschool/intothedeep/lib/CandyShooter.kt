@@ -17,6 +17,7 @@ class CandyShooter(hardwareMap: HardwareMap) {
     var previousB : Boolean = false
     var armIsExtended : Boolean = false
     init  {
+
         leftShooter = hardwareMap.get(DcMotor::class.java, "leftShooter")
         rightShooter = hardwareMap.get(DcMotor::class.java, "rightShooter")
         shooterServo = hardwareMap.get(Servo::class.java,"shooterServo")
@@ -25,11 +26,10 @@ class CandyShooter(hardwareMap: HardwareMap) {
         servoIsExtended = false
         shooterIsOn = false
 
-
     }
 
     fun shooterOn() {
-        leftShooter.power = 1.0
+        leftShooter.power = -1.0
         rightShooter.power = 1.0
         shooterIsOn = true
     }
