@@ -11,11 +11,14 @@ class CandyShooter(hardwareMap: HardwareMap) {
     val leftShooter: DcMotor
     val rightShooter: DcMotor
     val shooterServo: Servo
+
     var servoIsExtended : Boolean
     var shooterIsOn : Boolean
+    var armIsExtended : Boolean = false
+
     var previousA : Boolean = false
     var previousB : Boolean = false
-    var armIsExtended : Boolean = false
+
     init  {
 
         leftShooter = hardwareMap.get(DcMotor::class.java, "leftShooter")

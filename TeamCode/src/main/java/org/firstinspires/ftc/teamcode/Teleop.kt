@@ -15,7 +15,7 @@ class TeleOp: LinearOpMode() {
     override fun runOpMode() {
         val telemetryMultiple = MultipleTelemetry(telemetry, FtcDashboard.getInstance().telemetry)
         val arm = Arm(hardwareMap)
-        val diffy = Diffy(hardwareMap)
+       // val diffy = Diffy(hardwareMap)
         var loopTime = 0.0
         var loop: Double
 
@@ -24,9 +24,9 @@ class TeleOp: LinearOpMode() {
         while (opModeIsActive()) {
             loop = System.nanoTime().toDouble()
             arm.armLoop(gamepad2)
-            diffy.depositLoop(gamepad2)
+           // diffy.depositLoop(gamepad2)
             arm.telemetry(telemetryMultiple)
-            diffy.telemetry(telemetryMultiple)
+            //diffy.telemetry(telemetryMultiple)
             telemetryMultiple.addData("frequency (hz):", 1000000000 / (loop - loopTime))
             loopTime = loop
             telemetryMultiple.update()

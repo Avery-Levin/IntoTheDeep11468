@@ -8,23 +8,27 @@ import org.firstinspires.ftc.robotcore.external.Telemetry
 
 import org.baylorschool.intothedeep.controllers.PIDFController
 import org.baylorschool.intothedeep.controllers.PIDCoefficients
+import org.firstinspires.ftc.teamcode.lib.armPIDConfig.d
+import org.firstinspires.ftc.teamcode.lib.armPIDConfig.i
 import org.firstinspires.ftc.teamcode.lib.armPIDConfig.fg
 import org.firstinspires.ftc.teamcode.lib.armPIDConfig.target
 import org.firstinspires.ftc.teamcode.lib.armPIDConfig.p
 
 @Config
 object armPIDConfig {
-    @JvmField var p: Double = 0.02
+    @JvmField var p: Double = 0.0
+    @JvmField var i : Double = 0.0
+    @JvmField var d : Double = 0.0
     @JvmField var fg: Double = 0.25
     @JvmField var target: Double = 0.0
 }
 class Arm(hardwareMap: HardwareMap) {
 
-    val ticks_per_degree =  537.7 / 360.0
+    val ticks_per_degree = 2786.2 / 360.0
     var correctedValue = target/ticks_per_degree
     val armMotor: DcMotorEx
     var armPos: Double = 0.0
-    private val pControl = PIDCoefficients(p)
+    private val pControl = PIDCoefficients(p, i, d)
     private val controller = PIDFController(pControl)
     var armPower = 0.0
     private var offset = 0
