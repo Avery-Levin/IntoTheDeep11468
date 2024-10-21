@@ -6,8 +6,8 @@ import com.outoftheboxrobotics.photoncore.Photon
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import com.qualcomm.robotcore.util.ElapsedTime
-import org.baylorschool.intothedeep.lib.Arm
 import org.baylorschool.intothedeep.lib.Diffy
+import org.firstinspires.ftc.teamcode.lib.Arm
 
 
 @TeleOp
@@ -24,7 +24,7 @@ class TeleOp: LinearOpMode() {
         resetRuntime()
         while (opModeIsActive()) {
             loop = System.nanoTime().toDouble()
-            arm.actuatorLoop(gamepad2)
+            arm.armLoop(gamepad2)
            // diffy.depositLoop(gamepad2)
             arm.telemetry(telemetryMultiple)
             //diffy.telemetry(telemetryMultiple)
