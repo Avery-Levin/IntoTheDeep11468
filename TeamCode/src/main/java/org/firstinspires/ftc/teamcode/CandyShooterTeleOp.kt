@@ -8,7 +8,7 @@ import org.baylorschool.intothedeep.lib.Mecanum
 @TeleOp(name = "Candy Shooter",group = "Beta Bot")
 
 class CandyShooterTeleOp : LinearOpMode() {
-    val mecanum : Mecanum = Mecanum(hardwareMap)
+    val mecanum  = Mecanum(hardwareMap)
     val candyShooter : CandyShooter = CandyShooter(hardwareMap)
     override fun runOpMode() {
         while(opModeIsActive()) {
