@@ -1,6 +1,7 @@
 package org.baylorschool.intothedeep.lib
 
 import com.qualcomm.robotcore.hardware.DcMotor
+import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.Gamepad
 import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.hardware.Servo
@@ -12,77 +13,50 @@ class CandyShooter(hardwareMap: HardwareMap) {
     val rightShooter: DcMotor
     val shooterServo: Servo
 
-    var servoIsExtended : Boolean
-    var shooterIsOn : Boolean
-    var armIsExtended : Boolean = false
-
-    var previousA : Boolean = false
-    var previousB : Boolean = false
-
     init  {
-
         leftShooter = hardwareMap.get(DcMotor::class.java, "leftShooter")
         rightShooter = hardwareMap.get(DcMotor::class.java, "rightShooter")
         shooterServo = hardwareMap.get(Servo::class.java,"shooterServo")
         leftShooter.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
         rightShooter.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
-        servoIsExtended = false
-        shooterIsOn = false
-
+        leftShooter.direction = DcMotorSimple.Direction.REVERSE
+        shooterServo.direction = Servo.Direction.REVERSE
     }
 
     fun shooterOn() {
-        leftShooter.power = -1.0
+        leftShooter.power = 1.0
         rightShooter.power = 1.0
-        shooterIsOn = true
     }
 
     fun shooterOff(){
         leftShooter.power = 0.0
         rightShooter.power = 0.0
-        shooterIsOn = false
     }
 
     fun swingServo(){
-        shooterServo.position += (1/12)
-        armIsExtended = true
+        shooterServo.position = 0.0
     }
 
     fun retractServo(){
-        shooterServo.position -= (1/12)
-        armIsExtended = false
+        shooterServo.position = 1.0
     }
 
-
-
-
-
-
-
     fun shooterLoop(gamepad : Gamepad){
-        if(gamepad.a && !previousA) {
+        if (gamepad.right_bumper) {
             shooterOn()
-            previousA = true
-        } else if(!gamepad.a && previousA) {
+        } else {
             shooterOff()
-            previousA = false
         }
 
-        if(gamepad.b && !previousB){
+        if (gamepad.a) {
             swingServo()
-            previousB = true
-        } else if(!gamepad.b && previousB) {
+        } else {
             retractServo()
-            previousB = false
         }
-
-
     }
 
     fun telemetry(telemetry: Telemetry) {
-        telemetry.addData("Shooter is powered:",shooterIsOn)
-        telemetry.addData("Servo arm is extended", armIsExtended)
+        telemetry.addData("shooter pos", shooterServo.position)
+        telemetry.update()
     }
-
-
 }

@@ -6,15 +6,16 @@ import org.baylorschool.intothedeep.lib.CandyShooter
 import org.baylorschool.intothedeep.lib.Mecanum
 
 @TeleOp(name = "Candy Shooter",group = "Beta Bot")
-
 class CandyShooterTeleOp : LinearOpMode() {
-    val mecanum  = Mecanum(hardwareMap)
-    val candyShooter : CandyShooter = CandyShooter(hardwareMap)
+    @Throws(InterruptedException::class)
     override fun runOpMode() {
-        while(opModeIsActive()) {
-            mecanum.mecanumLoop(gamepad1)
-            candyShooter.shooterLoop(gamepad1)
+        val candyShooter = CandyShooter(hardwareMap)
+        val mecanum = Mecanum(hardwareMap)
 
+        waitForStart()
+        while(opModeIsActive()) {
+            candyShooter.shooterLoop(gamepad1)
+            mecanum.mecanumLoop(gamepad1)
             candyShooter.telemetry(telemetry)
         }
     }
