@@ -40,7 +40,7 @@ class Mecanum(hardwareMap: HardwareMap) {
 
     fun softwareDefinedLoop(forward: Float, leftRight: Float, turn: Float, fast: Boolean) {
         y = forward
-        x = -(leftRight * 1.1).toFloat()
+        x = (leftRight * 1.1).toFloat()
         this.turn = turn
         s = if (fast)
             1.0

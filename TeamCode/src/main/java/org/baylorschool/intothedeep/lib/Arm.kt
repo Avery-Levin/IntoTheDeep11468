@@ -28,6 +28,8 @@ class Arm(hardwareMap: HardwareMap) {
     private val controller = PIDFController(pControl)
     var armPower = 0.0
     private var offset = 0
+    private val high: Int = 900
+    private val low: Int = 0
 
     init {
         armMotor = hardwareMap.get(DcMotorEx::class.java, "armMotor")
@@ -39,7 +41,7 @@ class Arm(hardwareMap: HardwareMap) {
     fun telemetry(telemetry: Telemetry) {
         telemetry.addData("arm Motor Position", armPos)
         telemetry.addData("Target Position", target)
-        telemetry.addData("power",armMotor.power)
+        telemetry.addData("arm power",armMotor.power)
     }
 
     fun update() {
@@ -50,15 +52,15 @@ class Arm(hardwareMap: HardwareMap) {
     }
 
     private fun increaseTarget() {
-
-        target += .5
+        target += 5
     }
 
     private fun decreaseTarget() {
-        target -= .5
+        target -= 5
     }
 
     fun armLoop(gamepad: Gamepad) {
+        target = hardStops(target.toInt(), low, high).toDouble()
         update()
         armMotor.power = armPower
 
@@ -66,6 +68,12 @@ class Arm(hardwareMap: HardwareMap) {
             increaseTarget()
         else if (gamepad.dpad_down)
             decreaseTarget()
+    }
+
+    private fun hardStops(value: Int, low: Int, high: Int): Int {
+        return if (value < low) low + 1
+        else if (value > high) high - 1
+        else value
     }
 
 }
