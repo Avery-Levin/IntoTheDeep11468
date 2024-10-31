@@ -148,13 +148,13 @@ fun process(frame: Mat, color: Color, draw: Boolean = true, telemetry: Telemetry
 		}
 	}*/
 	//telemetry.addData("t", t)
-	telemetry.addData("pixel", frame.get(640/2, 480/2).toList().toString())
+	//telemetry.addData("pixel", frame.get(640/2, 480/2).toList().toString())
 	//Imgproc.drawContours(frame, contours, 0, Scalar(0.0, 255.0, 0.0))
-	println("size0: ${contours.size}")
-	telemetry.addData("size0", contours.size)
+	//println("size0: ${contours.size}")
+	//telemetry.addData("size0", contours.size)
 	//filter out small contours. These are false positives.
 	val samples = contours.filter { Imgproc.contourArea(it) > 1000 }
-			.also { telemetry.addData("size1", "${it.size}") }
+			//.also { telemetry.addData("size1", "${it.size}") }
 			.map {
 				//find the four corners of the contour. These are the corners of the sample.
 				//Warning: This is a very expensive operation, as it is preformed in kotlin instead of C++ like "findContours" and other such methods
@@ -190,7 +190,7 @@ fun process(frame: Mat, color: Color, draw: Boolean = true, telemetry: Telemetry
 					it
 				}
 			}
-			.also { telemetry.addData("size2", "${it.size}") }
+			//.also { telemetry.addData("size2", "${it.size}") }
 			.filter {
 				//how "square" is this sample identification?
 				val distL = sqrt(sq(it.topLeft.x - it.bottomLeft.x) + sq(it.topLeft.y - it.bottomLeft.y))
@@ -198,13 +198,13 @@ fun process(frame: Mat, color: Color, draw: Boolean = true, telemetry: Telemetry
 				val distT = sqrt(sq(it.topLeft.x - it.topRight.x) + sq(it.topLeft.y - it.topRight.y))
 				val distB = sqrt(sq(it.bottomLeft.x - it.bottomRight.x) + sq(it.bottomLeft.y - it.bottomRight.y))
 				val q = abs(distL - distR) + abs(distT - distB)
-				telemetry.addData("q", q)
-				telemetry.addData("distL / distT", distL / distT)
-				q < 50 && distL / distT > 2 && distL / distT < 5
+				//telemetry.addData("q", q)
+				//telemetry.addData("distL / distT", distL / distT)
+				//q < 50 && distL / distT > 2 && distL / distT < 5
 				//println("q:${q}, distL / distT: ${distL / distT}")
-				//true
+				true
 			}
-			.also { telemetry.addData("final", "${it.size}") }
+			//.also { telemetry.addData("final", "${it.size}") }
 	//Draw the samples, so we can see them
 	if (draw) {
 		samples.forEach { sample ->
@@ -215,7 +215,8 @@ fun process(frame: Mat, color: Color, draw: Boolean = true, telemetry: Telemetry
 			sample.drawDirections(frame)
 		}
 	}
-	telemetry.update()
+	//telemetry.update()
+	Thread.sleep(100)
 	return samples
 }
 fun sq(a: Double) = a*a
