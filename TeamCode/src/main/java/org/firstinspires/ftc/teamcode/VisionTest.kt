@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode
 
 import com.acmerobotics.dashboard.FtcDashboard
+import com.acmerobotics.dashboard.config.Config
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
@@ -9,10 +10,15 @@ import org.baylorschool.intothedeep.vision.Color
 import org.baylorschool.intothedeep.vision.OverheadProcessor
 import org.baylorschool.intothedeep.vision.findClosest
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName
+import org.firstinspires.ftc.teamcode.allowanceTuning.allowance
 
 import org.firstinspires.ftc.vision.VisionPortal
 
 
+@Config
+object allowanceTuning {
+    @JvmField var allowance = -40
+}
 
 @TeleOp(name = "Overhead Vision Test", group = "Concept")
 class VisionTest : LinearOpMode() {
@@ -54,7 +60,7 @@ class VisionTest : LinearOpMode() {
         }
         waitForStart()
         var loopTime = 0.0
-        var loop = 0.0
+        var loop: Double
         loop@while (opModeIsActive()) {
             loop = System.nanoTime().toDouble()
             //telemetry.addData("detections", overheadProcessor.lastDetection)
@@ -62,14 +68,24 @@ class VisionTest : LinearOpMode() {
             if (centerobj == null) {
                 telemetry.addData("center", "null")
                 telemetry.update()
+                mecanum.softwareDefinedLoop(
+                        0.0F,
+                        0.0F,
+                        0.0F,
+                        false
+                )
                 continue@loop
             }
-            telemetry.addData("center", centerobj)
-            val center = centerobj!!.middle
+            telemetry.addData("middle", centerobj.middle)
+            val angle = centerobj.getAngle();
+            telemetry.addData("middle angle", angle)
+            val center = centerobj.middle
             val centerx = overheadProcessor.width / 2
             val centery = overheadProcessor.height / 2
-            val allowance = 15
-            var weGoUp = center.y - allowance < centery//kinda a Ghostbusters reference hehe
+            telemetry.addData("cx", centerx)
+            telemetry.addData("cy", centery)
+
+            var weGoUp = center.y - allowance < centery
             var weGoDown = center.y + allowance > centery
             var weGoLeft = center.x - allowance < centerx
             var weGoRight = center.x + allowance > centerx
@@ -80,12 +96,12 @@ class VisionTest : LinearOpMode() {
             telemetry.addData("fw", if (weGoDown) 1.0F else 0.0F + if (weGoUp) -1.0F else 0.0F)
             telemetry.addData("lr", if (weGoRight) 1.0F else 0.0F + if (weGoLeft) -1.0F else 0.0F)
             mecanum.softwareDefinedLoop(
-                    (if (weGoDown) 1.0F else 0.0F + if (weGoUp) -1.0F else 0.0F)/-5.0F,
-                    (if (weGoRight) 1.0F else 0.0F + if (weGoLeft) -1.0F else 0.0F)/5.0F,
-                    0.0F,
+                    (if (weGoDown) 1.0F else 0.0F + if (weGoUp) -1.0F else 0.0F)/-6.0F,
+                    (if (weGoRight) 1.0F else 0.0F + if (weGoLeft) -1.0F else 0.0F)/3.0F,
+                    if (angle < 75) {0.25F} else if (angle > 105) {-0.25F} else {0.0F},
                     false
             )
-            telemetry.addData("freq (Hz)", 1000000000/loop-loopTime)
+            telemetry.addData("freq (Hz)", 1000000000/(loop-loopTime))
             loopTime = loop
             telemetry.update()
         }

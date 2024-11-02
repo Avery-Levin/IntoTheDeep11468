@@ -53,7 +53,7 @@ class Sample(val topLeft: Point, val topRight: Point, val bottomLeft: Point, val
 	 */
 	fun drawDirections(mat: Mat) {
 		//get the angle of the side lines
-		val angle = findAngle(middle.x, middleBottom.x, middle.y, middleBottom.y)
+		var angle = findAngle(middle.x, middleBottom.x, middle.y, middleBottom.y)
 		Imgproc.circle(mat, middle, 25, Scalar(0.0, 255.0, 0.0), 10)
 		Imgproc.putText(mat, angle.toString(), Point(middle.x + 40, middle.y + 40), 0, 1.0, Scalar(0.0, 255.0, 0.0), 3)
 		Imgproc.line(mat, middle, middleBottom, Scalar(0.0, 255.0, 0.0), 10)
@@ -89,7 +89,8 @@ class Sample(val topLeft: Point, val topRight: Point, val bottomLeft: Point, val
 		if (x < 0) {
 			x += Math.PI * 2
 		}
-		return (180 - x * (180 / Math.PI).toInt().toDouble()) + 180
+		val angle =  (180 - x * (180 / Math.PI).toInt().toDouble()) + 180
+		return (angle + 90) % 180
 	}
 
 	override fun toString(): String {
@@ -136,7 +137,7 @@ fun process(frame: Mat, color: Color, draw: Boolean = true, telemetry: Telemetry
 			out,
 			contours,
 			hierarchyOutput,
-			Imgproc.RETR_TREE,
+			Imgproc.RETR_EXTERNAL,
 			Imgproc.CHAIN_APPROX_SIMPLE
 	)
 	var t = 0
@@ -153,6 +154,7 @@ fun process(frame: Mat, color: Color, draw: Boolean = true, telemetry: Telemetry
 	//println("size0: ${contours.size}")
 	//telemetry.addData("size0", contours.size)
 	//filter out small contours. These are false positives.
+	var time0 = System.currentTimeMillis()
 	val samples = contours.filter { Imgproc.contourArea(it) > 1000 }
 			//.also { telemetry.addData("size1", "${it.size}") }
 			.map {
@@ -162,6 +164,7 @@ fun process(frame: Mat, color: Color, draw: Boolean = true, telemetry: Telemetry
 				var rightMost = Point(Double.NEGATIVE_INFINITY, 0.0)
 				var topMost = Point(0.0, Double.NEGATIVE_INFINITY)
 				var bottomMost = Point(0.0, Double.POSITIVE_INFINITY)
+				telemetry.addData("num points", it.toArray().size)
 				for (i in it.toArray()) {
 					if (i.x < leftMost.x) {
 						leftMost = i
@@ -216,7 +219,6 @@ fun process(frame: Mat, color: Color, draw: Boolean = true, telemetry: Telemetry
 		}
 	}
 	//telemetry.update()
-	Thread.sleep(100)
 	return samples
 }
 fun sq(a: Double) = a*a
