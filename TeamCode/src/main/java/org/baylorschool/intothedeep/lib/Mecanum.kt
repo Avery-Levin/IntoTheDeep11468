@@ -6,7 +6,12 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.Gamepad
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.robotcore.external.Telemetry
-
+object MotorNames {
+    const val flMotorName = "flMotor"//These here so we can depend on them in rr code
+    const val blMotorName = "blMotor"
+    const val frMotorName = "frMotor"
+    const val brMotorName = "brMotor"
+}
 class Mecanum(hardwareMap: HardwareMap) {
     private val flMotor: DcMotorEx
     private val frMotor: DcMotorEx
@@ -18,10 +23,10 @@ class Mecanum(hardwareMap: HardwareMap) {
     private var turn: Float = 0.0F
 
     init {
-        flMotor = hardwareMap.get(DcMotorEx::class.java, "flMotor")
-        blMotor = hardwareMap.get(DcMotorEx::class.java, "blMotor")
-        frMotor = hardwareMap.get(DcMotorEx::class.java, "frMotor")
-        brMotor = hardwareMap.get(DcMotorEx::class.java, "brMotor")
+        flMotor = hardwareMap.get(DcMotorEx::class.java, MotorNames.flMotorName)
+        blMotor = hardwareMap.get(DcMotorEx::class.java, MotorNames.blMotorName)
+        frMotor = hardwareMap.get(DcMotorEx::class.java, MotorNames.frMotorName)
+        brMotor = hardwareMap.get(DcMotorEx::class.java, MotorNames.brMotorName)
         frMotor.direction = DcMotorSimple.Direction.REVERSE
         brMotor.direction = DcMotorSimple.Direction.REVERSE
         brMotor.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
