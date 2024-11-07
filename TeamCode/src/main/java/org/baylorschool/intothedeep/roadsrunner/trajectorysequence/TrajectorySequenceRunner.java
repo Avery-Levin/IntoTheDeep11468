@@ -23,7 +23,6 @@ import org.baylorschool.intothedeep.roadsrunner.trajectorysequence.sequencesegme
 import org.baylorschool.intothedeep.roadsrunner.trajectorysequence.sequencesegment.TurnSegment;
 import org.baylorschool.intothedeep.roadsrunner.trajectorysequence.sequencesegment.WaitSegment;
 import org.baylorschool.intothedeep.roadsrunner.util.DashboardUtil;
-import org.baylorschool.intothedeep.roadsrunner.util.LogFiles;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -211,10 +210,10 @@ public class TrajectorySequenceRunner {
         }
 
         if (targetPose != null) {
-            LogFiles.record(
-                    targetPose, poseEstimate, voltage,
-                    lastDriveEncPositions, lastDriveEncVels, lastTrackingEncPositions, lastTrackingEncVels
-            );
+            //LogFiles.record(
+            //        targetPose, poseEstimate, voltage,
+            //        lastDriveEncPositions, lastDriveEncVels, lastTrackingEncPositions, lastTrackingEncVels
+            //);
         }
 
         packet.put("x", poseEstimate.getX());
