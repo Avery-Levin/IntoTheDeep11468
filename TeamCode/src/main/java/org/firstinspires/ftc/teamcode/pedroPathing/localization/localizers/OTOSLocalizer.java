@@ -68,23 +68,24 @@ public class OTOSLocalizer extends Localizer {
         hardwareMap = map;
 
         /*
-         TODO: If you want to use the "SparkFunOTOSCorrected" version of OTOS, then replace the
+         TO DO: If you want to use the "SparkFunOTOSCorrected" version of OTOS, then replace the
           'SparkFunOTOS.class' below with 'SparkFunOTOSCorrected.class' and set the OTOS as a
           "SparkFunOTOS Corrected" in your robot config
          */
-        // TODO: replace this with your OTOS port
+        // TO DO: replace this with your OTOS port
+        // not using
         otos = hardwareMap.get(SparkFunOTOS.class, "sensor_otos");
 
         otos.setLinearUnit(DistanceUnit.INCH);
         otos.setAngularUnit(AngleUnit.RADIANS);
 
-        // TODO: replace this with your OTOS offset from the center of the robot
+        // TO DO: replace this with your OTOS offset from the center of the robot
         // For the OTOS, left/right is the y axis and forward/backward is the x axis, with left being
         // positive y and forward being positive x. PI/2 radians is facing forward, and clockwise
         // rotation is negative rotation.
         otos.setOffset(new SparkFunOTOS.Pose2D(0,0,Math.PI / 2));
 
-        // TODO: replace these with your tuned multipliers
+        // TO DO: replace these with your tuned multipliers
         otos.setLinearScalar(1.0);
         otos.setAngularScalar(1.0);
 
