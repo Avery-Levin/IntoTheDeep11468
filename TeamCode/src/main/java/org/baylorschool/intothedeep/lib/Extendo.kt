@@ -55,11 +55,11 @@ class Extendo(hardwareMap: HardwareMap) {
     }
 
     private fun increaseTarget() {
-        target += 10
+        target += 15.0
     }
 
     private fun decreaseTarget() {
-        target -= 10
+        target = 0.0
     }
 
     fun slideLoop(gamepad: Gamepad) {
