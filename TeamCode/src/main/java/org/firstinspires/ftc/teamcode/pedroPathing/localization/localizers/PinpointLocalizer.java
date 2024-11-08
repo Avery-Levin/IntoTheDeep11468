@@ -70,8 +70,7 @@ public class PinpointLocalizer extends Localizer {
         // TO DO: replace this with your Pinpoint port
         odo = hardwareMap.get(GoBildaPinpointDriver.class,"odo");
 
-        //This uses mm, to use inches divide these numbers by 25.4
-        odo.setOffsets(DriveConstants.TRACK_WIDTH/2 /25.4, 8.464567/25.4); //these are tuned for 3110-0002-0001 Product Insight #1
+        odo.setOffsets(DriveConstants.TRACK_WIDTH/2 * 25.4, 8.464567 * 25.4); //this uses mm according to Javadoc
         //TO DO: If you find that the gobilda Yaw Scaling is incorrect you can edit this here
       //  odo.setYawScalar(1.0);
         odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD);
