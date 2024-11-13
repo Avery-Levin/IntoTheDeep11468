@@ -49,6 +49,10 @@ public class PinpointLocalizer extends Localizer {
     private GoBildaPinpointDriver odo;
     private double previousHeading;
     private double totalHeading;
+    private boolean reverseX = false;
+    private boolean reverseY = false;
+    private double reverseXD = reverseX ? -1.0 : 1.0;
+    private double reverseYD = reverseY ? -1.0 : 1.0;
 
     /**
      * This creates a new PinpointLocalizer from a HardwareMap, with a starting Pose at (0,0)
@@ -75,7 +79,7 @@ public class PinpointLocalizer extends Localizer {
       //  odo.setYawScalar(1.0);
         odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD);
         //TO DO: Set encoder directions. should be fine
-        odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD);
+        odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.REVERSED);
 
         odo.resetPosAndIMU();
 
@@ -94,7 +98,7 @@ public class PinpointLocalizer extends Localizer {
     @Override
     public Pose getPose() {
         Pose2D rawPose = odo.getPosition();
-        Pose pose = new Pose(rawPose.getX(DistanceUnit.INCH), rawPose.getY(DistanceUnit.INCH), rawPose.getHeading(AngleUnit.RADIANS));
+        Pose pose = new Pose(reverseXD * rawPose.getX(DistanceUnit.INCH), reverseYD * rawPose.getY(DistanceUnit.INCH), rawPose.getHeading(AngleUnit.RADIANS));
 
         return MathFunctions.addPoses(startPose, MathFunctions.rotatePose(pose, startPose.getHeading(), false));
     }

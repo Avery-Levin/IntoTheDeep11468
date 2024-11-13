@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.DriveConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Encoder;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Localizer;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Matrix;
@@ -91,7 +92,7 @@ public class ThreeWheelIMULocalizer extends Localizer {
         imu = hardwareMap.get(IMU.class, "imu");
 
         // TODO: replace this with your IMU's orientation
-        imu.initialize(new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.LEFT, RevHubOrientationOnRobot.UsbFacingDirection.UP)));
+        imu.initialize(new IMU.Parameters(new RevHubOrientationOnRobot(DriveConstants.LOGO_FACING_DIR, DriveConstants.USB_FACING_DIR)));
 
         // TODO: replace these with your encoder positions
         leftEncoderPose = new Pose(-3, 5.7, 0);

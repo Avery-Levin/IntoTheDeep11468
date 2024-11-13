@@ -27,12 +27,12 @@ public class FollowerConstants {
     public static String leftFrontMotorName = MotorNames.flMotorName;
     public static String leftRearMotorName = MotorNames.blMotorName;
     public static String rightFrontMotorName = MotorNames.frMotorName;
-    public static String rightRearMotorName = MotorNames.flMotorName;
+    public static String rightRearMotorName = MotorNames.brMotorName;
 
     // This section is for setting the actual drive vector for the front left wheel, if the robot
     // is facing a heading of 0 radians with the wheel centered at (0,0)
-    private static double xMovement = 81.34056;
-    private static double yMovement = 65.43028;
+    private static double xMovement = 56.763;
+    private static double yMovement = 39.41348300819702;
     private static double[] convertToPolar = Point.cartesianToPolar(xMovement, -yMovement);
     public static Vector frontLeftVector = MathFunctions.normalizeVector(new Vector(convertToPolar[0], convertToPolar[1]));
 
@@ -41,7 +41,7 @@ public class FollowerConstants {
     public static CustomPIDFCoefficients translationalPIDFCoefficients = new CustomPIDFCoefficients(
             0.1,
             0,
-            0,
+            0.1,
             0);
 
     // Translational Integral
@@ -59,7 +59,7 @@ public class FollowerConstants {
     public static CustomPIDFCoefficients headingPIDFCoefficients = new CustomPIDFCoefficients(
             1,
             0,
-            0,
+            0.1,
             0);
 
     // Feed forward constant added on to the heading PIDF
@@ -70,7 +70,7 @@ public class FollowerConstants {
     public static CustomFilteredPIDFCoefficients drivePIDFCoefficients = new CustomFilteredPIDFCoefficients(
             0.025,
             0,
-            0.00001,
+            0.0001,
             0.6,
             0);
 
@@ -83,8 +83,8 @@ public class FollowerConstants {
             1);
 
 
-    // TODO Mass of robot in kilograms
-    public static double mass = 10.65942;
+    // TO DO Mass of robot in kilograms
+    public static double mass = 5.44217;//153 lb = 165 lb
 
     // Centripetal force to power scaling
     public static double centripetalScaling = 0.0005;
@@ -92,11 +92,11 @@ public class FollowerConstants {
 
     // Acceleration of the drivetrain when power is cut in inches/second^2 (should be negative)
     // if not negative, then the robot thinks that its going to go faster under 0 power
-    public static double forwardZeroPowerAcceleration = -34.62719;
+    public static double forwardZeroPowerAcceleration = -36.565254155040726;
 
     // Acceleration of the drivetrain when power is cut in inches/second^2 (should be negative)
     // if not negative, then the robot thinks that its going to go faster under 0 power
-    public static double lateralZeroPowerAcceleration = -78.15554;
+    public static double lateralZeroPowerAcceleration = -46.68764113549571;
 
     // A multiplier for the zero power acceleration to change the speed the robot decelerates at
     // the end of paths.
