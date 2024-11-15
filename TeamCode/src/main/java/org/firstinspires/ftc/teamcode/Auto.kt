@@ -10,8 +10,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose
 
-@TeleOp(name = "TESTINGIGNORE")
-class TESTINGIGNORE : LinearOpMode() {
+@TeleOp()
+class Auto : LinearOpMode() {
     private val startPos = Pose(-32.0, -5.0*12.0, Math.toRadians(90.0))
     private val place0Pos = Pose(0.0, -37.0, Math.toRadians(90.0))
     private val pickupBezierPoint = Pose(24.0 + 6.0, -48.0 + 6.0, Math.toRadians(90.0))
