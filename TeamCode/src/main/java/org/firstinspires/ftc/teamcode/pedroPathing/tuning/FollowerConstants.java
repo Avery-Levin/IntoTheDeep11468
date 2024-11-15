@@ -38,10 +38,11 @@ public class FollowerConstants {
 
 
     // Translational PIDF coefficients (don't use integral)
+    // Translational PIDF coefficients (don't use integral)
     public static CustomPIDFCoefficients translationalPIDFCoefficients = new CustomPIDFCoefficients(
-            0.1,
-            0,
-            0.1,
+            0.5,
+            0.0,
+            0.03,
             0);
 
     // Translational Integral
@@ -59,7 +60,7 @@ public class FollowerConstants {
     public static CustomPIDFCoefficients headingPIDFCoefficients = new CustomPIDFCoefficients(
             1,
             0,
-            0.1,
+            0,
             0);
 
     // Feed forward constant added on to the heading PIDF
@@ -68,9 +69,9 @@ public class FollowerConstants {
 
     // Drive PIDF coefficients
     public static CustomFilteredPIDFCoefficients drivePIDFCoefficients = new CustomFilteredPIDFCoefficients(
-            0.025,
+            0.009,
             0,
-            0.0001,
+            0.000001,
             0.6,
             0);
 
@@ -96,7 +97,7 @@ public class FollowerConstants {
 
     // Acceleration of the drivetrain when power is cut in inches/second^2 (should be negative)
     // if not negative, then the robot thinks that its going to go faster under 0 power
-    public static double lateralZeroPowerAcceleration = -46.68764113549571;
+    public static double lateralZeroPowerAcceleration = -50.992636249433126;
 
     // A multiplier for the zero power acceleration to change the speed the robot decelerates at
     // the end of paths.

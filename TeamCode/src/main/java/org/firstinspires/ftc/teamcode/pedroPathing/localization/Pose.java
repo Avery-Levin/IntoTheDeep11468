@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.pedroPathing.localization;
 import androidx.annotation.NonNull;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.MathFunctions;
+import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Vector;
 
 /**
@@ -15,6 +16,9 @@ import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Vector;
  * @version 1.0, 4/2/2024
  */
 public class Pose {
+    public Point asPoint() {//drops heading but whatever
+        return new Point(x, y);
+    }
     private double x;
     private double y;
     private double heading;
