@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.pedroPathing.localization.localizers;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.baylorschool.intothedeep.Global;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
@@ -74,7 +75,7 @@ public class PinpointLocalizer extends Localizer {
         // TO DO: replace this with your Pinpoint port
         odo = hardwareMap.get(GoBildaPinpointDriver.class,"odo");
 
-        odo.setOffsets(DriveConstants.TRACK_WIDTH/2 * 25.4, -8.464567 * 25.4); //this uses mm according to Javadoc
+        odo.setOffsets(Global.xOffset * 25.4, Global.yOffset * 25.4); //this uses mm according to Javadoc
 
         //TO DO: If you find that the gobilda Yaw Scaling is incorrect you can edit this here
       //  odo.setYawScalar(1.0);

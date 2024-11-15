@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.pedroPathing.tuning;
 
 import com.acmerobotics.dashboard.config.Config;
 
-import org.baylorschool.intothedeep.lib.MotorNames;
+import org.baylorschool.intothedeep.Global;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.MathFunctions;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Vector;
@@ -24,10 +24,10 @@ import org.firstinspires.ftc.teamcode.pedroPathing.util.KalmanFilterParameters;
 public class FollowerConstants {
 
     // This section is for configuring your motors
-    public static String leftFrontMotorName = MotorNames.flMotorName;
-    public static String leftRearMotorName = MotorNames.blMotorName;
-    public static String rightFrontMotorName = MotorNames.frMotorName;
-    public static String rightRearMotorName = MotorNames.brMotorName;
+    public static String leftFrontMotorName = Global.flMotorName;
+    public static String leftRearMotorName = Global.blMotorName;
+    public static String rightFrontMotorName = Global.frMotorName;
+    public static String rightRearMotorName = Global.brMotorName;
 
     // This section is for setting the actual drive vector for the front left wheel, if the robot
     // is facing a heading of 0 radians with the wheel centered at (0,0)
@@ -85,7 +85,7 @@ public class FollowerConstants {
 
 
     // TO DO Mass of robot in kilograms
-    public static double mass = 5.44217;//153 lb = 165 lb
+    public static double mass = Global.mass;//153 lb = 165 lb
 
     // Centripetal force to power scaling
     public static double centripetalScaling = 0.0005;

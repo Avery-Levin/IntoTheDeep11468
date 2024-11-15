@@ -9,8 +9,9 @@ object Global {
 
     // odo
     const val odo = "odo"
-    const val xOffset = 0.0
-    const val yOffset = 0.0
+    const val xOffset = 16.33858/2
+    const val yOffset = -8.464567//in
+    const val mass = 5.44217
 
     //
 
