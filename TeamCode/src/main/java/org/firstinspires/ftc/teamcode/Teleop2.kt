@@ -2,13 +2,9 @@ package org.firstinspires.ftc.teamcode
 
 import com.acmerobotics.dashboard.FtcDashboard
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
-import com.outoftheboxrobotics.photoncore.Photon
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
-import com.qualcomm.robotcore.util.ElapsedTime
-import org.baylorschool.intothedeep.lib.ArmTest
 import org.baylorschool.intothedeep.lib.Depo
-import org.firstinspires.ftc.teamcode.lib.Arm
 
 @TeleOp
 class TeleOp2: LinearOpMode() {
