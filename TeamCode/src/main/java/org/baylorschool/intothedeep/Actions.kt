@@ -1,5 +1,7 @@
 package org.baylorschool.intothedeep
 
+import java.time.Duration
+
 /**
  * This is a simple action framework.
  * ActionGroups execute things concurrently until everything in the group is done.
@@ -12,6 +14,10 @@ interface Action {
      * @returns whether the action is done or not
      */
     fun update() : Boolean
+    fun execute() {
+        init()
+        while (!update()) {}
+    }
 }
 class ActionGroup(vararg actions0: Action) : Action {
     private val actions = actions0.toMutableList()
@@ -27,18 +33,42 @@ class ActionGroup(vararg actions0: Action) : Action {
         return actions.isEmpty()
     }
 }
-class ActionSet(vararg actions0: Action) {
+class ActionSet(vararg actions0: Action) : Action {
     private val actions = actions0.toMutableList()
     /**
      * this is blocking, obviously.
      */
-    fun execute() {
+    override fun execute() {
         for (i in actions) {
             i.init()
             while (!i.update()) {
                 // do nothing
             }
         }
+    }
+
+    override fun init() {
+
+    }
+    var hasinited = false
+
+    /**
+     * so you can run this like an action, so this will work: ActionGroup {alwaysHappening, ActionSet {first, second, third} }
+     */
+    override fun update(): Boolean {
+        if (actions.isEmpty()) {
+            return true
+        }
+        if (!hasinited) {
+            hasinited = true
+            actions.first().init()
+        } else {
+            if (actions.first().update()) {
+                actions.removeAt(0)
+                hasinited = false
+            }
+        }
+        return actions.isEmpty()
     }
 }
 fun initAction(id: () -> Unit): Action {
@@ -48,4 +78,11 @@ fun initAction(id: () -> Unit): Action {
         }
         override fun update(): Boolean = true
     }
+}
+fun ensureMinTime(action: Action, durms: Long): Action {
+    return ActionGroup(object : Action {
+        val time = System.currentTimeMillis()
+        override fun init() {}
+        override fun update(): Boolean = System.currentTimeMillis() > time + durms
+    }, action)
 }

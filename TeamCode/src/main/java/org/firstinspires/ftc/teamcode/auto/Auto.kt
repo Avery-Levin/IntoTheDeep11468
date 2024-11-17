@@ -8,15 +8,16 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.baylorschool.intothedeep.ActionSet
+import org.baylorschool.intothedeep.initAction
 import org.firstinspires.ftc.teamcode.Driver
 import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose
 
-@TeleOp()
+@TeleOp
 class Auto : LinearOpMode() {
     private val startPos = Pose(-32.0, -5.0*12.0, Math.toRadians(90.0))
     private val place0Pos = Pose(0.0, -37.0, Math.toRadians(90.0))
-    private val pickupBezierPoint = Pose(24.0 + 6.0, -48.0 + 6.0, Math.toRadians(90.0))
+    private val pickupBezierPoint = Pose(24.0 + 6.0, -48.0 - 6.0, Math.toRadians(90.0))
     private val pickup0Pos = Pose(36.0, -24.0, Math.toRadians(0.0))
     private val pickup1Pos = Pose(36.0 + 10, -24.0, Math.toRadians(0.0))
     private val pickup2Pos = Pose(36.0 + 20, -24.0, Math.toRadians(0.0))
@@ -33,15 +34,25 @@ class Auto : LinearOpMode() {
         waitForStart()
         ActionSet(
                 driver.runToAction(place0Pos),
+                initAction { telemetryA.addData("data", 0); telemetryA.update() },
                 driver.runToAction(pickup0Pos, pickupBezierPoint.asPoint()),
+                initAction { telemetryA.addData("data", 1); telemetryA.update() },
                 driver.runToAction(pickupBezierPoint),
+                initAction { telemetryA.addData("data", 2); telemetryA.update() },
                 driver.runToAction(basketPos),
+                initAction { telemetryA.addData("data", 3); telemetryA.update() },
                 driver.runToAction(pickup1Pos, pickupBezierPoint.asPoint()),
+                initAction { telemetryA.addData("data", 4); telemetryA.update() },
                 driver.runToAction(basketPos, pickupBezierPoint.asPoint()),
+                initAction { telemetryA.addData("data", 5); telemetryA.update() },
                 driver.runToAction(pickup2Pos, pickupBezierPoint.asPoint()),
+                initAction { telemetryA.addData("data", 6); telemetryA.update() },
                 driver.runToAction(basketPos, pickupBezierPoint.asPoint()),
+                initAction { telemetryA.addData("data", 7); telemetryA.update() },
                 driver.runToAction(pickupBezierPoint),
+                initAction { telemetryA.addData("data", 8); telemetryA.update() },
                 driver.runToAction(endPos, pickup0Pos.asPoint()),
+                initAction { telemetryA.addData("data", 9); telemetryA.update() },
         ).execute()
         driver.holdPoint(endPos)
 
