@@ -1,23 +1,18 @@
 package org.baylorschool.intothedeep.lib
 
 import com.acmerobotics.dashboard.config.Config
-import com.acmerobotics.roadrunner.profile.MotionProfileGenerator
-import com.acmerobotics.roadrunner.profile.MotionState
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.hardware.Gamepad
 import com.qualcomm.robotcore.hardware.HardwareMap
-import com.qualcomm.robotcore.util.ElapsedTime
-import org.firstinspires.ftc.robotcore.external.Telemetry
-
-import org.baylorschool.intothedeep.controllers.PIDFController
 import org.baylorschool.intothedeep.controllers.PIDCoefficients
-import org.baylorschool.intothedeep.lib.ArmPIDConfig.target
-import org.baylorschool.intothedeep.lib.ArmPIDConfig.p
-import org.baylorschool.intothedeep.lib.ArmPIDConfig.i
+import org.baylorschool.intothedeep.controllers.PIDFController
 import org.baylorschool.intothedeep.lib.ArmPIDConfig.d
 import org.baylorschool.intothedeep.lib.ArmPIDConfig.fg
-
+import org.baylorschool.intothedeep.lib.ArmPIDConfig.i
+import org.baylorschool.intothedeep.lib.ArmPIDConfig.p
+import org.baylorschool.intothedeep.lib.ArmPIDConfig.target
+import org.firstinspires.ftc.robotcore.external.Telemetry
 import kotlin.math.cos
 
 @Config
@@ -30,10 +25,11 @@ object ArmPIDConfig {
 }
 
 class Arm(hardwareMap: HardwareMap) {
-    val mpTime = ElapsedTime()
+
     private val ticks_per_degree =  2786.2 / 360.0
     private var correctedValue = target/ticks_per_degree
-    private val armMotor: DcMotorEx
+    private val armMotor1: DcMotorEx
+    private val armMotor2 : DcMotorEx
     private var armPos: Double = 0.0
     private val control = PIDCoefficients(p, i, d)
     val controller = PIDFController(control, /* kF = {x, v -> ((cos(Math.toRadians(correctedValue))) * fg)} */)
@@ -44,38 +40,24 @@ class Arm(hardwareMap: HardwareMap) {
 
     init {
         controller.targetPosition = target
-        armMotor = hardwareMap.get(DcMotorEx::class.java, "armMotor")
-        offset = armMotor.currentPosition
-        armPos = armMotor.currentPosition.toDouble() - offset
+        armMotor1 = hardwareMap.get(DcMotorEx::class.java, "armMotor1")
+        armMotor2 = hardwareMap.get(DcMotorEx::class.java, "armMotor2")
+        offset = armMotor1.currentPosition
+        armPos = armMotor1.currentPosition.toDouble() - offset
         target = 0.0
-        armMotor.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
+        armMotor1.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
     }
 
     fun telemetry(telemetry: Telemetry) {
         telemetry.addData("arm Motor Position", armPos)
         telemetry.addData("arm Target Position", target)
-        telemetry.addData("arm power",armMotor.power)
+        telemetry.addData("arm power",armMotor1.power)
     }
 
     fun update() {
         controller.targetPosition = target
         correctedValue = target / ticks_per_degree
-        armPos = armMotor.currentPosition.toDouble() - offset
-        /* val profile = MotionProfileGenerator.generateSimpleMotionProfile(
-            MotionState(0.0, 0.0, 0.0),
-            MotionState(target, 0.0, 0.0),
-            0.0,
-            0.0,
-            0.0,
-        )
-        val state = profile[mpTime]
-
-         controller.apply {
-            targetPosition = state.x
-            targetVelocity = state.v
-            targetAcceleration = state.a
-        }
-         */
+        armPos = armMotor1.currentPosition.toDouble() - offset
         armPower = controller.update(armPos) + ((cos(Math.toRadians(correctedValue))) * fg)
     }
 
@@ -90,7 +72,7 @@ class Arm(hardwareMap: HardwareMap) {
     fun armLoop(gamepad: Gamepad) {
         target = hardStops(target.toInt(), low, high).toDouble()
         update()
-        armMotor.power = armPower
+        armMotor1.power = armPower
         if (gamepad.dpad_up)
             increaseTarget()
         else if (gamepad.dpad_down)
