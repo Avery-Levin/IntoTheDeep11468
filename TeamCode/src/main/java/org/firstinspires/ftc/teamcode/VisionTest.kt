@@ -3,14 +3,23 @@ package org.firstinspires.ftc.teamcode
 import com.acmerobotics.dashboard.FtcDashboard
 import com.acmerobotics.dashboard.config.Config
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
+import com.acmerobotics.roadrunner.followers.PathFollower
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
+import org.baylorschool.intothedeep.ActionSet
+import org.baylorschool.intothedeep.Action
 import org.baylorschool.intothedeep.lib.Mecanum
 import org.baylorschool.intothedeep.vision.Color
 import org.baylorschool.intothedeep.vision.OverheadProcessor
+import org.baylorschool.intothedeep.vision.Sample
+import org.baylorschool.intothedeep.vision.cameraDataToRealPosition
 import org.baylorschool.intothedeep.vision.findClosest
+import org.firstinspires.ftc.robotcore.external.hardware.camera.Camera
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName
 import org.firstinspires.ftc.teamcode.allowanceTuning.allowance
+import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower
+import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose
+import org.firstinspires.ftc.teamcode.pedroPathing.util.Drawing
 
 import org.firstinspires.ftc.vision.VisionPortal
 
@@ -24,88 +33,52 @@ object allowanceTuning {
 class VisionTest : LinearOpMode() {
     override fun runOpMode() {
         val telemetry = MultipleTelemetry(telemetry, FtcDashboard.getInstance().telemetry)
-        telemetry.addData("data", "ok")
-        telemetry.update()
-        val overheadProcessor = OverheadProcessor(Color.RED, telemetry)
-        val visionPortal = VisionPortal.easyCreateWithDefaults(
-                hardwareMap[WebcamName::class.java, "Webcam 1"], overheadProcessor)
-        FtcDashboard.getInstance().startCameraStream(visionPortal, 0.0)
-        val mecanum = Mecanum(hardwareMap)
-        //visionPortal.resumeLiveView() ???
-        //visionPortal.resumeStreaming() ???
-        loop@while (!isStarted) {
-            Thread.sleep(100)
+        try {
+            telemetry.addData("data", "ok")
+            telemetry.update()
+            val overheadProcessor = OverheadProcessor(Color.RED, telemetry)
+            val visionPortal = VisionPortal.easyCreateWithDefaults(
+                    hardwareMap[WebcamName::class.java, "Webcam 1"], overheadProcessor)
+            FtcDashboard.getInstance().startCameraStream(visionPortal, 1.0)
+            //visionPortal.resumeLiveView() ???
+            //visionPortal.resumeStreaming() ???
             //telemetry.addData("detections", overheadProcessor.lastDetection)
-            val centerobj = findClosest(overheadProcessor.lastDetection, overheadProcessor.width, overheadProcessor.height)
-            if (centerobj == null) {
-                telemetry.addData("center", "null")
-                telemetry.update()
-                continue@loop
+            waitForStart()
+            var centerobj: Sample? = null
+            while (centerobj == null) {
+                centerobj = findClosest(overheadProcessor.lastDetection, overheadProcessor.width, overheadProcessor.height)
             }
             telemetry.addData("center", centerobj)
             val center = centerobj!!.middle
-            val centerx = overheadProcessor.width / 2
-            val centery = overheadProcessor.height / 2
-            var weGoUp = center.y - 75 > centery//kinda a Ghostbusters reference hehe
-            var weGoDown = center.y + 75 < centery
-            var weGoLeft = center.x - 75 > centerx
-            var weGoRight = center.x + 75 < centerx
-            telemetry.addData("weGoUp", weGoUp)
-            telemetry.addData("weGoDown", weGoDown)
-            telemetry.addData("weGoLeft", weGoLeft)
-            telemetry.addData("weGoRight", weGoRight)
-            telemetry.addData("fw", if (weGoDown) 1.0F else if (weGoUp) -1.0F else 0.0F)
-            telemetry.addData("lr", if (weGoRight) 1.0F else if (weGoLeft) -1.0F else 0.0F)
+            telemetry.addData("width, height", "${overheadProcessor.width} ${overheadProcessor.height}")
             telemetry.update()
-        }
-        waitForStart()
-        var loopTime = 0.0
-        var loop: Double
-        loop@while (opModeIsActive()) {
-            loop = System.nanoTime().toDouble()
-            //telemetry.addData("detections", overheadProcessor.lastDetection)
-            val centerobj = findClosest(overheadProcessor.lastDetection, overheadProcessor.width, overheadProcessor.height)
-            if (centerobj == null) {
-                telemetry.addData("center", "null")
+            val driver = Driver(Follower(hardwareMap), Pose(0.0, 0.0, 0.0))//55 is diagonal
+            cameraDataToRealPosition(11.0, 0.0, overheadProcessor.width, overheadProcessor.height, center.x, center.y) { posX, posY, realAngleX, realAngleY, camWidthAngle, camHeightAngle ->
+                //
+                telemetry.addData("endData", "x: $posX, y: $posY, raX:$realAngleX, raY:$realAngleY, cWa(x):$camWidthAngle, cHa(y):$camHeightAngle , heading: ${centerobj.getAngle()}")
                 telemetry.update()
-                mecanum.softwareDefinedLoop(
-                        0.0F,
-                        0.0F,
-                        0.0F,
-                        false
-                )
-                continue@loop
+                //Thread.sleep(25000)
+                ActionSet (
+                        //driver.runToAction(Pose(posY, posX, 0.0)),
+                        driver.runToAction(Pose(0.0, 0.0, 0.0)),
+                        object : Action {
+                            override fun init() {
+                                //driver.follower.holdPoint(Pose(posY, posX, 0.0))
+                                //driver.follower.holdPoint(Pose(1.0, 0.0, 0.0))
+                            }
+                            override fun update(): Boolean {
+                                driver.update()
+                                Drawing.drawDebug(driver.follower)
+                                return false
+                            }
+                        }
+                ).execute()
+                //Thread.sleep(25000)
             }
-            telemetry.addData("middle", centerobj.middle)
-            val angle = centerobj.getAngle();
-            telemetry.addData("middle angle", angle)
-            val center = centerobj.middle
-            val centerx = overheadProcessor.width / 2
-            val centery = overheadProcessor.height / 2
-            telemetry.addData("cx", centerx)
-            telemetry.addData("cy", centery)
-
-            var weGoUp = center.y - allowance < centery
-            var weGoDown = center.y + allowance > centery
-            var weGoLeft = center.x - allowance < centerx
-            var weGoRight = center.x + allowance > centerx
-            telemetry.addData("weGoUp", weGoUp)
-            telemetry.addData("weGoDown", weGoDown)
-            telemetry.addData("weGoLeft", weGoLeft)
-            telemetry.addData("weGoRight", weGoRight)
-            telemetry.addData("fw", if (weGoDown) 1.0F else 0.0F + if (weGoUp) -1.0F else 0.0F)
-            telemetry.addData("lr", if (weGoRight) 1.0F else 0.0F + if (weGoLeft) -1.0F else 0.0F)
-            mecanum.softwareDefinedLoop(
-                    (if (weGoDown) 1.0F else 0.0F + if (weGoUp) -1.0F else 0.0F)/-6.0F,
-                    (if (weGoRight) 1.0F else 0.0F + if (weGoLeft) -1.0F else 0.0F)/3.0F,
-                    if (angle < 75) {0.25F} else if (angle > 105) {-0.25F} else {0.0F},
-                    false
-            )
-            telemetry.addData("freq (Hz)", 1000000000/(loop-loopTime))
-            loopTime = loop
+        } catch (t: Throwable) {
+            telemetry.addData("error", t.toString())
             telemetry.update()
         }
-        //Select a target and drive to it??? We'll see I guess.
     }
-
+    //Select a target and drive to it??? We'll see I guess.
 }

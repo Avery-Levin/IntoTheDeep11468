@@ -8,24 +8,26 @@ import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierCurve
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierLine
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point
+import org.firstinspires.ftc.teamcode.pedroPathing.util.Drawing
 
 class Driver(val follower: Follower, startPose: Pose) {
     init {
         follower.setStartingPose(startPose)
     }
-    fun runToAction(pose: Pose, bezier: Point? = null): Action {
+    fun runToAction(pose: Pose, vararg bezier: Point? = arrayOf()): Action {
         return object : Action {
             override fun init() {
                 val nul = if (bezier == null) {
                     Path(BezierLine(Point(follower.pose.x, follower.pose.y, Point.CARTESIAN), Point(pose.x, pose.y, Point.CARTESIAN)))
                 } else {
-                    Path(BezierCurve(Point(follower.pose.x, follower.pose.y), bezier, bezier, Point(pose.x, pose.y)))
+                    Path(BezierCurve(Point(follower.pose.x, follower.pose.y), *bezier, Point(pose.x, pose.y)))
                 }
                 nul.setConstantHeadingInterpolation(pose.heading)
                 follower.followPath(nul, true)
             }
             override fun update(): Boolean {
                 follower.update()
+                Drawing.drawDebug(follower)
                 return !isRunning()//if it's still running we're not done!
             }
         }
@@ -66,5 +68,16 @@ class Driver(val follower: Follower, startPose: Pose) {
 
     fun holdPoint(ready0Pos: Pose) {
         follower.holdPoint(Point(ready0Pos.x, ready0Pos.y), ready0Pos.heading)
+    }
+    fun holdAction(): Action {
+        return object : Action {
+            override fun init() {}
+
+            override fun update(): Boolean {
+                follower.update()
+                return false
+            }
+
+        }
     }
 }
