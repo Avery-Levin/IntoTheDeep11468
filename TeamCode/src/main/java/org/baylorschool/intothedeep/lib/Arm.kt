@@ -15,6 +15,7 @@ import org.baylorschool.intothedeep.lib.ArmPIDConfig.target
 import org.firstinspires.ftc.robotcore.external.Telemetry
 import kotlin.math.cos
 
+
 @Config
 object ArmPIDConfig {
     @JvmField var p: Double = 0.0175
@@ -22,6 +23,8 @@ object ArmPIDConfig {
     @JvmField var d: Double = 0.0008
     @JvmField var fg: Double = 0.25
     @JvmField var target: Double = 0.0
+
+
 }
 
 class Arm(hardwareMap: HardwareMap) {
@@ -73,7 +76,7 @@ class Arm(hardwareMap: HardwareMap) {
         target = hardStops(target.toInt(), low, high).toDouble()
         update()
         armMotor1.power = armPower
-        if (gamepad.dpad_up)
+        if (gamepad.dpad_up )
             increaseTarget()
         else if (gamepad.dpad_down)
             decreaseTarget()
