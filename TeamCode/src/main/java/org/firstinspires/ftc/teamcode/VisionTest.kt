@@ -3,24 +3,19 @@ package org.firstinspires.ftc.teamcode
 import com.acmerobotics.dashboard.FtcDashboard
 import com.acmerobotics.dashboard.config.Config
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
-import com.acmerobotics.roadrunner.followers.PathFollower
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
-import org.baylorschool.intothedeep.ActionSet
 import org.baylorschool.intothedeep.Action
-import org.baylorschool.intothedeep.lib.Mecanum
+import org.baylorschool.intothedeep.ActionSet
 import org.baylorschool.intothedeep.vision.Color
 import org.baylorschool.intothedeep.vision.OverheadProcessor
 import org.baylorschool.intothedeep.vision.Sample
 import org.baylorschool.intothedeep.vision.cameraDataToRealPosition
 import org.baylorschool.intothedeep.vision.findClosest
-import org.firstinspires.ftc.robotcore.external.hardware.camera.Camera
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName
-import org.firstinspires.ftc.teamcode.allowanceTuning.allowance
 import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose
 import org.firstinspires.ftc.teamcode.pedroPathing.util.Drawing
-
 import org.firstinspires.ftc.vision.VisionPortal
 
 
