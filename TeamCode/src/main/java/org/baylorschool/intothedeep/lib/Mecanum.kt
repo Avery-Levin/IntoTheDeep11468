@@ -9,7 +9,7 @@ import org.baylorschool.intothedeep.Global
 import org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion
 import org.firstinspires.ftc.robotcore.external.Telemetry
 import org.firstinspires.ftc.teamcode.GoBildaPinpointDriver
-
+import kotlin.math.pow
 
 class Mecanum(hardwareMap: HardwareMap) {
     private val flMotor: DcMotorEx
@@ -29,6 +29,8 @@ class Mecanum(hardwareMap: HardwareMap) {
 
         frMotor.direction = DcMotorSimple.Direction.REVERSE
         brMotor.direction = DcMotorSimple.Direction.REVERSE
+        blMotor.direction = DcMotorSimple.Direction.REVERSE
+
 
         brMotor.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
         frMotor.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
@@ -41,12 +43,11 @@ class Mecanum(hardwareMap: HardwareMap) {
         brMotor.mode = DcMotor.RunMode.RUN_USING_ENCODER
     }
 
-    fun telemetry(telemetry: Telemetry, gamepad: Gamepad) {
+    fun telemetry(telemetry: Telemetry) {
         telemetry.addData("Front Left Power", flMotor.power)
         telemetry.addData("Front Right Power", frMotor.power)
         telemetry.addData("Back Left Power", blMotor.power)
         telemetry.addData("Back Right Power", brMotor.power)
-        telemetry.addData("right stick", gamepad.right_stick_x)
     }
 
     fun softwareDefinedLoop(forward: Float, leftRight: Float, turn: Float, fast: Boolean) {
@@ -61,9 +62,10 @@ class Mecanum(hardwareMap: HardwareMap) {
     }
 
     fun mecanumLoop(gamepad1: Gamepad){
-        y = -gamepad1.left_stick_y
-        x = (gamepad1.left_stick_x * 1.1).toFloat()
-        turn = -gamepad1.right_stick_x
+        y = -gamepad1.left_stick_y.pow(3)
+        x = gamepad1.left_stick_x.pow(3)
+        turn = -gamepad1.right_stick_x.pow(3)
+
         if (gamepad1.right_bumper)
             s = 0.4
         else if (gamepad1.left_bumper)

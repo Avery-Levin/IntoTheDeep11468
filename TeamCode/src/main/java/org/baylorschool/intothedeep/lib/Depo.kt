@@ -3,59 +3,73 @@ package org.baylorschool.intothedeep.lib
 import com.qualcomm.robotcore.hardware.Gamepad
 import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.hardware.Servo
+import org.baylorschool.intothedeep.Global
 import org.firstinspires.ftc.robotcore.external.Telemetry
 
+class DiffyPos (var left: Double, var right: Double) {
+    fun set(diffyLeft: Servo, diffyRight: Servo) {
+        diffyLeft.position = left
+        diffyRight.position = right
+    }
+}
+
 class Depo(hardwareMap: HardwareMap) {
-    val claw: Servo
-    val diffy1: Servo
-    val diffy2: Servo
+    private val claw: Servo
+    private val diffyL: Servo
+    private val diffyR: Servo
 
     init {
         claw = hardwareMap.get(Servo::class.java, "claw")
-        diffy1 = hardwareMap.get(Servo::class.java, "diffy1")
-        diffy2 = hardwareMap.get(Servo::class.java, "diffy2")
-        diffy2.direction = Servo.Direction.REVERSE
+        diffyL = hardwareMap.get(Servo::class.java, "diffyL")
+        diffyR = hardwareMap.get(Servo::class.java, "diffyR")
+        diffyL.direction = Servo.Direction.REVERSE
+        claw.direction = Servo.Direction.REVERSE
         closeClaw()
     }
 
     fun telemetry(telemetry: Telemetry) {
-        telemetry.addData("diffy1 pos", diffy1.position)
-        telemetry.addData("diffy2 pos", diffy2.position)
+        telemetry.addData("diffyL pos", diffyL.position)
+        telemetry.addData("diffyR pos", diffyR.position)
         telemetry.addData("claw pos", claw.position)
     }
 
-
     fun openClaw() {
-        claw.position = 0.8
+        claw.position = Global.clawOpen
     }
 
     fun closeClaw() {
-        claw.position = 0.0
+        claw.position = Global.clawClosed
     }
 
-    fun diffyLeft() {
-        diffy1.position = 0.422
-        diffy2.position = 0.488
+    fun diffy90() {
+        Global.diffy90.set(diffyL, diffyR)
     }
 
-    fun diffyRight() {
-        diffy1.position = 0.488
-        diffy2.position = 0.422
+    fun diffy45() {
+        Global.diffy45.set(diffyL, diffyR)
+        diffyL.position -= 0.001
+        diffyR.position += 0.001
     }
 
-    fun diffyUp() {
-        diffy1.position += 0.0005
-        diffy2.position += 0.0005
+    fun diffy135() {
+        Global.diffy135.set(diffyL, diffyR)
     }
 
-    fun diffyDown() {
-        diffy1.position = 0.445
-        diffy2.position = 0.445
+    fun diffy180() {
+        Global.diffy180.set(diffyL, diffyR)
     }
 
-    fun half() {
-        diffy1.position = 0.5
-        diffy2.position = 0.5
+    fun diffySpec() {
+        diffyL.position += 0.001
+        diffyR.position += 0.001
+    }
+
+    fun diffyBasket() {
+        Global.diffyBasket.set(diffyL, diffyR)
+    }
+
+    fun idle() {
+        Global.diffyIdle.set(diffyL, diffyR)
     }
 
     fun depositLoop(gamepad: Gamepad) {
@@ -64,14 +78,15 @@ class Depo(hardwareMap: HardwareMap) {
         else if (gamepad.left_bumper)
             closeClaw()
         else if (gamepad.x)
-            diffyLeft()
+            diffy135()
         else if (gamepad.b)
-            diffyRight()
+            diffy45()
         else if (gamepad.y)
-            diffyUp()
+            diffy90()
         else if (gamepad.a)
-            diffyDown()
-        else if (gamepad.left_stick_button)
-            half()
+            diffy180()
+        else if (gamepad.left_stick_button) {
+            diffyBasket()
+        }
     }
 }
