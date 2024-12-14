@@ -55,24 +55,15 @@ class Pivot(hardwareMap: HardwareMap) {
         armPower = controller.update(pivotPos) + ((cos(Math.toRadians(correctedValue))) * fg)
         pivotL.power = armPower
         pivotR.power = armPower
+        target = Global.hardStops(target.toInt(), low, high).toDouble()
     }
 
-    private fun increaseTarget() {
-        target = Global.PivotPresets.DEPO.pos
-    }
-
-    private fun decreaseTarget() {
+    fun reset() {
         target = Global.PivotPresets.RESET.pos
     }
 
-    fun armLoop(gamepad: Gamepad) {
-        target = Global.hardStops(target.toInt(), low, high).toDouble()
-        update()
-        if (gamepad.dpad_up)
-            increaseTarget()
-        else if (gamepad.dpad_down)
-            decreaseTarget()
+    fun deposit() {
+        target = Global.PivotPresets.DEPO.pos
     }
-
 
 }

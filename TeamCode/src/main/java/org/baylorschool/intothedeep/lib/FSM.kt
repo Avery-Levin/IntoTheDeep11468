@@ -51,12 +51,11 @@ class FSM(hardwareMap: HardwareMap) {
             RobotState.START -> {
                 depo.openClaw()
                 depo.idle()
-                Global.PivotPIDConfig.target = Global.PivotPresets.RESET.pos
-                Global.SlidePIDConfig.target = Global.SlidePresets.RESET.pos
+                pivot.reset()
                 if (gamepad.a) {
                     transDelay = 0.5
                     intakeTimer.reset()
-                    Global.SlidePIDConfig.target = Global.SlidePresets.INTAKE.pos
+                    slides.intake()
                     transition = true
                     state = RobotState.INTAKE
                 }
@@ -87,7 +86,7 @@ class FSM(hardwareMap: HardwareMap) {
                     transDelay = 1.0
                     transTimer.reset()
                     depo.idle()
-                    Global.SlidePIDConfig.target = Global.SlidePresets.RESET.pos
+                    slides.reset()
                     state = RobotState.INTAKE_RETRACT
                 }
 
@@ -96,7 +95,7 @@ class FSM(hardwareMap: HardwareMap) {
                     if (gamepad.dpad_up) {
                         transDelay = 1.5
                         transTimer.reset()
-                        Global.PivotPIDConfig.target = Global.PivotPresets.DEPO.pos
+                        pivot.deposit()
                         transition = true
                         state = RobotState.DEPOSIT
                     }
@@ -104,7 +103,7 @@ class FSM(hardwareMap: HardwareMap) {
 
             } RobotState.DEPOSIT -> {
                 if ((abs(Global.PivotPresets.DEPO.pos - pivot.pivotPos) > pivotThreshold) && transition) {
-                    Global.SlidePIDConfig.target = Global.SlidePresets.HIGH_BASKET.pos
+                    slides.highBasket()
                 }
                 if ((abs(Global.SlidePresets.HIGH_BASKET.pos - slides.slidePos) > slideThreshold) && transition) {
                     depo.diffyBasket()
@@ -113,15 +112,15 @@ class FSM(hardwareMap: HardwareMap) {
                     transition = false
 
                     if (gamepad.dpad_up) {
-                        Global.SlidePIDConfig.target = Global.SlidePresets.HIGH_BASKET.pos
+                        slides.highBasket()
                         lowerCheck = 0.0
                     } else if (gamepad.dpad_down) {
-                        Global.SlidePIDConfig.target = Global.SlidePresets.LOW_BASKET.pos
+                        slides.lowBasket()
                         lowerCheck = 0.0
                     } else if (gamepad.dpad_left) {
-                        Global.SlidePIDConfig.target = Global.SlidePresets.LOW_RUNG.pos
+                        slides.lowChamber()
                     } else if (gamepad.dpad_right) {
-                        Global.SlidePIDConfig.target = Global.SlidePresets.HIGH_RUNG.pos
+                        slides.highChamber()
                     }
 
                     if (gamepad.x) {
@@ -137,10 +136,10 @@ class FSM(hardwareMap: HardwareMap) {
             } RobotState.BUCKET_RETRACT -> {
                 if (retractTimer.seconds() > retractDelay) {
                     depo.idle()
-                    Global.SlidePIDConfig.target = Global.SlidePresets.RESET.pos
+                    slides.reset()
                 }
                 if (abs(Global.SlidePresets.HIGH_BASKET.pos - (slides.slidePos + lowerCheck)) > slideThreshold) {
-                    Global.PivotPIDConfig.target = Global.PivotPresets.RESET.pos
+                    pivot.reset()
                 }
                 if (pivot.pivotPos < 50) {
                     state = RobotState.START

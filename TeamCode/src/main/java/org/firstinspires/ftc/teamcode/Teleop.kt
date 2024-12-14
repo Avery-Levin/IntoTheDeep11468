@@ -26,8 +26,8 @@ class TeleOp: LinearOpMode() {
         resetRuntime()
         while (opModeIsActive()) {
             loop = System.nanoTime().toDouble()
-            pivot.armLoop(gamepad2)
-            slide.slideLoop(gamepad2)
+           // pivot.armLoop(gamepad2)
+            //slide.slideLoop(gamepad2)
             depo.depositLoop(gamepad2)
 
             //mecanum.mecanumLoop(gamepad2)

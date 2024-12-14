@@ -47,24 +47,31 @@ class Slides(hardwareMap: HardwareMap) {
         slidePower = controller.update(slidePos) + fg
         slideL.power = slidePower
         slideR.power = slidePower
+        target = Global.hardStops(target.toInt(), low, high).toDouble()
     }
 
-    private fun increaseTarget() {
-        target = Global.SlidePresets.HIGH_BASKET.pos
-    }
-
-    private fun decreaseTarget() {
+    fun reset() {
         target = Global.SlidePresets.RESET.pos
     }
 
-    fun slideLoop(gamepad: Gamepad) {
-        target = Global.hardStops(target.toInt(), low, high).toDouble()
-        update()
-        if (gamepad.dpad_right)
-            increaseTarget()
-        else if (gamepad.dpad_left)
-            decreaseTarget()
+    fun intake() {
+        target = Global.SlidePresets.INTAKE.pos
     }
 
+    fun highBasket() {
+        target = Global.SlidePresets.HIGH_BASKET.pos
+    }
+
+    fun lowBasket() {
+        target = Global.SlidePresets.LOW_BASKET.pos
+    }
+
+    fun lowChamber() {
+        target = Global.SlidePresets.LOW_CHAMBER.pos
+    }
+
+    fun highChamber() {
+        target = Global.SlidePresets.HIGH_CHAMBER.pos
+    }
 
 }
