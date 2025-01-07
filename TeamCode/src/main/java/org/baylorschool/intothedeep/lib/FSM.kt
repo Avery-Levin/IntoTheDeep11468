@@ -24,12 +24,14 @@ class FSM(hardwareMap: HardwareMap) {
     private var transTimer = ElapsedTime()
     private var pivotTimer = ElapsedTime()
     private var retractTimer = ElapsedTime()
-    private val intakeDelay = 0.5
-    private val retractDelay = 1.0
+    private val retractDelay = 0.5
     private var transDelay = 0.0
-    private val pivotThreshold = 100
-    private val slideThreshold = 300
-    private var transition = true
+    private val intakeThreshold = 200.0
+    private val pivotThreshold = 120.0
+    private var slideThreshold = 300.0
+    private var transition = false
+    private var difference = 0.0
+    private var pivotDifference = 0.0
 
     private var lowerCheck = 0.0
 
@@ -40,10 +42,17 @@ class FSM(hardwareMap: HardwareMap) {
 
     fun telemetry(telemetry: Telemetry) {
         telemetry.addData("State", state)
+        telemetry.addData("Transition", transition)
+        telemetry.addData("Transition Delay", transDelay)
+
         telemetry.addData("Intake Timer", intakeTimer.seconds())
         telemetry.addData("Pivot Timer", pivotTimer.seconds())
         telemetry.addData("Trans Timer", transTimer.seconds())
         telemetry.addData("Retract Timer", retractTimer.seconds())
+
+        telemetry.addData("difference", difference)
+
+
     }
 
     fun loop(gamepad: Gamepad) {
@@ -53,22 +62,25 @@ class FSM(hardwareMap: HardwareMap) {
                 depo.idle()
                 pivot.reset()
                 if (gamepad.a) {
-                    transDelay = 0.5
+                    transition = true
+                    transDelay = 0.2
+                    transTimer.reset()
                     intakeTimer.reset()
                     slides.intake()
-                    transition = true
                     state = RobotState.INTAKE
                 }
 
             } RobotState.INTAKE -> {
-                if (intakeTimer.seconds() > intakeDelay && transition) {
+                slides.slidePos = (slides.slideR.currentPosition.toDouble() * -1) - slides.offset
+                difference = Global.SlidePresets.INTAKE.pos - slides.slidePos
+                if (difference < intakeThreshold && transition) {
                     depo.diffy180()
                 }
 
                 if (transTimer.seconds() > transDelay) {
                     transition = false
                     if (gamepad.a) {
-                        depo.diffy180()
+                       depo.diffy180()
                     } else if (gamepad.b) {
                         depo.diffy45()
                     } else if (gamepad.x) {
@@ -83,29 +95,35 @@ class FSM(hardwareMap: HardwareMap) {
                 }
 
                 if (gamepad.dpad_up) {
-                    transDelay = 1.0
+                    slideThreshold = 100.0
+                    transDelay = 0.3
                     transTimer.reset()
-                    depo.idle()
+                    depo.diffy180()
                     slides.reset()
                     state = RobotState.INTAKE_RETRACT
                 }
 
             } RobotState.INTAKE_RETRACT -> {
+                difference = (slides.slidePos + lowerCheck) - Global.SlidePresets.RESET.pos
+                if (difference < slideThreshold) {
+                    pivot.deposit()
+                }
+
                 if (transTimer.seconds() > transDelay) {
                     if (gamepad.dpad_up) {
-                        transDelay = 1.5
+                        slides.highBasket()
+                        slideThreshold = 300.0
+                        transDelay = 1.0
                         transTimer.reset()
-                        pivot.deposit()
                         transition = true
                         state = RobotState.DEPOSIT
                     }
                 }
 
             } RobotState.DEPOSIT -> {
-                if ((abs(Global.PivotPresets.DEPO.pos - pivot.pivotPos) > pivotThreshold) && transition) {
-                    slides.highBasket()
-                }
-                if ((abs(Global.SlidePresets.HIGH_BASKET.pos - slides.slidePos) > slideThreshold) && transition) {
+                slides.slidePos = (slides.slideR.currentPosition.toDouble() * -1) - slides.offset
+                difference = Global.SlidePresets.HIGH_BASKET.pos - slides.slidePos
+                if ((difference < slideThreshold)) {
                     depo.diffyBasket()
                 }
                 if (transTimer.seconds() > transDelay) {
@@ -126,7 +144,7 @@ class FSM(hardwareMap: HardwareMap) {
                     if (gamepad.x) {
                         depo.diffySpec()
                         state = RobotState.SPEC_RETRACT
-                    } else if (gamepad.a) {
+                    } else if (gamepad.left_bumper) {
                         depo.openClaw()
                         retractTimer.reset()
                         state = RobotState.BUCKET_RETRACT
@@ -134,11 +152,14 @@ class FSM(hardwareMap: HardwareMap) {
                 }
 
             } RobotState.BUCKET_RETRACT -> {
+                slides.slidePos = (slides.slideR.currentPosition.toDouble() * -1) - slides.offset
+                pivot.pivotPos = (pivot.pivotL.currentPosition.toDouble()) - pivot.offset
+                difference = (slides.slidePos + lowerCheck) - Global.SlidePresets.RESET.pos
                 if (retractTimer.seconds() > retractDelay) {
                     depo.idle()
                     slides.reset()
                 }
-                if (abs(Global.SlidePresets.HIGH_BASKET.pos - (slides.slidePos + lowerCheck)) > slideThreshold) {
+                if (difference < slideThreshold) {
                     pivot.reset()
                 }
                 if (pivot.pivotPos < 50) {

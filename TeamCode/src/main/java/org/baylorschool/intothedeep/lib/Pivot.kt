@@ -19,15 +19,15 @@ import kotlin.math.cos
 class Pivot(hardwareMap: HardwareMap) {
     private val ticks_per_degree =  (2786.2/1.583333) / 360.0
     private var correctedValue = target/ticks_per_degree
-    private val pivotL: DcMotorEx
+    val pivotL: DcMotorEx
     private val pivotR : DcMotorEx
     var pivotPos: Double = 0.0
     private val control = PIDCoefficients(p, i, d)
     val controller = PIDFController(control)
     private var armPower = 0.0
-    private var offset = 0
+    var offset = 0
     private val high: Int = 1100
-    private val low: Int = 20
+    private val low: Int = 10
 
     init {
         controller.targetPosition = target

@@ -55,15 +55,15 @@ object Global {
 
     //pivot
     enum class PivotPresets(var pos: Double) {
-        RESET(20.0), DEPO(1100.0),
+        RESET(10.0), DEPO(950.0),
         LOW_RUNG(0.0), HIGH_RUNG(0.0),
     }
 
     @Config
     object PivotPIDConfig {
-        @JvmField var p: Double = 0.006
+        @JvmField var p: Double = 0.003 //0.006
         @JvmField var i: Double = 0.000
-        @JvmField var d: Double = 0.000
+        @JvmField var d: Double = 0.00001
         @JvmField var fg: Double = 0.15
         @JvmField var target: Double = 0.0
     }

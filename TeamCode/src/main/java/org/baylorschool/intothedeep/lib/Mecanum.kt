@@ -27,10 +27,8 @@ class Mecanum(hardwareMap: HardwareMap) {
         frMotor = hardwareMap.get(DcMotorEx::class.java, Global.frMotorName)
         brMotor = hardwareMap.get(DcMotorEx::class.java, Global.brMotorName)
 
-        frMotor.direction = DcMotorSimple.Direction.REVERSE
-        brMotor.direction = DcMotorSimple.Direction.REVERSE
         blMotor.direction = DcMotorSimple.Direction.REVERSE
-
+        flMotor.direction = DcMotorSimple.Direction.REVERSE
 
         brMotor.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
         frMotor.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
@@ -64,7 +62,7 @@ class Mecanum(hardwareMap: HardwareMap) {
     fun mecanumLoop(gamepad1: Gamepad){
         y = -gamepad1.left_stick_y.pow(3)
         x = gamepad1.left_stick_x.pow(3)
-        turn = -gamepad1.right_stick_x.pow(3)
+        turn = gamepad1.right_stick_x.pow(3)
 
         if (gamepad1.right_bumper)
             s = 0.4

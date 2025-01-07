@@ -71,22 +71,4 @@ class Depo(hardwareMap: HardwareMap) {
     fun idle() {
         Global.diffyIdle.set(diffyL, diffyR)
     }
-
-    fun depositLoop(gamepad: Gamepad) {
-        if (gamepad.right_bumper)
-            openClaw()
-        else if (gamepad.left_bumper)
-            closeClaw()
-        else if (gamepad.x)
-            diffy135()
-        else if (gamepad.b)
-            diffy45()
-        else if (gamepad.y)
-            diffy90()
-        else if (gamepad.a)
-            diffy180()
-        else if (gamepad.left_stick_button) {
-            diffyBasket()
-        }
-    }
 }

@@ -21,7 +21,7 @@ class Slides(hardwareMap: HardwareMap) {
     private val pControl = PIDCoefficients(p)
     private val controller = PIDFController(pControl)
     var slidePower = 0.0
-    private var offset = 0
+    var offset = 0
     private val high: Int = 2300
     private val low: Int = 0
 

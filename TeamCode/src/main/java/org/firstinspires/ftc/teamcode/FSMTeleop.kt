@@ -27,14 +27,14 @@ class FSMTeleOp: LinearOpMode() {
         resetRuntime()
         while (opModeIsActive()) {
             loop = System.nanoTime().toDouble()
-            //mecanum.mecanumLoop(gamepad2)
+            mecanum.mecanumLoop(gamepad2)
             fsm.loop(gamepad2)
 
             pivot.update()
             slide.update()
             pivot.telemetry(telemetryMultiple)
             slide.telemetry(telemetryMultiple)
-            // mecanum.telemetry(telemetryMultiple)
+            mecanum.telemetry(telemetryMultiple)
             fsm.telemetry(telemetryMultiple)
 
             telemetryMultiple.addData("frequency (hz)", 1000000000 / (loop - loopTime))
