@@ -27,7 +27,7 @@ class Pivot(hardwareMap: HardwareMap) {
     private var armPower = 0.0
     var offset = 0
     private val high: Int = 1100
-    private val low: Int = 10
+    private val low: Int = 0
 
     init {
         controller.targetPosition = target

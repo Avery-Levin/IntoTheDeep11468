@@ -28,7 +28,7 @@ class FSM(hardwareMap: HardwareMap) {
     private var transDelay = 0.0
     private val intakeThreshold = 200.0
     private val pivotThreshold = 120.0
-    private var slideThreshold = 300.0
+    private var slideThreshold = 200.0
     private var transition = false
     private var difference = 0.0
     private var pivotDifference = 0.0
@@ -63,7 +63,7 @@ class FSM(hardwareMap: HardwareMap) {
                 pivot.reset()
                 if (gamepad.a) {
                     transition = true
-                    transDelay = 0.2
+                    transDelay = 0.4
                     transTimer.reset()
                     intakeTimer.reset()
                     slides.intake()
@@ -96,7 +96,7 @@ class FSM(hardwareMap: HardwareMap) {
 
                 if (gamepad.dpad_up) {
                     slideThreshold = 100.0
-                    transDelay = 0.3
+                    transDelay = 0.6
                     transTimer.reset()
                     depo.diffy180()
                     slides.reset()

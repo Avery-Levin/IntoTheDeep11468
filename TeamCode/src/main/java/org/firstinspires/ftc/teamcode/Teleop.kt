@@ -2,10 +2,9 @@ package org.firstinspires.ftc.teamcode
 
 import com.acmerobotics.dashboard.FtcDashboard
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
-import com.outoftheboxrobotics.photoncore.Photon
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
-import org.baylorschool.intothedeep.lib.Depo
+import org.baylorschool.intothedeep.lib.FSM
 import org.baylorschool.intothedeep.lib.Mecanum
 import org.baylorschool.intothedeep.lib.Pivot
 import org.firstinspires.ftc.teamcode.lib.Slides
@@ -18,7 +17,7 @@ class TeleOp: LinearOpMode() {
         val pivot = Pivot(hardwareMap)
         val slide = Slides(hardwareMap)
         val mecanum = Mecanum(hardwareMap)
-       val depo = Depo(hardwareMap)
+        val fsm = FSM(hardwareMap)
         var loopTime = 0.0
         var loop: Double
 
@@ -26,16 +25,15 @@ class TeleOp: LinearOpMode() {
         resetRuntime()
         while (opModeIsActive()) {
             loop = System.nanoTime().toDouble()
-           // pivot.armLoop(gamepad2)
-            //slide.slideLoop(gamepad2)
-            //depo.depositLoop(gamepad2)
-
             mecanum.mecanumLoop(gamepad2)
-            //pivot.telemetry(telemetryMultiple)
-           // slide.telemetry(telemetryMultiple)
+            fsm.loop(gamepad2)
 
+            pivot.update()
+            slide.update()
+            pivot.telemetry(telemetryMultiple)
+            slide.telemetry(telemetryMultiple)
             mecanum.telemetry(telemetryMultiple)
-           depo.telemetry(telemetryMultiple)
+            fsm.telemetry(telemetryMultiple)
 
             telemetryMultiple.addData("frequency (hz)", 1000000000 / (loop - loopTime))
             loopTime = loop

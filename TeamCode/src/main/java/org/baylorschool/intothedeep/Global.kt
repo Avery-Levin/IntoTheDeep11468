@@ -20,16 +20,16 @@ object Global {
 
     // diffy
 
-    val diffyIdle = DiffyPos(0.485, 0.515)
-    val diffy45 = DiffyPos(0.28, 0.15)
-    val diffy90 = DiffyPos(0.35, 0.09)
-    val diffy135 = DiffyPos(0.13, 0.3)
-    val diffy180 = DiffyPos(0.20, 0.23)
-    val diffyBasket = DiffyPos(0.58, 0.61)
+    val diffyIdle = DiffyPos(0.5, 0.5)
+    val diffy45 = DiffyPos(0.549, 0.58)
+    val diffy90 = DiffyPos(0.53, 0.595)
+    val diffy135 = DiffyPos(0.578, 0.55)
+    val diffy180 = DiffyPos(0.56, 0.56)
+    val diffyBasket = DiffyPos(0.5, 0.45)
 
     //claw
     const val claw = "claw"
-    const val clawOpen = 0.5
+    const val clawOpen = 0.55
     const val clawClosed = 1.0
 
     //hardstop
@@ -55,13 +55,13 @@ object Global {
 
     //pivot
     enum class PivotPresets(var pos: Double) {
-        RESET(10.0), DEPO(950.0),
+        RESET(0.0), DEPO(950.0),
         LOW_RUNG(0.0), HIGH_RUNG(0.0),
     }
 
     @Config
     object PivotPIDConfig {
-        @JvmField var p: Double = 0.003 //0.006
+        @JvmField var p: Double = 0.006
         @JvmField var i: Double = 0.000
         @JvmField var d: Double = 0.00001
         @JvmField var fg: Double = 0.15
