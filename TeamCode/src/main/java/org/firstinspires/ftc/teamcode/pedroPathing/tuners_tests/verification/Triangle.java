@@ -1,4 +1,4 @@
-package pedroPathing.tuners_tests.verification;
+package org.firstinspires.ftc.teamcode.pedroPathing.tuners_tests.verification;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -14,8 +14,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-import pedroPathing.constants.FConstants;
-import pedroPathing.constants.LConstants;
+import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
+import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
 
 
 /**
@@ -59,7 +59,9 @@ public class Triangle extends OpMode {
      */
     @Override
     public void init() {
-        follower = new Follower(hardwareMap, FConstants.class, LConstants.class);
+        FConstants.init();
+        LConstants.init();
+        follower = new Follower(hardwareMap);
         follower.setStartingPose(startPose);
 
         triangle = follower.pathBuilder()

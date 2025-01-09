@@ -108,8 +108,8 @@ fun process(frame: Mat, color: Color, draw: Boolean = true, telemetry: Telemetry
 				frame,
 				//Scalar(0.0, 0.0, 160.0),//BGR
 				//Scalar(120.0, 120.0, 255.0),
-				Scalar(160.0, 0.0, 30.0, 0.0),//RGBA
-				Scalar(255.0, 120.0, 120.0, 255.0),
+				Scalar(80.0, 0.0, 0.0, 0.0),//RGBA
+				Scalar(255.0, 80.0, 80.0, 255.0),
 				out
 		)
 		Color.BLUE -> Core.inRange(

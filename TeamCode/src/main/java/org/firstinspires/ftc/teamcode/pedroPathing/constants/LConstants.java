@@ -22,6 +22,7 @@ public class LConstants {
 
 
     }
+    public static void init() {/*load static block!*/}
 }
 
 
