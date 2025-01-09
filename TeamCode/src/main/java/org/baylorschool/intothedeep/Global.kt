@@ -20,12 +20,14 @@ object Global {
 
     // diffy
 
-    val diffyIdle = DiffyPos(0.5, 0.5)
+    val diffyIdle = DiffyPos(0.52, 0.52)
     val diffy45 = DiffyPos(0.549, 0.58)
     val diffy90 = DiffyPos(0.53, 0.595)
     val diffy135 = DiffyPos(0.578, 0.55)
     val diffy180 = DiffyPos(0.56, 0.56)
+    val diffyRetract = DiffyPos (0.00, 0.00)
     val diffyBasket = DiffyPos(0.5, 0.45)
+
 
     //claw
     const val claw = "claw"
@@ -55,7 +57,7 @@ object Global {
 
     //pivot
     enum class PivotPresets(var pos: Double) {
-        RESET(0.0), DEPO(950.0),
+        RESET(20.0), DEPO(1240.0),
         LOW_RUNG(0.0), HIGH_RUNG(0.0),
     }
 

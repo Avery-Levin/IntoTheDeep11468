@@ -26,8 +26,8 @@ class Pivot(hardwareMap: HardwareMap) {
     val controller = PIDFController(control)
     private var armPower = 0.0
     var offset = 0
-    private val high: Int = 1100
-    private val low: Int = 0
+    private val high: Int = 1300
+    private val low: Int = 10
 
     init {
         controller.targetPosition = target

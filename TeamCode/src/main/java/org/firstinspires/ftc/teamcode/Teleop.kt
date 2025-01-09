@@ -25,7 +25,7 @@ class TeleOp: LinearOpMode() {
         resetRuntime()
         while (opModeIsActive()) {
             loop = System.nanoTime().toDouble()
-            mecanum.mecanumLoop(gamepad2)
+            mecanum.mecanumLoop(gamepad1)
             fsm.loop(gamepad2)
 
             pivot.update()

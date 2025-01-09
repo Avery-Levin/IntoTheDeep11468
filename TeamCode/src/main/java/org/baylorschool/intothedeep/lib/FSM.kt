@@ -28,7 +28,7 @@ class FSM(hardwareMap: HardwareMap) {
     private var transDelay = 0.0
     private val intakeThreshold = 200.0
     private val pivotThreshold = 120.0
-    private var slideThreshold = 200.0
+    private var slideThreshold = 1250.0
     private var transition = false
     private var difference = 0.0
     private var pivotDifference = 0.0
@@ -91,6 +91,8 @@ class FSM(hardwareMap: HardwareMap) {
                         depo.closeClaw()
                     } else if (gamepad.left_bumper) {
                         depo.openClaw()
+                    } else if (gamepad.left_stick_button) {
+                        depo.retract()
                     }
                 }
 
@@ -104,6 +106,7 @@ class FSM(hardwareMap: HardwareMap) {
                 }
 
             } RobotState.INTAKE_RETRACT -> {
+                slides.slidePos = (slides.slideR.currentPosition.toDouble() * -1) - slides.offset
                 difference = (slides.slidePos + lowerCheck) - Global.SlidePresets.RESET.pos
                 if (difference < slideThreshold) {
                     pivot.deposit()
@@ -112,7 +115,7 @@ class FSM(hardwareMap: HardwareMap) {
                 if (transTimer.seconds() > transDelay) {
                     if (gamepad.dpad_up) {
                         slides.highBasket()
-                        slideThreshold = 300.0
+                        slideThreshold = 200.0
                         transDelay = 1.0
                         transTimer.reset()
                         transition = true

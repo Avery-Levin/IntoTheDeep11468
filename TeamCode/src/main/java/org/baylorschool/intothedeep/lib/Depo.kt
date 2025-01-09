@@ -72,6 +72,10 @@ class Depo(hardwareMap: HardwareMap) {
         Global.diffyIdle.set(diffyL, diffyR)
     }
 
+    fun retract() {
+        Global.diffyRetract.set(diffyL, diffyR)
+    }
+
     fun tuning(gamepad: Gamepad) {
         if (gamepad.dpad_up) {
             diffyL.position += 0.0003
@@ -86,8 +90,7 @@ class Depo(hardwareMap: HardwareMap) {
             diffyL.position += 0.0003
             diffyR.position -= 0.0003
         } else if (gamepad.a) {
-            diffyL.position = 0.56
-            diffyR.position = 0.56
+            idle()
         }
     }
 }
