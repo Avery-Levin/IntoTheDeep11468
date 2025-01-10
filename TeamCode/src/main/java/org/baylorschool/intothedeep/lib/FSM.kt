@@ -24,7 +24,7 @@ class FSM(hardwareMap: HardwareMap) {
     private var transTimer = ElapsedTime()
     private var pivotTimer = ElapsedTime()
     private var retractTimer = ElapsedTime()
-    private val retractDelay = 0.5
+    private val retractDelay = 0.25
     private var transDelay = 0.0
     private val intakeThreshold = 200.0
     private val pivotThreshold = 120.0
@@ -88,19 +88,17 @@ class FSM(hardwareMap: HardwareMap) {
                     } else if (gamepad.y) {
                         depo.diffy90()
                     } else if (gamepad.right_bumper) {
-                        depo.closeClaw()
+                        depo.claw.position = 0.55
                     } else if (gamepad.left_bumper) {
-                        depo.openClaw()
-                    } else if (gamepad.left_stick_button) {
-                        depo.retract()
+                        depo.claw.position = 1.0
                     }
                 }
 
                 if (gamepad.dpad_up) {
+                    depo.retract()
                     slideThreshold = 100.0
                     transDelay = 0.6
                     transTimer.reset()
-                    depo.diffy180()
                     slides.reset()
                     state = RobotState.INTAKE_RETRACT
                 }
@@ -159,7 +157,7 @@ class FSM(hardwareMap: HardwareMap) {
                 pivot.pivotPos = (pivot.pivotL.currentPosition.toDouble()) - pivot.offset
                 difference = (slides.slidePos + lowerCheck) - Global.SlidePresets.RESET.pos
                 if (retractTimer.seconds() > retractDelay) {
-                    depo.idle()
+                    depo.diffy180()
                     slides.reset()
                 }
                 if (difference < slideThreshold) {

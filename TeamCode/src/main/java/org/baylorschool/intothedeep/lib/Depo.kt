@@ -14,7 +14,7 @@ class DiffyPos (var left: Double, var right: Double) {
 }
 
 class Depo(hardwareMap: HardwareMap) {
-    private val claw: Servo
+    val claw: Servo
     private val diffyL: Servo
     private val diffyR: Servo
 
@@ -24,7 +24,6 @@ class Depo(hardwareMap: HardwareMap) {
         diffyR = hardwareMap.get(Servo::class.java, "diffyR")
         diffyL.direction = Servo.Direction.REVERSE
         claw.direction = Servo.Direction.REVERSE
-        closeClaw()
     }
 
     fun telemetry(telemetry: Telemetry) {
@@ -90,6 +89,12 @@ class Depo(hardwareMap: HardwareMap) {
             diffyL.position += 0.0003
             diffyR.position -= 0.0003
         } else if (gamepad.a) {
+            diffy180()
+        } else if (gamepad.left_bumper) {
+            closeClaw()
+        } else if (gamepad.right_bumper) {
+            openClaw()
+        } else if (gamepad.y) {
             idle()
         }
     }

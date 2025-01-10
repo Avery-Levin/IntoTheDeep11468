@@ -1,7 +1,6 @@
 package org.baylorschool.intothedeep
 
 import com.acmerobotics.dashboard.config.Config
-import com.qualcomm.robotcore.hardware.Servo
 import org.baylorschool.intothedeep.lib.DiffyPos
 
 @Config
@@ -20,17 +19,14 @@ object Global {
 
     // diffy
 
-    val diffyIdle = DiffyPos(0.52, 0.52)
-    val diffy45 = DiffyPos(0.549, 0.58)
-    val diffy90 = DiffyPos(0.53, 0.595)
-    val diffy135 = DiffyPos(0.578, 0.55)
-    val diffy180 = DiffyPos(0.56, 0.56)
-    val diffyRetract = DiffyPos (0.00, 0.00)
-    val diffyBasket = DiffyPos(0.5, 0.45)
+    val diffyIdle = DiffyPos(0.51, 0.509)
+    val diffy45 = DiffyPos(0.624, 0.522)
+    val diffy90 = DiffyPos(0.557, 0.602)
+    val diffy135 = DiffyPos(0.594, 0.552)
+    val diffy180 = DiffyPos(0.581, 0.566)
+    val diffyRetract = DiffyPos (0.546, 0.472)
+    val diffyBasket = DiffyPos(0.51, 0.438)
 
-
-    //claw
-    const val claw = "claw"
     const val clawOpen = 0.55
     const val clawClosed = 1.0
 

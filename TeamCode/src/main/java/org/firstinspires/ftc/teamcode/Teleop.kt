@@ -4,7 +4,9 @@ import com.acmerobotics.dashboard.FtcDashboard
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
+import org.baylorschool.intothedeep.lib.Depo
 import org.baylorschool.intothedeep.lib.FSM
+import org.baylorschool.intothedeep.lib.FieldCentricMec
 import org.baylorschool.intothedeep.lib.Mecanum
 import org.baylorschool.intothedeep.lib.Pivot
 import org.firstinspires.ftc.teamcode.lib.Slides
@@ -16,7 +18,8 @@ class TeleOp: LinearOpMode() {
         val telemetryMultiple = MultipleTelemetry(telemetry, FtcDashboard.getInstance().telemetry)
         val pivot = Pivot(hardwareMap)
         val slide = Slides(hardwareMap)
-        val mecanum = Mecanum(hardwareMap)
+        val mecanum = FieldCentricMec(hardwareMap)
+        val depo = Depo(hardwareMap)
         val fsm = FSM(hardwareMap)
         var loopTime = 0.0
         var loop: Double
@@ -30,6 +33,8 @@ class TeleOp: LinearOpMode() {
 
             pivot.update()
             slide.update()
+
+            depo.telemetry(telemetryMultiple)
             pivot.telemetry(telemetryMultiple)
             slide.telemetry(telemetryMultiple)
             mecanum.telemetry(telemetryMultiple)
