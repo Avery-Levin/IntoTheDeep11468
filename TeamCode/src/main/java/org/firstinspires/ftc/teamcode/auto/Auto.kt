@@ -10,8 +10,9 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.baylorschool.intothedeep.ActionSet
 import org.baylorschool.intothedeep.initAction
 import org.firstinspires.ftc.teamcode.Driver
-import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower
-import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose
+import com.pedropathing.follower.Follower
+import com.pedropathing.localization.Pose
+import com.pedropathing.pathgen.Point
 
 @TeleOp
 class Auto : LinearOpMode() {
@@ -41,13 +42,13 @@ class Auto : LinearOpMode() {
         ActionSet(
                 driver.runToAction(place0Pos),
                 driver.runToAction(pickupBezierPoint),
-                driver.runToAction(push0Pos, endPos.asPoint()),
+                driver.runToAction(push0Pos, Point(endPos)),
 
                 driver.runToAction(push0PosEnd),
-                driver.runToAction(push1Pos, push0Pos.asPoint()),
+                driver.runToAction(push1Pos, Point(push0Pos)),
 
                 driver.runToAction(push1PosEnd),
-                driver.runToAction(push2Pos, push1Pos.asPoint()),
+                driver.runToAction(push2Pos, Point(push1Pos)),
 
                 driver.runToAction(push2PosEnd),
                 driver.runToAction(endPos),
