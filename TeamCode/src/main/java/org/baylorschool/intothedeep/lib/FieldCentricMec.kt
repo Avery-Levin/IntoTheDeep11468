@@ -1,5 +1,6 @@
 package org.baylorschool.intothedeep.lib
 
+import com.pedropathing.localization.GoBildaPinpointDriver
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.hardware.DcMotorSimple
@@ -7,7 +8,6 @@ import com.qualcomm.robotcore.hardware.Gamepad
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.baylorschool.intothedeep.Global
 import org.firstinspires.ftc.robotcore.external.Telemetry
-import org.firstinspires.ftc.teamcode.pedroPathing.localization.GoBildaPinpointDriver
 import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.max
@@ -24,7 +24,7 @@ class FieldCentricMec(hardwareMap: HardwareMap) {
     private var x: Double = 0.0
     private var turn: Double = 0.0
     private var botHeading: Double = 0.0
-    var offset: Double = 0.0
+    private var offset: Double = 0.0
     private var rotX: Double = 0.0
     private var rotY: Double = 0.0
     private var denominator: Double = 0.0
@@ -72,7 +72,7 @@ class FieldCentricMec(hardwareMap: HardwareMap) {
 
      */
 
-    fun reset() {
+    private fun reset() {
         offset = odo.heading
         botHeading = odo.heading - offset
     }

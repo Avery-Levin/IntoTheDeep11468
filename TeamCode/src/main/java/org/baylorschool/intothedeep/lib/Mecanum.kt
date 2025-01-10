@@ -34,11 +34,6 @@ class Mecanum(hardwareMap: HardwareMap) {
         frMotor.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
         blMotor.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
         flMotor.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
-
-        flMotor.mode = DcMotor.RunMode.RUN_USING_ENCODER
-        blMotor.mode = DcMotor.RunMode.RUN_USING_ENCODER
-        frMotor.mode = DcMotor.RunMode.RUN_USING_ENCODER
-        brMotor.mode = DcMotor.RunMode.RUN_USING_ENCODER
     }
 
     fun telemetry(telemetry: Telemetry) {
