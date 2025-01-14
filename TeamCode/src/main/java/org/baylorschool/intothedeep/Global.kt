@@ -1,6 +1,7 @@
 package org.baylorschool.intothedeep
 
 import com.acmerobotics.dashboard.config.Config
+import com.qualcomm.robotcore.hardware.Gamepad
 import org.baylorschool.intothedeep.lib.DiffyPos
 
 @Config
@@ -65,7 +66,6 @@ object Global {
         @JvmField var fg: Double = 0.15
         @JvmField var target: Double = 0.0
     }
-
 }
 
 

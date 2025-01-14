@@ -55,12 +55,13 @@ class FSM(hardwareMap: HardwareMap) {
 
     }
 
-    fun loop(gamepad: Gamepad) {
+    fun loop(gamepad: Gamepad, rumble: Gamepad) {
         when(state) {
             RobotState.START -> {
                 depo.openClaw()
                 depo.idle()
                 pivot.reset()
+                slides.reset()
                 if (gamepad.a) {
                     transition = true
                     transDelay = 0.4
@@ -87,6 +88,8 @@ class FSM(hardwareMap: HardwareMap) {
                         depo.diffy135()
                     } else if (gamepad.y) {
                         depo.diffy90()
+                    } else if (gamepad.left_stick_button) {
+                        depo.idle()
                     } else if (gamepad.right_bumper) {
                         depo.claw.position = 0.55
                     } else if (gamepad.left_bumper) {
@@ -95,6 +98,7 @@ class FSM(hardwareMap: HardwareMap) {
                 }
 
                 if (gamepad.dpad_up) {
+                    rumble.rumble(1.0,1.0,100)
                     depo.retract()
                     slideThreshold = 100.0
                     transDelay = 0.6

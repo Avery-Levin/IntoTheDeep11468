@@ -46,7 +46,7 @@ class FieldCentricMec(hardwareMap: HardwareMap) {
         flMotor.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
 
         odo.recalibrateIMU()
-        offset = odo.heading
+        offset = odo.heading + Math.PI
         botHeading = odo.heading - offset
     }
 
@@ -56,6 +56,7 @@ class FieldCentricMec(hardwareMap: HardwareMap) {
         telemetry.addData("Back Left Power", blMotor.power)
         telemetry.addData("Back Right Power", brMotor.power)
         telemetry.addData("Robot Heading", botHeading)
+        telemetry.addData("Heading Offset", offset)
         telemetry.addData("Pinpoint Frequency", odo.frequency)
     }
     /*
@@ -73,16 +74,17 @@ class FieldCentricMec(hardwareMap: HardwareMap) {
      */
 
     private fun reset() {
-        offset = odo.heading
+        offset = odo.heading + Math.PI
         botHeading = odo.heading - offset
     }
 
     fun mecanumLoop(gamepad1: Gamepad){
         odo.update(GoBildaPinpointDriver.readData.ONLY_UPDATE_HEADING)
+        botHeading =  odo.heading - offset
 
         y = gamepad1.left_stick_y.toDouble()
         x = (-gamepad1.left_stick_x).toDouble()
-        turn = gamepad1.right_stick_x.toDouble()
+        turn = -(gamepad1.right_stick_x).toDouble()
 
         if (gamepad1.right_bumper)
             s = 0.4
