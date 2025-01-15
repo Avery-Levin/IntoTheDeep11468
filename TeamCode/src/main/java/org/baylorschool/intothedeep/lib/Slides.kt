@@ -74,4 +74,8 @@ class Slides(hardwareMap: HardwareMap) {
         target = Global.SlidePresets.HIGH_CHAMBER.pos
     }
 
+    fun specScore() {
+        target = Global.SlidePresets.HIGH_CHAMBER_SNAP.pos
+    }
+
 }

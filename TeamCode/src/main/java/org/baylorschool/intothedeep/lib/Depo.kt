@@ -46,8 +46,6 @@ class Depo(hardwareMap: HardwareMap) {
 
     fun diffy45() {
         Global.diffy45.set(diffyL, diffyR)
-        diffyL.position -= 0.001
-        diffyR.position += 0.001
     }
 
     fun diffy135() {
@@ -56,11 +54,6 @@ class Depo(hardwareMap: HardwareMap) {
 
     fun diffy180() {
         Global.diffy180.set(diffyL, diffyR)
-    }
-
-    fun diffySpec() {
-        diffyL.position += 0.001
-        diffyR.position += 0.001
     }
 
     fun diffyBasket() {
@@ -73,6 +66,13 @@ class Depo(hardwareMap: HardwareMap) {
 
     fun retract() {
         Global.diffyRetract.set(diffyL, diffyR)
+    }
+
+    fun specIntake() {
+        Global.diffySpecIntake.set(diffyL, diffyR)
+    }
+    fun diffySpec() {
+        Global.diffySpecDepo.set(diffyL, diffyR)
     }
 
     fun tuning(gamepad: Gamepad) {
