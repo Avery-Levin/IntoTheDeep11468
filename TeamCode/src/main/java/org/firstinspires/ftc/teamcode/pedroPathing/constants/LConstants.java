@@ -17,8 +17,8 @@ public class LConstants {
         PinpointConstants.useCustomEncoderResolution = false;
         PinpointConstants.encoderResolution = GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD;
         PinpointConstants.customEncoderResolution = 13.26291192;
-        PinpointConstants.forwardEncoderDirection = GoBildaPinpointDriver.EncoderDirection.REVERSED; //TODO Determine the encoder direction for the final robot
-        PinpointConstants.strafeEncoderDirection = GoBildaPinpointDriver.EncoderDirection.FORWARD; //TODO Determine the encoder direction for the final robot
+        PinpointConstants.forwardEncoderDirection = GoBildaPinpointDriver.EncoderDirection.FORWARD; //TODO Determine the encoder direction for the final robot
+        PinpointConstants.strafeEncoderDirection = GoBildaPinpointDriver.EncoderDirection.REVERSE; //TODO Determine the encoder direction for the final robot
 
 
     }
