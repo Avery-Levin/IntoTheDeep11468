@@ -3,7 +3,6 @@ package org.baylorschool.intothedeep.lib
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.hardware.DcMotorSimple
-import com.qualcomm.robotcore.hardware.Gamepad
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.baylorschool.intothedeep.Global
 import org.baylorschool.intothedeep.Global.PivotPIDConfig.d
@@ -66,4 +65,7 @@ class Pivot(hardwareMap: HardwareMap) {
         target = Global.PivotPresets.DEPO.pos
     }
 
+    fun specIntake() {
+        target = Global.PivotPresets.SPEC_INTAKE.pos
+    }
 }

@@ -1,6 +1,7 @@
 package org.baylorschool.intothedeep
 
 import com.acmerobotics.dashboard.config.Config
+import com.qualcomm.robotcore.hardware.Gamepad
 import org.baylorschool.intothedeep.lib.DiffyPos
 
 @Config
@@ -19,13 +20,16 @@ object Global {
 
     // diffy
 
-    val diffyIdle = DiffyPos(0.51, 0.509)
-    val diffy45 = DiffyPos(0.624, 0.522)
-    val diffy90 = DiffyPos(0.557, 0.602)
-    val diffy135 = DiffyPos(0.594, 0.552)
-    val diffy180 = DiffyPos(0.581, 0.566)
-    val diffyRetract = DiffyPos (0.546, 0.472)
-    val diffyBasket = DiffyPos(0.51, 0.438)
+    val diffyIdle = DiffyPos(0.5061, 0.5233)
+    val diffy45 = DiffyPos(0.5606, 0.605)
+    val diffy90 = DiffyPos(0.6167, 0.5689)
+    val diffy135 = DiffyPos(0.6028, 0.5833)
+    val diffy180 = DiffyPos(0.5844, 0.6017)
+    val diffyRetract = DiffyPos (0.5383, 0.4906)
+    val diffyBasket = DiffyPos(0.51, 0.4623)
+    val diffySpecIntake = DiffyPos(0.0,0.0)
+    val diffySpecDepo = DiffyPos(0.0, 0.0)
+
 
     const val clawOpen = 0.55
     const val clawClosed = 1.0
@@ -41,7 +45,7 @@ object Global {
     enum class SlidePresets(var pos: Double) {
         RESET(0.0), INTAKE(1000.0),
         LOW_BASKET(0.0), HIGH_BASKET(2300.0),
-        LOW_CHAMBER(0.0), HIGH_CHAMBER(0.0),
+        LOW_CHAMBER(0.0), HIGH_CHAMBER(900.0), HIGH_CHAMBER_SNAP(600.0),
         LOW_RUNG(0.0), HIGH_RUNG(0.0),
     }
     @Config
@@ -54,7 +58,7 @@ object Global {
     //pivot
     enum class PivotPresets(var pos: Double) {
         RESET(20.0), DEPO(1240.0),
-        LOW_RUNG(0.0), HIGH_RUNG(0.0),
+        SPEC_INTAKE(220.0), LOW_RUNG(0.0), HIGH_RUNG(0.0),
     }
 
     @Config
@@ -65,7 +69,6 @@ object Global {
         @JvmField var fg: Double = 0.15
         @JvmField var target: Double = 0.0
     }
-
 }
 
 
