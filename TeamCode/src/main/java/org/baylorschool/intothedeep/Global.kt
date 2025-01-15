@@ -20,15 +20,16 @@ object Global {
 
     // diffy
 
-    val diffyIdle = DiffyPos(0.5061, 0.5233)
+    val diffyIdle = DiffyPos(0.5433, 0.5606)
     val diffy45 = DiffyPos(0.5606, 0.605)
     val diffy90 = DiffyPos(0.6167, 0.5689)
     val diffy135 = DiffyPos(0.6028, 0.5833)
-    val diffy180 = DiffyPos(0.5844, 0.6017)
+    val diffy180 = DiffyPos(0.605, 0.625)
     val diffyRetract = DiffyPos (0.5383, 0.4906)
     val diffyBasket = DiffyPos(0.51, 0.4623)
     val diffySpecIntake = DiffyPos(0.0,0.0)
     val diffySpecDepo = DiffyPos(0.0, 0.0)
+
 
 
     const val clawOpen = 0.55
