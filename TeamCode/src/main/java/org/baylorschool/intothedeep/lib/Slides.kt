@@ -78,4 +78,8 @@ class Slides(hardwareMap: HardwareMap) {
         target = Global.SlidePresets.HIGH_CHAMBER_SNAP.pos
     }
 
+    fun specIntake() {
+        target = Global.SlidePresets.SPEC_INTAKE.pos
+    }
+
 }

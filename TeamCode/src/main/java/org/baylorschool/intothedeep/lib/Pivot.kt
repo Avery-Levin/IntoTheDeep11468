@@ -65,7 +65,7 @@ class Pivot(hardwareMap: HardwareMap) {
         target = Global.PivotPresets.DEPO.pos
     }
 
-    fun specIntake() {
-        target = Global.PivotPresets.SPEC_INTAKE.pos
+    fun specDeposit() {
+        target = Global.PivotPresets.SPEC_DEPOSIT.pos
     }
 }

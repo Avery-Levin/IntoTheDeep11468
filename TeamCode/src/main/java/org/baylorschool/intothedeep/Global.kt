@@ -19,18 +19,15 @@ object Global {
     const val mass = 5.44217
 
     // diffy
-
-    val diffyIdle = DiffyPos(0.5433, 0.5606)
-    val diffy45 = DiffyPos(0.5606, 0.605)
-    val diffy90 = DiffyPos(0.6167, 0.5689)
-    val diffy135 = DiffyPos(0.6028, 0.5833)
-    val diffy180 = DiffyPos(0.605, 0.625)
-    val diffyRetract = DiffyPos (0.5383, 0.4906)
-    val diffyBasket = DiffyPos(0.51, 0.4623)
-    val diffySpecIntake = DiffyPos(0.0,0.0)
-    val diffySpecDepo = DiffyPos(0.0, 0.0)
-
-
+    val diffyIdle = DiffyPos(0.515, 0.5139)
+    val diffy45 = DiffyPos(0.5661, 0.6094)
+    val diffy90 = DiffyPos(0.5578, 0.6278)
+    val diffy135 = DiffyPos(0.6106, 0.575)
+    val diffy180 = DiffyPos(0.595, 0.5911)
+    val diffyRetract = DiffyPos (0.5472, 0.4939)
+    val diffyBasket = DiffyPos(0.5361, 0.47)
+    val diffySpecIntake = DiffyPos(0.4222,0.4017)
+    val diffySpecDepo = DiffyPos(0.5222, 0.6383)
 
     const val clawOpen = 0.55
     const val clawClosed = 1.0
@@ -46,7 +43,7 @@ object Global {
     enum class SlidePresets(var pos: Double) {
         RESET(0.0), INTAKE(1000.0),
         LOW_BASKET(0.0), HIGH_BASKET(2300.0),
-        LOW_CHAMBER(0.0), HIGH_CHAMBER(900.0), HIGH_CHAMBER_SNAP(600.0),
+        SPEC_INTAKE(120.0), LOW_CHAMBER(0.0), HIGH_CHAMBER(950.0), HIGH_CHAMBER_SNAP(450.0),
         LOW_RUNG(0.0), HIGH_RUNG(0.0),
     }
     @Config
@@ -59,7 +56,7 @@ object Global {
     //pivot
     enum class PivotPresets(var pos: Double) {
         RESET(20.0), DEPO(1240.0),
-        SPEC_INTAKE(220.0), LOW_RUNG(0.0), HIGH_RUNG(0.0),
+        SPEC_DEPOSIT(1000.0), LOW_RUNG(0.0), HIGH_RUNG(0.0),
     }
 
     @Config

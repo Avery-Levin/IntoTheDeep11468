@@ -60,8 +60,8 @@ class FSM(hardwareMap: HardwareMap) {
                     slides.intake()
                     state = RobotState.INTAKE
                 }
+
                 if (gamepad.y) {
-                    depo.specIntake()
                     transition = true
                     transDelay = 0.4
                     transTimer.reset()
@@ -164,7 +164,9 @@ class FSM(hardwareMap: HardwareMap) {
                     state = RobotState.START
                 }
             } RobotState.SPEC_INTAKE -> {
-                pivot.specIntake()
+                slides.specIntake()
+                depo.specIntake()
+                pivot.deposit()
                 if (gamepad.right_bumper) {
                     depo.claw.position = 0.55
                 } else if (gamepad.left_bumper) {
@@ -173,26 +175,35 @@ class FSM(hardwareMap: HardwareMap) {
 
                 if (gamepad.dpad_up) {
                     rumble.rumble(10.0,1.0,400)
-                    pivot.deposit()
+                    pivot.specDeposit()
                     depo.diffySpec()
+                    slides.highChamber()
                     transDelay = 0.4
                     transTimer.reset()
+                    pivotThreshold = 100.0
                     state = RobotState.SPEC_DEPOSIT
                 }
             } RobotState.SPEC_DEPOSIT ->{
-                pivot.pivotPos = pivot.pivotL.currentPosition.toDouble() - slides.offset
-                difference = Global.PivotPresets.DEPO.pos - pivot.pivotPos
-                if (difference < pivotThreshold) {
-                    slides.highChamber()
-                }
+                depo.claw.position = 1.0
 
                 if (gamepad.left_bumper) {
                     slides.specScore()
-                    state = RobotState.SAMPLE_RETRACT
+                    state = RobotState.SPEC_RETRACT
+                    slideThreshold = 30.0
                 }
 
             } RobotState.SPEC_RETRACT -> {
-
+                slides.slidePos = (slides.slideR.currentPosition.toDouble() * -1) - slides.offset
+                difference = slides.slidePos - Global.SlidePresets.HIGH_CHAMBER_SNAP.pos
+                if (difference < slideThreshold) {
+                    depo.claw.position = 0.55
+                }
+                if (gamepad.y) {
+                    state = RobotState.SPEC_INTAKE
+                }
+                if (gamepad.a) {
+                    state = RobotState.START
+                }
             }
         }
 
