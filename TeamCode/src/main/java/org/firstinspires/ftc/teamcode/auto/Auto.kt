@@ -56,7 +56,7 @@ class Auto : LinearOpMode() {
             driver.runToAction(push2EndPos),*/
 
             ensureMinTime(driver.runToAction(pickup0Pos), 2000, true),
-            Global.PivotPresets.SPEC_INTAKE.action(pivot),
+            Global.PivotPresets.SPEC_DEPOSIT.action(pivot),
             Global.SlidePresets.FWINTAKE.action(slides),
             Global.SlidePresets.RESET.action(slides),
             driver.runToAction(placePreloadPos),
