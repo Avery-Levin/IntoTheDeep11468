@@ -20,16 +20,14 @@ interface Action {
     }
 }
 class ActionGroup(vararg actions0: Action) : Action {
-    private val actions = actions0.toMutableList()
+    private var actions = actions0.toList()
     override fun init() {
         for (i in actions) {
             i.init()
         }
     }
     override fun update(): Boolean {
-        for (i in actions) {
-            actions.removeIf { i.update() }
-        }
+        actions = actions.filterNot { it.update() }
         return actions.isEmpty()
     }
 }
@@ -79,10 +77,21 @@ fun initAction(id: () -> Unit): Action {
         override fun update(): Boolean = true
     }
 }
-fun ensureMinTime(action: Action, durms: Long): Action {
-    return ActionGroup(object : Action {
-        val time = System.currentTimeMillis()
-        override fun init() {}
-        override fun update(): Boolean = System.currentTimeMillis() > time + durms
-    }, action)
+fun ensureMinTime(action: Action, durms: Long, hold: Boolean = false): Action {
+    return object : Action {
+        var start = 0L
+        override fun init() {
+            start = System.currentTimeMillis()
+            action.init()
+        }
+        var done = false
+        override fun update(): Boolean {
+            if (!done || hold) {
+                if (action.update()) {
+                    done = true
+                }
+            }
+            return done && System.currentTimeMillis() > start + durms
+        }
+    }
 }

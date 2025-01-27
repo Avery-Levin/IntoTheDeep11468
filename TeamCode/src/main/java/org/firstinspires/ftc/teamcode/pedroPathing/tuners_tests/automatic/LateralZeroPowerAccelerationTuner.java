@@ -148,6 +148,8 @@ public class LateralZeroPowerAccelerationTuner extends OpMode {
                         motor.setPower(0);
                     }
                 }
+                telemetryA.addData("lateral velocity", MathFunctions.dotProduct(poseUpdater.getVelocity(), heading));
+                telemetryA.update();
             } else {
                 double currentVelocity = MathFunctions.dotProduct(poseUpdater.getVelocity(), heading);
                 accelerations.add((currentVelocity - previousVelocity) / ((System.nanoTime() - previousTimeNano) / Math.pow(10.0, 9)));

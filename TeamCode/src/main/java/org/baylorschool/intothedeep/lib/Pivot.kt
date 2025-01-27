@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.HardwareMap
+import org.baylorschool.intothedeep.Action
 import org.baylorschool.intothedeep.Global
 import org.baylorschool.intothedeep.Global.PivotPIDConfig.d
 import org.baylorschool.intothedeep.Global.PivotPIDConfig.fg
@@ -13,6 +14,7 @@ import org.baylorschool.intothedeep.Global.PivotPIDConfig.target
 import org.baylorschool.intothedeep.controllers.PIDCoefficients
 import org.baylorschool.intothedeep.controllers.PIDFController
 import org.firstinspires.ftc.robotcore.external.Telemetry
+import kotlin.math.abs
 import kotlin.math.cos
 
 class Pivot(hardwareMap: HardwareMap) {
@@ -56,6 +58,9 @@ class Pivot(hardwareMap: HardwareMap) {
         pivotR.power = armPower
         target = Global.hardStops(target.toInt(), low, high).toDouble()
     }
+    fun close(): Boolean {
+        return abs(target - pivotPos) < 30
+    }
 
     fun reset() {
         target = Global.PivotPresets.RESET.pos
@@ -67,5 +72,17 @@ class Pivot(hardwareMap: HardwareMap) {
 
     fun specDeposit() {
         target = Global.PivotPresets.SPEC_DEPOSIT.pos
+    }
+    fun action() : Action {
+        val pivot = this
+        return object : Action {
+            override fun init() {}
+
+            override fun update(): Boolean {
+                pivot.update()
+                return false
+            }
+
+        }
     }
 }

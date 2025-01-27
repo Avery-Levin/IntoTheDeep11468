@@ -14,13 +14,13 @@ class Driver(val follower: Follower, startPose: Pose) {
     init {
         follower.setStartingPose(startPose)
     }
-    fun runToAction(pose: Pose, vararg bezier: Point? = arrayOf()): Action {
+    fun runToAction(pose: Pose, vararg bezier: Pose? = arrayOf()): Action {
         return object : Action {
             override fun init() {
                 val nul = if (bezier == null) {
                     Path(BezierLine(Point(follower.pose.x, follower.pose.y, Point.CARTESIAN), Point(pose.x, pose.y, Point.CARTESIAN)))
                 } else {
-                    Path(BezierCurve(Point(follower.pose.x, follower.pose.y), *bezier, Point(pose.x, pose.y)))
+                    Path(BezierCurve(Point(follower.pose.x, follower.pose.y), *bezier.map { Point(it!!.x, it.y) }.toTypedArray(), Point(pose.x, pose.y)))
                 }
                 nul.setConstantHeadingInterpolation(pose.heading)
                 follower.followPath(nul, true)

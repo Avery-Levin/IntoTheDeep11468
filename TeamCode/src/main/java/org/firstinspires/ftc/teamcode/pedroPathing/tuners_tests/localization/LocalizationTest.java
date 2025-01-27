@@ -12,6 +12,8 @@ import static com.pedropathing.follower.FollowerConstants.rightRearMotorDirectio
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.pedropathing.localization.constants.PinpointConstants;
+import com.pedropathing.localization.localizers.PinpointLocalizer;
 import com.pedropathing.util.Constants;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -103,6 +105,33 @@ public class LocalizationTest extends OpMode {
         double x = gamepad1.left_stick_x; // this is strafing
         double rx = gamepad1.right_stick_x;
 
+        boolean upd = false;
+        if (gamepad1.dpad_down) {
+            //y down
+            PinpointConstants.forwardY -= 0.01;
+            upd = true;
+        }
+        if (gamepad1.dpad_up) {
+            //y up
+            PinpointConstants.forwardY += 0.01;
+            upd = true;
+        }
+        if (gamepad1.dpad_left) {
+            //x down
+            PinpointConstants.strafeX -= 0.01;
+            upd = true;
+        }
+        if (gamepad1.dpad_right) {
+            //x up
+            PinpointConstants.strafeX += 0.01;
+            upd = true;
+        }
+        if (upd) {
+            poseUpdater = new PoseUpdater(hardwareMap);
+            //((PinpointLocalizer)poseUpdater.getLocalizer()).
+            dashboardPoseTracker = new DashboardPoseTracker(poseUpdater);
+        }
+
         // Denominator is the largest motor power (absolute value) or 1
         // This ensures all the powers maintain the same ratio, but only when
         // at least one is out of the range [-1, 1]
@@ -121,6 +150,8 @@ public class LocalizationTest extends OpMode {
         telemetryA.addData("y", poseUpdater.getPose().getY());
         telemetryA.addData("heading", poseUpdater.getPose().getHeading());
         telemetryA.addData("total heading", poseUpdater.getTotalHeading());
+        telemetryA.addData("y offset", PinpointConstants.forwardY);
+        telemetryA.addData("x offset", PinpointConstants.strafeX);
         telemetryA.update();
 
         Drawing.drawPoseHistory(dashboardPoseTracker, "#4CAF50");

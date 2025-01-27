@@ -4,13 +4,16 @@ import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.Gamepad
 import com.qualcomm.robotcore.hardware.HardwareMap
+import org.baylorschool.intothedeep.Action
 import org.baylorschool.intothedeep.Global
+import org.baylorschool.intothedeep.Global.PivotPIDConfig
 import org.baylorschool.intothedeep.Global.SlidePIDConfig.fg
 import org.baylorschool.intothedeep.Global.SlidePIDConfig.p
 import org.baylorschool.intothedeep.Global.SlidePIDConfig.target
 import org.baylorschool.intothedeep.controllers.PIDCoefficients
 import org.baylorschool.intothedeep.controllers.PIDFController
 import org.firstinspires.ftc.robotcore.external.Telemetry
+import kotlin.math.abs
 
 class Slides(hardwareMap: HardwareMap) {
     val ticks_per_degree = 384.5 / 360.0
@@ -49,6 +52,9 @@ class Slides(hardwareMap: HardwareMap) {
         slideR.power = slidePower
         target = Global.hardStops(target.toInt(), low, high).toDouble()
     }
+    fun close(): Boolean {
+        return abs(target - slidePos) < 30
+    }
 
     fun reset() {
         target = Global.SlidePresets.RESET.pos
@@ -81,5 +87,16 @@ class Slides(hardwareMap: HardwareMap) {
     fun specIntake() {
         target = Global.SlidePresets.SPEC_INTAKE.pos
     }
+    fun action() : Action {
+        val slides = this
+        return object : Action {
+            override fun init() {}
 
+            override fun update(): Boolean {
+                slides.update()
+                return false
+            }
+
+        }
+    }
 }

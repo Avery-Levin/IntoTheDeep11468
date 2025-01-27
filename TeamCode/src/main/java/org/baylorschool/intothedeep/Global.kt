@@ -2,7 +2,10 @@ package org.baylorschool.intothedeep
 
 import com.acmerobotics.dashboard.config.Config
 import com.qualcomm.robotcore.hardware.Gamepad
+import org.baylorschool.intothedeep.Global.PivotPIDConfig.target
 import org.baylorschool.intothedeep.lib.DiffyPos
+import org.baylorschool.intothedeep.lib.Pivot
+import org.firstinspires.ftc.teamcode.lib.Slides
 
 @Config
 object Global {
@@ -14,9 +17,9 @@ object Global {
 
     // odo
     const val odo = "odo"
-    const val xOffset = 4.035
-    const val yOffset = 1.673
-    const val mass = 5.44217
+    const val xOffset = -3.03//-4.0309
+    const val yOffset = -4.21//-1.673
+    const val mass = 12.24
 
     // diffy
     val diffyIdle = DiffyPos(0.515, 0.5139)
@@ -44,7 +47,18 @@ object Global {
         RESET(0.0), INTAKE(1000.0),
         LOW_BASKET(0.0), HIGH_BASKET(2300.0),
         SPEC_INTAKE(120.0), LOW_CHAMBER(0.0), HIGH_CHAMBER(950.0), HIGH_CHAMBER_SNAP(450.0),
-        LOW_RUNG(0.0), HIGH_RUNG(0.0),
+        FWINTAKE(500.0),
+        LOW_RUNG(0.0), HIGH_RUNG(0.0),;
+        fun action(slides: Slides) : Action {
+            val x = this
+            return object : Action {
+                override fun init() {
+                    SlidePIDConfig.target = x.pos
+                }
+
+                override fun update(): Boolean = slides.close()
+            }
+        }
     }
     @Config
     object SlidePIDConfig {
@@ -57,6 +71,17 @@ object Global {
     enum class PivotPresets(var pos: Double) {
         RESET(20.0), DEPO(1240.0),
         SPEC_DEPOSIT(1000.0), LOW_RUNG(0.0), HIGH_RUNG(0.0),
+        WALL_PICKUP(100.0);
+        fun action(pivot: Pivot) : Action {
+            val x = this
+            return object : Action {
+                override fun init() {
+                    target = x.pos
+                }
+
+                override fun update(): Boolean = pivot.close()
+            }
+        }
     }
 
     @Config
