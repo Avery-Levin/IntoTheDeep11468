@@ -32,6 +32,10 @@ class Depo(hardwareMap: HardwareMap) {
         telemetry.addData("claw pos", claw.position)
     }
 
+    fun set(diffyPosition: Global.DiffyPosition) {
+        diffyPosition.diffyPos.set(diffyL, diffyR)
+    }
+
     fun openClaw() {
         claw.position = Global.clawOpen
     }

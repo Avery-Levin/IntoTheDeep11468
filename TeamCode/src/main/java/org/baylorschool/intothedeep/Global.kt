@@ -21,6 +21,16 @@ object Global {
     const val yOffset = -4.21//-1.673
     const val mass = 12.24
 
+    enum class DiffyPosition(val diffyPos: DiffyPos) {
+        DiffyIdle(diffyIdle),
+        Diffy45(diffy45),
+        Diffy90(diffy90),
+        Diffy135(diffy135),
+        DiffyRetract(diffyRetract),
+        DiffyBasket(diffyBasket),
+        DiffySpecIntake(diffySpecIntake),
+        DiffySpecDepo(diffySpecDepo)
+    }
     // diffy
     val diffyIdle = DiffyPos(0.515, 0.5139)
     val diffy45 = DiffyPos(0.5661, 0.6094)
