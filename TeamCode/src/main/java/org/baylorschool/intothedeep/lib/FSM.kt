@@ -109,8 +109,14 @@ class FSM(hardwareMap: HardwareMap) {
                 if (difference < slideThreshold) {
                     pivot.deposit()
                 }
+                if (gamepad.right_bumper) {
+                    depo.claw.position = 0.55
+                } else if (gamepad.left_bumper) {
+                    depo.claw.position = 1.0
+                }
 
-                if (transTimer.seconds() > transDelay) {
+
+            if (transTimer.seconds() > transDelay) {
                     if (gamepad.dpad_up) {
                         slides.highBasket()
                         slideThreshold = 200.0
@@ -166,7 +172,7 @@ class FSM(hardwareMap: HardwareMap) {
             } RobotState.SPEC_INTAKE -> {
                 slides.specIntake()
                 depo.specIntake()
-                pivot.deposit()
+                pivot.specIntake()
                 if (gamepad.right_bumper) {
                     depo.claw.position = 0.55
                 } else if (gamepad.left_bumper) {

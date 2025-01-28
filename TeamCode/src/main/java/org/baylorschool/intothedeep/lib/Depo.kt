@@ -79,6 +79,8 @@ class Depo(hardwareMap: HardwareMap) {
         Global.diffySpecDepo.set(diffyL, diffyR)
     }
 
+
+
     fun tuning(gamepad: Gamepad) {
         if (gamepad.dpad_up) {
             diffyL.position += 0.0003

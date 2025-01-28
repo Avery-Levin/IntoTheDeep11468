@@ -70,6 +70,10 @@ class Pivot(hardwareMap: HardwareMap) {
         target = Global.PivotPresets.DEPO.pos
     }
 
+    fun specIntake() {
+        target = Global.PivotPresets.WALL_PICKUP.pos
+    }
+
     fun specDeposit() {
         target = Global.PivotPresets.SPEC_DEPOSIT.pos
     }
