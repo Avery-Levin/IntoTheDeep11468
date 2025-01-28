@@ -31,16 +31,19 @@ object Global {
         DiffySpecIntake(diffySpecIntake),
         DiffySpecDepo(diffySpecDepo)
     }
+
     // diffy
-    val diffyIdle = DiffyPos(0.515, 0.5139)
-    val diffy45 = DiffyPos(0.5661, 0.6094)
-    val diffy90 = DiffyPos(0.5578, 0.6278)
-    val diffy135 = DiffyPos(0.6106, 0.575)
-    val diffy180 = DiffyPos(0.595, 0.5911)
-    val diffyRetract = DiffyPos (0.5472, 0.4939)
-    val diffyBasket = DiffyPos(0.5361, 0.47)
-    val diffySpecIntake = DiffyPos(0.4222,0.4017)
-    val diffySpecDepo = DiffyPos(0.5222, 0.6383)
+    val standardL = 0.5211
+    val standardR = 0.5289
+    val diffyIdle = DiffyPos(standardL, standardR)
+    val diffy45 = DiffyPos(standardL+0.0511, standardR+0.0955)
+    val diffy90 = DiffyPos(standardL+0.0428, standardR+0.1139)
+    val diffy135 = DiffyPos(standardL+0.0956, standardR+0.0611)
+    val diffy180 = DiffyPos(standardL+.08, standardR+0.0772)
+    val diffyRetract = DiffyPos (standardL+0.0322, standardR-0.02)
+    val diffyBasket = DiffyPos(standardL+0.0211, standardR-0.0439)
+    val diffySpecIntake = DiffyPos(standardL-0.0961, standardR-0.0983)
+    val diffySpecDepo = DiffyPos(standardL+0.0511, standardR+0.055)
 
     const val clawOpen = 0.55
     const val clawClosed = 1.0
@@ -56,7 +59,7 @@ object Global {
     enum class SlidePresets(var pos: Double) {
         RESET(0.0), INTAKE(1000.0),
         LOW_BASKET(0.0), HIGH_BASKET(2300.0),
-        SPEC_INTAKE(120.0), LOW_CHAMBER(0.0), HIGH_CHAMBER(950.0), HIGH_CHAMBER_SNAP(450.0),
+        SPEC_INTAKE(100.0), LOW_CHAMBER(0.0), HIGH_CHAMBER(1100.0), HIGH_CHAMBER_SNAP(380.0),
         FWINTAKE(500.0),
         LOW_RUNG(0.0), HIGH_RUNG(0.0),;
         fun action(slides: Slides) : Action {
@@ -79,8 +82,8 @@ object Global {
 
     //pivot
     enum class PivotPresets(var pos: Double) {
-        RESET(20.0), DEPO(1240.0),
-        SPEC_DEPOSIT(1000.0), LOW_RUNG(0.0), HIGH_RUNG(0.0),
+        RESET(20.0), DEPO(1200.0),
+        SPEC_DEPOSIT(900.0), LOW_RUNG(0.0), HIGH_RUNG(0.0),
         WALL_PICKUP(100.0);
         fun action(pivot: Pivot) : Action {
             val x = this
@@ -96,7 +99,7 @@ object Global {
 
     @Config
     object PivotPIDConfig {
-        @JvmField var p: Double = 0.006
+        @JvmField var p: Double = 0.007
         @JvmField var i: Double = 0.000
         @JvmField var d: Double = 0.00001
         @JvmField var fg: Double = 0.15
