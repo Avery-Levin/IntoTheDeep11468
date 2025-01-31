@@ -99,4 +99,12 @@ class Slides(hardwareMap: HardwareMap) {
 
         }
     }
+
+    fun tuning(gamepad2: Gamepad?) {
+        if (gamepad2!!.dpad_up) {
+            target++
+        } else if (gamepad2.dpad_down) {
+            target--
+        }
+    }
 }

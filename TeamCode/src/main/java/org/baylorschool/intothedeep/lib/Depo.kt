@@ -3,6 +3,7 @@ package org.baylorschool.intothedeep.lib
 import com.qualcomm.robotcore.hardware.Gamepad
 import com.qualcomm.robotcore.hardware.HardwareMap
 import com.qualcomm.robotcore.hardware.Servo
+import org.baylorschool.intothedeep.Action
 import org.baylorschool.intothedeep.Global
 import org.firstinspires.ftc.robotcore.external.Telemetry
 
@@ -10,6 +11,16 @@ class DiffyPos (var left: Double, var right: Double) {
     fun set(diffyLeft: Servo, diffyRight: Servo) {
         diffyLeft.position = left
         diffyRight.position = right
+    }
+
+    fun setAction(depo: Depo): Action {
+        val depopos = this
+        return object : Action {
+            override fun init() {
+                depo.set(depopos)
+            }
+            override fun update(): Boolean { return true }
+        }
     }
 }
 
@@ -34,6 +45,22 @@ class Depo(hardwareMap: HardwareMap) {
 
     fun set(diffyPosition: Global.DiffyPosition) {
         diffyPosition.diffyPos.set(diffyL, diffyR)
+    }
+    fun set(diffyPos: DiffyPos) {
+        diffyPos.set(diffyL, diffyR)
+    }
+    fun setClaw(open: Boolean): Action {
+        val depo = this
+        return object : Action {
+            override fun init() {
+                if (open) {
+                    depo.openClaw()
+                } else {
+                    depo.closeClaw()
+                }
+            }
+            override fun update(): Boolean { return true }
+        }
     }
 
     fun openClaw() {

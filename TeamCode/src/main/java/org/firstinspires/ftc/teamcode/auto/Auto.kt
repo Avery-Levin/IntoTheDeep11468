@@ -13,6 +13,7 @@ import org.baylorschool.intothedeep.ActionGroup
 import org.baylorschool.intothedeep.ActionSet
 import org.baylorschool.intothedeep.Global
 import org.baylorschool.intothedeep.ensureMinTime
+import org.baylorschool.intothedeep.lib.Depo
 import org.baylorschool.intothedeep.lib.Pivot
 import org.firstinspires.ftc.teamcode.Driver
 import org.firstinspires.ftc.teamcode.lib.Slides
@@ -23,6 +24,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants
 class Auto : LinearOpMode() {
     //private val startPos = Pose(-32.0, -5.0*12.0, Math.toRadians(90.0))
     private val placePreloadPos = Pose(21.0, 0.0, 0.0)
+    private val placePreloadPos1 = Pose(25.0, 0.0, 0.0)
     private val push0StartPos = Pose(49.5, -46.5, 0.0)
     private val push0BezierPosA = Pose(-7.5, -53.0, 0.0)//toward human player
     private val push0BezierPosB = Pose(53.0, -23.5, 0.0)
@@ -39,10 +41,10 @@ class Auto : LinearOpMode() {
         val driver = Driver(Follower(hardwareMap), Pose(0.0, 0.0, 0.0))
 
         val telemetryA = MultipleTelemetry(telemetry, FtcDashboard.getInstance().telemetry)
-        val pivot = Pivot(hardwareMap)
-        val slides = Slides(hardwareMap)
+        val pivot = Pivot(hardwareMap)//up down
+        val slides = Slides(hardwareMap)//forward back
+        val depo = Depo(hardwareMap)//THE CLAW
         telemetryA.update()
-
         driver.update()
 
         waitForStart()
@@ -56,31 +58,25 @@ class Auto : LinearOpMode() {
             driver.runToAction(push2EndPos),*/
 
             ensureMinTime(driver.runToAction(pickup0Pos), 2000, true),
-            Global.PivotPresets.SPEC_DEPOSIT.action(pivot),
-            Global.SlidePresets.FWINTAKE.action(slides),
+            Global.PivotPresets.WALL_PICKUP_AUTO.action(pivot),
+            ensureMinTime(Global.DiffyPosition.DiffySpecIntake.diffyPos.setAction(depo),1000),
+            ensureMinTime(depo.setClaw(true), 1000),
+            Global.SlidePresets.FWINTAKE_AUTO.action(slides),
+            ensureMinTime(depo.setClaw(false), 1000),
+            Global.PivotPresets.WALL_PICKUP_UP_AUTO.action(pivot),
             Global.SlidePresets.RESET.action(slides),
             driver.runToAction(placePreloadPos),
-            Global.PivotPresets.DEPO.action(pivot),
-            Global.SlidePresets.HIGH_CHAMBER.action(slides),
-            Global.SlidePresets.RESET.action(slides),
-
-            /*ensureMinTime(driver.runToAction(pickup0Pos), 2000, true),
-            Global.PivotPresets.SPEC_INTAKE.action(pivot),
-            Global.SlidePresets.INTAKE.action(slides),
-            Global.SlidePresets.RESET.action(slides),
-            driver.runToAction(placePreloadPos),
-            Global.PivotPresets.DEPO.action(pivot),
-            Global.SlidePresets.HIGH_CHAMBER.action(slides),
-            Global.SlidePresets.RESET.action(slides),
-
-            ensureMinTime(driver.runToAction(pickup0Pos), 2000, true),
-            Global.PivotPresets.SPEC_INTAKE.action(pivot),
-            Global.SlidePresets.INTAKE.action(slides),
-            Global.SlidePresets.RESET.action(slides),
-            driver.runToAction(placePreloadPos),
-            Global.PivotPresets.DEPO.action(pivot),
-            Global.SlidePresets.HIGH_CHAMBER.action(slides),
-            Global.SlidePresets.RESET.action(slides),*/
+            ActionGroup (
+                Global.PivotPresets.SPEC_DEPOSIT_AUTO.action(pivot),
+                ensureMinTime(Global.DiffyPosition.DiffySpecDepo.diffyPos.setAction(depo), 1000),
+            ),
+            Global.SlidePresets.HIGH_CHAMBER_AUTO.action(slides),
+            driver.runToAction(placePreloadPos1),
+            Global.SlidePresets.HIGH_CHAMBER_DROP_AUTO.action(slides),
+            ActionGroup (
+                Global.SlidePresets.RESET.action(slides),
+                depo.setClaw(true)
+            )
         ), pivot.action(), slides.action(), driverAction(driver)).execute()
         driver.holdPoint(placePreloadPos)
 

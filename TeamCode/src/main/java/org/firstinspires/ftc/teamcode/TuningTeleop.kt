@@ -16,6 +16,7 @@ class TuningTeleOp: LinearOpMode() {
         val telemetryMultiple = MultipleTelemetry(telemetry, FtcDashboard.getInstance().telemetry)
         val mecanum = Mecanum(hardwareMap)
         val pivot = Pivot(hardwareMap)
+        pivot.specDeposit()
         val slide = Slides(hardwareMap)
         val depo = Depo(hardwareMap)
         var loopTime = 0.0
@@ -29,6 +30,7 @@ class TuningTeleOp: LinearOpMode() {
             depo.tuning(gamepad1)
             pivot.update()
             slide.update()
+            slide.tuning(gamepad2)
 
             depo.telemetry(telemetryMultiple)
             pivot.telemetry(telemetryMultiple)

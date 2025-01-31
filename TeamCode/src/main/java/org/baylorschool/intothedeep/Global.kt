@@ -59,9 +59,11 @@ object Global {
     //slides
     enum class SlidePresets(var pos: Double) {
         RESET(0.0), INTAKE(1000.0),
-        LOW_BASKET(0.0), HIGH_BASKET(2300.0),
+        LOW_BASKET(0.0), HIGH_BASKET(2300.0),//7
         SPEC_INTAKE(300.0), LOW_CHAMBER(0.0), HIGH_CHAMBER(800.0), HIGH_CHAMBER_SNAP(200.0),
         FWINTAKE(500.0),
+        HIGH_CHAMBER_AUTO(580.0),
+        FWINTAKE_AUTO(525.0), HIGH_CHAMBER_DROP_AUTO(475.0),
         LOW_RUNG(0.0), HIGH_RUNG(0.0),;
         fun action(slides: Slides) : Action {
             val x = this
@@ -84,8 +86,10 @@ object Global {
     //pivot
     enum class PivotPresets(var pos: Double) {
         RESET(20.0), DEPO(1200.0),
-        SPEC_DEPOSIT(900.0), LOW_RUNG(0.0), HIGH_RUNG(0.0),
-        WALL_PICKUP(225.0);
+        SPEC_DEPOSIT(900.0),
+        WALL_PICKUP(225.0),
+        SPEC_DEPOSIT_AUTO(975.0), LOW_RUNG(0.0), HIGH_RUNG(0.0),
+        WALL_PICKUP_AUTO(260.0), WALL_PICKUP_UP_AUTO(275.0);//up before pull next
         fun action(pivot: Pivot) : Action {
             val x = this
             return object : Action {
