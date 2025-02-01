@@ -151,7 +151,7 @@ class FSM(hardwareMap: HardwareMap) {
 
             } RobotState.SAMPLE_RETRACT -> {
                 slides.slidePos = (slides.slideR.currentPosition.toDouble() * -1) - slides.offset
-                pivot.pivotPos = (pivot.pivotL.currentPosition.toDouble()) - pivot.offset
+                pivot.pivotPos = (pivot.pivotL.currentPosition.toDouble()) - pivot.offset + 1150
                 difference = (slides.slidePos + lowerCheck) - Global.SlidePresets.RESET.pos
                 if (clawMoveTimer.seconds() < clawMoveDelay) {
                     retractTimer.reset()
@@ -180,7 +180,7 @@ class FSM(hardwareMap: HardwareMap) {
                 }
 
                 if (gamepad.dpad_up) {
-                    rumble.rumble(10.0,1.0,400)
+                    rumble.rumble(1.0,1.0,400)
                     pivot.specDeposit()
                     depo.diffySpec()
                     slides.highChamber()

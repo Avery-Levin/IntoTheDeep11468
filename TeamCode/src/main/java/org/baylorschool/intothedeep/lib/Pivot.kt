@@ -37,7 +37,7 @@ class Pivot(hardwareMap: HardwareMap) {
         pivotL.direction = DcMotorSimple.Direction.REVERSE
 
         offset = pivotL.currentPosition
-        pivotPos = (pivotL.currentPosition.toDouble()) - offset
+        pivotPos = (pivotL.currentPosition.toDouble()) - offset + 1150
         target = 0.0
         pivotL.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
         pivotR.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
@@ -52,7 +52,7 @@ class Pivot(hardwareMap: HardwareMap) {
     fun update() {
         controller.targetPosition = target
         correctedValue = target / ticks_per_degree
-        pivotPos = (pivotL.currentPosition.toDouble()) - offset
+        pivotPos = (pivotL.currentPosition.toDouble()) - offset + 1150
         armPower = controller.update(pivotPos) + ((cos(Math.toRadians(correctedValue))) * fg)
         pivotL.power = armPower
         pivotR.power = armPower

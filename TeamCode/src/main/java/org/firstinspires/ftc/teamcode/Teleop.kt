@@ -23,6 +23,7 @@ class TeleOp: LinearOpMode() {
         val fsm = FSM(hardwareMap)
         var loopTime = 0.0
         var loop: Double
+        depo.diffy180()
 
         waitForStart()
         resetRuntime()

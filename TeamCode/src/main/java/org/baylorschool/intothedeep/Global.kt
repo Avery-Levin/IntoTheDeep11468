@@ -33,8 +33,8 @@ object Global {
     }
 
     // diffy
-    val standardL = 0.5133
-    val standardR = 0.5367
+    val standardL = 0.505
+    val standardR = 0.5344
     val diffyIdle = DiffyPos(standardL, standardR)
     val diffy45 = DiffyPos(standardL+0.0511, standardR+0.0955)
     val diffy90 = DiffyPos(standardL+0.0428, standardR+0.1139)
@@ -42,9 +42,8 @@ object Global {
     val diffy180 = DiffyPos(standardL+.08, standardR+0.0772)
     val diffyRetract = DiffyPos (standardL+0.0322, standardR-0.02)
     val diffyBasket = DiffyPos(standardL+0.0211, standardR-0.0439)
-    val diffySpecIntake = DiffyPos(standardL+0.03, standardR+0.03)
+    val diffySpecIntake = DiffyPos(standardL+0.026, standardR+0.026)
     val diffySpecDepo = DiffyPos(standardL-.1023, standardR+0.0233)
-
 
     const val clawOpen = 0.55
     const val clawClosed = 1.0
@@ -76,6 +75,7 @@ object Global {
             }
         }
     }
+
     @Config
     object SlidePIDConfig {
         @JvmField var p: Double = 0.01
@@ -85,7 +85,7 @@ object Global {
 
     //pivot
     enum class PivotPresets(var pos: Double) {
-        RESET(20.0), DEPO(1200.0),
+        RESET(20.0), DEPO(1150.0),
         SPEC_DEPOSIT(900.0),
         WALL_PICKUP(225.0),
         SPEC_DEPOSIT_AUTO(975.0), LOW_RUNG(0.0), HIGH_RUNG(0.0),
@@ -107,7 +107,7 @@ object Global {
         @JvmField var p: Double = 0.007
         @JvmField var i: Double = 0.000
         @JvmField var d: Double = 0.00001
-        @JvmField var fg: Double = 0.15
+        @JvmField var fg: Double = 0.015
         @JvmField var target: Double = 0.0
     }
 }
