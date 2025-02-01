@@ -86,6 +86,7 @@ class FSM(hardwareMap: HardwareMap) {
                         depo.diffy90()
                     } else if (gamepad.left_stick_button) {
                         depo.idle()
+                        slides.reset()
                     } else if (gamepad.right_bumper) {
                         depo.claw.position = 0.55
                     } else if (gamepad.left_bumper) {

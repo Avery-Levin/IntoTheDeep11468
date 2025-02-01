@@ -37,7 +37,7 @@ class Pivot(hardwareMap: HardwareMap) {
         pivotL.direction = DcMotorSimple.Direction.REVERSE
 
         offset = pivotL.currentPosition
-        pivotPos = (pivotL.currentPosition.toDouble()) - offset + 1150
+        pivotPos = (pivotL.currentPosition.toDouble()) - offset + 1200
         target = 0.0
         pivotL.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
         pivotR.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
