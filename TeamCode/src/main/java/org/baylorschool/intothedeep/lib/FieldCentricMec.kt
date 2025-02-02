@@ -74,7 +74,7 @@ class FieldCentricMec(hardwareMap: HardwareMap) {
      */
 
     private fun reset() {
-        offset = odo.heading + Math.PI
+        offset = odo.heading
         botHeading = odo.heading - offset
     }
 

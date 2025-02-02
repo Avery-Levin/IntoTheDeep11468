@@ -32,4 +32,5 @@ repositories {
 dependencies {
     implementation project(':FtcRobotController')
     implementation 'com.github.Eeshwar-Krishnan:PhotonFTC:v3.0.2-ALPHA'
+    implementation 'org.ftclib.ftclib:core:2.1.1'
 }

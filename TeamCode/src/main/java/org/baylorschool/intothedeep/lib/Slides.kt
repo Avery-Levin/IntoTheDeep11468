@@ -41,7 +41,7 @@ class Slides(hardwareMap: HardwareMap) {
         slideR.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.FLOAT
 
         offset = slideR.currentPosition * -1
-        slidePos = slideR.currentPosition.toDouble() - offset
+        slidePos = slideR.currentPosition.toDouble() //- offset
         target = 0.0
     }
 
@@ -53,7 +53,7 @@ class Slides(hardwareMap: HardwareMap) {
 
     fun update() {
         correctedValue = target / ticks_per_degree
-        slidePos = (slideR.currentPosition.toDouble() * -1) - offset
+        slidePos = (slideR.currentPosition.toDouble() * -1) //- offset
         controller.targetPosition = target
         slidePower = controller.update(slidePos) + fg
         slideL.power = slidePower
