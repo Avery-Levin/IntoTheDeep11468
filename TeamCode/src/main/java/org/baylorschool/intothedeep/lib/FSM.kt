@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.lib.Slides
 class FSM(hardwareMap: HardwareMap) {
 
     enum class RobotState {
-        START, INTAKE, SPEC_INTAKE, INTAKE_RETRACT, SAMPLE_DEPOSIT, SAMPLE_RETRACT, SPEC_DEPOSIT, SPEC_RETRACT
+        START, INTAKE, SPEC_INTAKE, INTAKE_RETRACT, SAMPLE_DEPOSIT, SAMPLE_RETRACT, SPEC_DEPOSIT, SPEC_RETRACT, HANG
     }
 
     private val slides = Slides(hardwareMap)
@@ -20,7 +20,7 @@ class FSM(hardwareMap: HardwareMap) {
     private var transTimer = ElapsedTime()
     private var retractTimer = ElapsedTime()
     private var clawMoveTimer = ElapsedTime()
-    private val retractDelay = 0.2
+    private val retractDelay = 0.4
     private var transDelay = 0.0
     private var clawMoveDelay = 0.3
     private val intakeThreshold = 200.0
@@ -49,7 +49,6 @@ class FSM(hardwareMap: HardwareMap) {
     fun loop(gamepad: Gamepad, rumble: Gamepad) {
         when(state) {
             RobotState.START -> {
-                depo.openClaw()
                 depo.idle()
                 pivot.reset()
                 slides.reset()
@@ -68,6 +67,7 @@ class FSM(hardwareMap: HardwareMap) {
                     state = RobotState.SPEC_INTAKE
                 }
             } RobotState.INTAKE -> {
+                depo.openClaw()
                 slides.slidePos = (slides.slideR.currentPosition.toDouble() * -1) - slides.offset
                 difference = Global.SlidePresets.INTAKE.pos - slides.slidePos
                 if (difference < intakeThreshold && transition) {
@@ -86,7 +86,6 @@ class FSM(hardwareMap: HardwareMap) {
                         depo.diffy90()
                     } else if (gamepad.left_stick_button) {
                         depo.idle()
-                        slides.reset()
                     } else if (gamepad.right_bumper) {
                         depo.claw.position = 0.55
                     } else if (gamepad.left_bumper) {
@@ -152,13 +151,13 @@ class FSM(hardwareMap: HardwareMap) {
 
             } RobotState.SAMPLE_RETRACT -> {
                 slides.slidePos = (slides.slideR.currentPosition.toDouble() * -1) - slides.offset
-                pivot.pivotPos = (pivot.pivotL.currentPosition.toDouble()) - pivot.offset + 1150
+                pivot.pivotPos = (pivot.pivotL.currentPosition.toDouble()) - pivot.offset
                 difference = (slides.slidePos + lowerCheck) - Global.SlidePresets.RESET.pos
                 if (clawMoveTimer.seconds() < clawMoveDelay) {
                     retractTimer.reset()
                 }
                 if (clawMoveTimer.seconds() > clawMoveDelay) {
-                    depo.diffy90()
+                    depo.diffy180()
                 }
                 if (retractTimer.seconds() > retractDelay) {
                     depo.idle()
@@ -211,6 +210,8 @@ class FSM(hardwareMap: HardwareMap) {
                 if (gamepad.a) {
                     state = RobotState.START
                 }
+            } RobotState.HANG -> {
+
             }
         }
 

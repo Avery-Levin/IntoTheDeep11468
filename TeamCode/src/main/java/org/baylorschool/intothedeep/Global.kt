@@ -85,11 +85,12 @@ object Global {
 
     //pivot
     enum class PivotPresets(var pos: Double) {
-        RESET(20.0), DEPO(1150.0),
+        RESET(0.0), DEPO(1150.0),
         SPEC_DEPOSIT(950.0),
         WALL_PICKUP(230.0),
-        SPEC_DEPOSIT_AUTO(975.0), LOW_RUNG(0.0), HIGH_RUNG(0.0),
-        WALL_PICKUP_AUTO(260.0), WALL_PICKUP_UP_AUTO(275.0);//up before pull next
+        SPEC_DEPOSIT_AUTO(975.0),
+        WALL_PICKUP_AUTO(260.0), WALL_PICKUP_UP_AUTO(275.0),//up before pull next
+        LOW_RUNG(0.0), HIGH_RUNG(0.0);
         fun action(pivot: Pivot) : Action {
             val x = this
             return object : Action {

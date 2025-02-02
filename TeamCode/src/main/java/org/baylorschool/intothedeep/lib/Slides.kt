@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.lib
 
+import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.Gamepad
@@ -32,6 +33,13 @@ class Slides(hardwareMap: HardwareMap) {
         slideL = hardwareMap.get(DcMotorEx::class.java, "slideL")
         slideR = hardwareMap.get(DcMotorEx::class.java, "slideR")
         slideL.direction = DcMotorSimple.Direction.REVERSE
+        slideR.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
+
+        slideL.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
+        slideR.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
+        slideL.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.FLOAT
+        slideR.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.FLOAT
+
         offset = slideR.currentPosition * -1
         slidePos = slideR.currentPosition.toDouble() - offset
         target = 0.0
@@ -87,6 +95,11 @@ class Slides(hardwareMap: HardwareMap) {
     fun specIntake() {
         target = Global.SlidePresets.SPEC_INTAKE.pos
     }
+
+    fun l2Hang() {
+        PivotPIDConfig.target = Global.PivotPresets.LOW_RUNG.pos
+    }
+
     fun action() : Action {
         val slides = this
         return object : Action {

@@ -24,27 +24,31 @@ class Pivot(hardwareMap: HardwareMap) {
     private val pivotR : DcMotorEx
     var pivotPos: Double = 0.0
     private val control = PIDCoefficients(p, i, d)
-    val controller = PIDFController(control)
+    private val controller = PIDFController(control)
     private var armPower = 0.0
     var offset = 0
     private val high: Int = 1300
-    private val low: Int = 10
+    private val low: Int = -1
 
     init {
         controller.targetPosition = target
         pivotL = hardwareMap.get(DcMotorEx::class.java, "pivotL")
         pivotR = hardwareMap.get(DcMotorEx::class.java, "pivotR")
         pivotL.direction = DcMotorSimple.Direction.REVERSE
+        pivotL.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
+
+        pivotL.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
+        pivotR.mode = DcMotor.RunMode.RUN_WITHOUT_ENCODER
+        pivotL.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.FLOAT
+        pivotR.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.FLOAT
 
         offset = pivotL.currentPosition
-        pivotPos = (pivotL.currentPosition.toDouble()) - offset + 1200
+        pivotPos = (pivotL.currentPosition.toDouble()) - offset
         target = 0.0
-        pivotL.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
-        pivotR.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.BRAKE
     }
 
     fun telemetry(telemetry: Telemetry) {
-        telemetry.addData("arm Motor Position", pivotPos)
+        telemetry.addData("arm Motor Position", pivotPos/ticks_per_degree)
         telemetry.addData("arm Target Position", target)
         telemetry.addData("arm power",pivotL.power)
     }
@@ -52,12 +56,13 @@ class Pivot(hardwareMap: HardwareMap) {
     fun update() {
         controller.targetPosition = target
         correctedValue = target / ticks_per_degree
-        pivotPos = (pivotL.currentPosition.toDouble()) - offset + 1150
-        armPower = controller.update(pivotPos) + ((cos(Math.toRadians(correctedValue))) * fg)
+        pivotPos = (pivotL.currentPosition.toDouble()) - offset
+        armPower = (controller.update(pivotPos) * ((cos(Math.toRadians(correctedValue))) * fg))
         pivotL.power = armPower
         pivotR.power = armPower
         target = Global.hardStops(target.toInt(), low, high).toDouble()
     }
+
     fun close(): Boolean {
         return abs(target - pivotPos) < 30
     }
@@ -77,6 +82,11 @@ class Pivot(hardwareMap: HardwareMap) {
     fun specDeposit() {
         target = Global.PivotPresets.SPEC_DEPOSIT.pos
     }
+
+    fun l2Hang() {
+        target = Global.PivotPresets.LOW_RUNG.pos
+    }
+
     fun action() : Action {
         val pivot = this
         return object : Action {
