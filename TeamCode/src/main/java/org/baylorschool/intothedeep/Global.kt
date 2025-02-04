@@ -33,8 +33,8 @@ object Global {
     }
 
     // diffy
-    val standardL = 0.505
-    val standardR = 0.5344
+    val standardL = 0.4583
+    val standardR = 0.5039
     val diffyIdle = DiffyPos(standardL, standardR)
     val diffy45 = DiffyPos(standardL+0.0511, standardR+0.0955)
     val diffy90 = DiffyPos(standardL+0.0428, standardR+0.1139)
@@ -105,9 +105,9 @@ object Global {
 
     @Config
     object PivotPIDConfig {
-        @JvmField var p: Double = 0.02
+        @JvmField var p: Double = 0.031
         @JvmField var i: Double = 0.000
-        @JvmField var d: Double = 0.00000
+        @JvmField var d: Double = 0.000022
         @JvmField var fg: Double = 0.00
         @JvmField var target: Double = 0.0
     }

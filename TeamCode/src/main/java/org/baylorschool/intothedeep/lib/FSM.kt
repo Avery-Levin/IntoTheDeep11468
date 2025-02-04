@@ -61,13 +61,13 @@ class FSM(hardwareMap: HardwareMap) {
                 }
 
                 if (gamepad.y) {
+                    depo.openClaw()
                     transition = true
                     transDelay = 0.4
                     transTimer.reset()
                     state = RobotState.SPEC_INTAKE
                 }
             } RobotState.INTAKE -> {
-                depo.openClaw()
                 slides.slidePos = (slides.slideR.currentPosition.toDouble() * -1)
                 difference = Global.SlidePresets.INTAKE.pos - slides.slidePos
                 if (difference < intakeThreshold && transition) {

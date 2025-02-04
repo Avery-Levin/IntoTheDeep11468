@@ -19,7 +19,7 @@ import kotlin.math.abs
 import kotlin.math.cos
 
 class Pivot(hardwareMap: HardwareMap) {
-    private val ticks_per_degree =  (2786.2/1.583333) / 360.0
+    private val ticks_per_degree =  (2786.2/1.583333) / 180.0
     private var correctedValue = target/ticks_per_degree
     val pivotL: DcMotorEx
     private val pivotR : DcMotorEx
