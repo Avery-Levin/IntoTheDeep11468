@@ -68,7 +68,7 @@ class FSM(hardwareMap: HardwareMap) {
                 }
             } RobotState.INTAKE -> {
                 depo.openClaw()
-                slides.slidePos = (slides.slideR.currentPosition.toDouble() * -1) - slides.offset
+                slides.slidePos = (slides.slideR.currentPosition.toDouble() * -1)
                 difference = Global.SlidePresets.INTAKE.pos - slides.slidePos
                 if (difference < intakeThreshold && transition) {
                     depo.diffy180()
@@ -104,7 +104,7 @@ class FSM(hardwareMap: HardwareMap) {
                 }
 
             } RobotState.INTAKE_RETRACT -> {
-                slides.slidePos = (slides.slideR.currentPosition.toDouble() * -1) - slides.offset
+                slides.slidePos = (slides.slideR.currentPosition.toDouble() * -1)
                 difference = (slides.slidePos + lowerCheck) - Global.SlidePresets.RESET.pos
                 if (difference < slideThreshold) {
                     pivot.deposit()
@@ -128,7 +128,7 @@ class FSM(hardwareMap: HardwareMap) {
                 }
 
             } RobotState.SAMPLE_DEPOSIT -> {
-                slides.slidePos = (slides.slideR.currentPosition.toDouble() * -1) - slides.offset
+                slides.slidePos = (slides.slideR.currentPosition.toDouble() * -1)
                 difference = Global.SlidePresets.HIGH_BASKET.pos - slides.slidePos
                 if ((difference < slideThreshold)) {
                     depo.diffyBasket()
@@ -150,7 +150,7 @@ class FSM(hardwareMap: HardwareMap) {
                 }
 
             } RobotState.SAMPLE_RETRACT -> {
-                slides.slidePos = (slides.slideR.currentPosition.toDouble() * -1) - slides.offset
+                slides.slidePos = (slides.slideR.currentPosition.toDouble() * -1)
                 pivot.pivotPos = (pivot.pivotL.currentPosition.toDouble()) - pivot.offset
                 difference = (slides.slidePos + lowerCheck) - Global.SlidePresets.RESET.pos
                 if (clawMoveTimer.seconds() < clawMoveDelay) {
@@ -199,7 +199,7 @@ class FSM(hardwareMap: HardwareMap) {
                 }
 
             } RobotState.SPEC_RETRACT -> {
-                slides.slidePos = (slides.slideR.currentPosition.toDouble() * -1) - slides.offset
+                slides.slidePos = (slides.slideR.currentPosition.toDouble() * -1)
                 difference = slides.slidePos - Global.SlidePresets.HIGH_CHAMBER_SNAP.pos
                 if (difference < slideThreshold) {
                     depo.claw.position = 0.55
