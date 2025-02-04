@@ -3,6 +3,7 @@ package org.baylorschool.intothedeep.lib
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.hardware.DcMotorSimple
+import com.qualcomm.robotcore.hardware.DigitalChannel
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.baylorschool.intothedeep.Action
 import org.baylorschool.intothedeep.Global
@@ -22,6 +23,7 @@ class Pivot(hardwareMap: HardwareMap) {
     private var correctedValue = target/ticks_per_degree
     val pivotL: DcMotorEx
     private val pivotR : DcMotorEx
+    private val switch: DigitalChannel
     var pivotPos: Double = 0.0
     private val control = PIDCoefficients(p, i, d)
     private val controller = PIDFController(control)
@@ -34,6 +36,7 @@ class Pivot(hardwareMap: HardwareMap) {
         controller.targetPosition = target
         pivotL = hardwareMap.get(DcMotorEx::class.java, "pivotL")
         pivotR = hardwareMap.get(DcMotorEx::class.java, "pivotR")
+        switch = hardwareMap.get(DigitalChannel::class.java, "switch")
         pivotL.direction = DcMotorSimple.Direction.REVERSE
         pivotL.mode = DcMotor.RunMode.STOP_AND_RESET_ENCODER
 
@@ -48,16 +51,18 @@ class Pivot(hardwareMap: HardwareMap) {
     }
 
     fun telemetry(telemetry: Telemetry) {
-        telemetry.addData("arm Motor Position", pivotPos/ticks_per_degree)
+        telemetry.addData("arm angle", pivotPos/ticks_per_degree)
+        telemetry.addData("arm Motor Position", pivotPos)
         telemetry.addData("arm Target Position", target)
         telemetry.addData("arm power",pivotL.power)
+        telemetry.addData("switch", switch.state)
     }
 
     fun update() {
         controller.targetPosition = target
         correctedValue = target / ticks_per_degree
         pivotPos = (pivotL.currentPosition.toDouble()) //- offset
-        armPower = (controller.update(pivotPos) * ((cos(Math.toRadians(correctedValue))) * fg))
+        armPower = controller.update(pivotPos) //* ((cos(Math.toRadians(correctedValue))) * fg))
         pivotL.power = armPower
         pivotR.power = armPower
         target = Global.hardStops(target.toInt(), low, high).toDouble()

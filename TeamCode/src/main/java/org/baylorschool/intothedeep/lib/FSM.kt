@@ -89,7 +89,7 @@ class FSM(hardwareMap: HardwareMap) {
                     } else if (gamepad.right_bumper) {
                         depo.claw.position = 0.55
                     } else if (gamepad.left_bumper) {
-                        depo.claw.position = 1.0
+                        depo.claw.position = 0.9
                     }
                 }
 
@@ -112,7 +112,7 @@ class FSM(hardwareMap: HardwareMap) {
                 if (gamepad.right_bumper) {
                     depo.claw.position = 0.55
                 } else if (gamepad.left_bumper) {
-                    depo.claw.position = 1.0
+                    depo.claw.position = 0.9
                 }
 
 
@@ -176,7 +176,7 @@ class FSM(hardwareMap: HardwareMap) {
                 if (gamepad.right_bumper) {
                     depo.claw.position = 0.55
                 } else if (gamepad.left_bumper) {
-                    depo.claw.position = 1.0
+                    depo.claw.position = 0.9
                 }
 
                 if (gamepad.dpad_up) {
@@ -190,7 +190,7 @@ class FSM(hardwareMap: HardwareMap) {
                     state = RobotState.SPEC_DEPOSIT
                 }
             } RobotState.SPEC_DEPOSIT ->{
-                depo.claw.position = 1.0
+                depo.claw.position = 0.9
 
                 if (gamepad.left_bumper) {
                     slides.specScore()

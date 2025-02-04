@@ -25,7 +25,6 @@ class Slides(hardwareMap: HardwareMap) {
     private val pControl = PIDCoefficients(p)
     private val controller = PIDFController(pControl)
     var slidePower = 0.0
-    var offset = 0
     private val high: Int = 2300
     private val low: Int = 0
 
@@ -40,8 +39,7 @@ class Slides(hardwareMap: HardwareMap) {
         slideL.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.FLOAT
         slideR.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.FLOAT
 
-        offset = slideR.currentPosition * -1
-        slidePos = slideR.currentPosition.toDouble() //- offset
+        slidePos = slideR.currentPosition.toDouble()
         target = 0.0
     }
 
@@ -53,7 +51,7 @@ class Slides(hardwareMap: HardwareMap) {
 
     fun update() {
         correctedValue = target / ticks_per_degree
-        slidePos = (slideR.currentPosition.toDouble() * -1) //- offset
+        slidePos = (slideR.currentPosition.toDouble() * -1)
         controller.targetPosition = target
         slidePower = controller.update(slidePos) + fg
         slideL.power = slidePower
