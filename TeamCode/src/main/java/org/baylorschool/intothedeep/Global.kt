@@ -62,7 +62,7 @@ object Global {
         SPEC_INTAKE(300.0), LOW_CHAMBER(0.0), HIGH_CHAMBER(625.0), HIGH_CHAMBER_SNAP(150.0),
         FWINTAKE(500.0),
         HIGH_CHAMBER_AUTO(580.0),
-        FWINTAKE_AUTO(525.0), HIGH_CHAMBER_DROP_AUTO(475.0),
+        FWINTAKE_AUTO(525.0), HIGH_CHAMBER_DROP_AUTO(500.0),
         LOW_RUNG(0.0), HIGH_RUNG(0.0),;
         fun action(slides: Slides) : Action {
             val x = this
@@ -85,7 +85,7 @@ object Global {
 
     //pivot
     enum class PivotPresets(var pos: Double) {
-        RESET(0.0), DEPO(1150.0),
+        RESET(0.0), DEPO(1100.0),
         SPEC_DEPOSIT(950.0),
         WALL_PICKUP(230.0),
         SPEC_DEPOSIT_AUTO(975.0),
@@ -105,9 +105,9 @@ object Global {
 
     @Config
     object PivotPIDConfig {
-        @JvmField var p: Double = 0.031
+        @JvmField var p: Double = 0.025
         @JvmField var i: Double = 0.000
-        @JvmField var d: Double = 0.000022
+        @JvmField var d: Double = 0.00005
         @JvmField var fg: Double = 0.00
         @JvmField var target: Double = 0.0
     }

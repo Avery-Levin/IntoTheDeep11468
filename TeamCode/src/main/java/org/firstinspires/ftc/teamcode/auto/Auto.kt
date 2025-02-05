@@ -23,8 +23,8 @@ import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants
 @Autonomous
 class Auto : LinearOpMode() {
     //private val startPos = Pose(-32.0, -5.0*12.0, Math.toRadians(90.0))
-    private val placePreloadPos = Pose(21.0, 0.0, 0.0)
-    private val placePreloadPos1 = Pose(25.0, 0.0, 0.0)
+    private val placePreloadPos = Pose(25.0, 0.0, 0.0)
+    private val placePreloadPos1 = Pose(30.0, 0.0, 0.0)
     private val push0StartPos = Pose(49.5, -46.5, 0.0)
     private val push0BezierPosA = Pose(-7.5, -53.0, 0.0)//toward human player
     private val push0BezierPosB = Pose(53.0, -23.5, 0.0)
@@ -46,10 +46,23 @@ class Auto : LinearOpMode() {
         val depo = Depo(hardwareMap)//THE CLAW
         telemetryA.update()
         driver.update()
+        pivot.offset = 1100
+        depo.closeClaw()
+        pivot.deposit()
 
         waitForStart()
         ActionGroup(ActionSet(
-                driver.runToAction(placePreloadPos),
+            ensureMinTime(driver.runToAction(placePreloadPos), 2000),
+            ensureMinTime(Global.PivotPresets.SPEC_DEPOSIT.action(pivot), 2000),
+            ensureMinTime(Global.DiffyPosition.DiffySpecDepo.diffyPos.setAction(depo), 1750),
+            ensureMinTime(Global.SlidePresets.HIGH_CHAMBER.action(slides), 2000),
+            ensureMinTime(driver.runToAction(placePreloadPos1), 1500),
+            ensureMinTime(Global.SlidePresets.HIGH_CHAMBER_DROP_AUTO.action(slides), 2000),
+            ActionGroup (
+                Global.SlidePresets.RESET.action(slides),
+                ensureMinTime(depo.setClaw(true), 2000),
+            ),
+
             /*driver.runToAction(push0StartPos, push0BezierPosA, push0BezierPosB),
             driver.runToAction(push0EndPos),
             driver.runToAction(push1StartPos, push1BezierPosA),
@@ -57,7 +70,7 @@ class Auto : LinearOpMode() {
             driver.runToAction(push2StartPos, push2BezierPosA),
             driver.runToAction(push2EndPos),*/
 
-            ensureMinTime(driver.runToAction(pickup0Pos), 2000, true),
+            /*ensureMinTime(driver.runToAction(pickup0Pos), 2000, true),
             Global.PivotPresets.WALL_PICKUP_AUTO.action(pivot),
             ensureMinTime(Global.DiffyPosition.DiffySpecIntake.diffyPos.setAction(depo),1000),
             ensureMinTime(depo.setClaw(true), 1000),
@@ -76,8 +89,8 @@ class Auto : LinearOpMode() {
             ActionGroup (
                 Global.SlidePresets.RESET.action(slides),
                 depo.setClaw(true)
-            )
-        ), pivot.action(), slides.action(), driverAction(driver)).execute()
+            )*/
+        ), pivot.action(telemetryA), slides.action(telemetryA), driverAction(driver)).execute()
         driver.holdPoint(placePreloadPos)
 
         while (!isStopRequested && opModeIsActive()) {

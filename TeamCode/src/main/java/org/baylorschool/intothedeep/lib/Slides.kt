@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.lib
 
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.hardware.DcMotorSimple
@@ -98,13 +99,14 @@ class Slides(hardwareMap: HardwareMap) {
         PivotPIDConfig.target = Global.PivotPresets.LOW_RUNG.pos
     }
 
-    fun action() : Action {
+    fun action(telemetry: MultipleTelemetry) : Action {
         val slides = this
         return object : Action {
             override fun init() {}
 
             override fun update(): Boolean {
                 slides.update()
+                slides.telemetry(telemetry)
                 return false
             }
 

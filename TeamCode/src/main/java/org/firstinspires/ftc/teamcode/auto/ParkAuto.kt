@@ -66,7 +66,7 @@ class ParkAuto : LinearOpMode() {
                 override fun init() {}
                 override fun update(): Boolean = false
             }
-        ), pivot.action(), slides.action(), driverAction(driver)).execute()
+        ), pivot.action(telemetryA), slides.action(telemetryA), driverAction(driver)).execute()
         //driver.holdPoint(Pose(2.0,12.0))
 
         while (!isStopRequested && opModeIsActive()) {

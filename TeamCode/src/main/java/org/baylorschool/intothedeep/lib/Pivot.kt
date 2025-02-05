@@ -1,5 +1,6 @@
 package org.baylorschool.intothedeep.lib
 
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.hardware.DcMotorSimple
@@ -45,8 +46,7 @@ class Pivot(hardwareMap: HardwareMap) {
         pivotL.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.FLOAT
         pivotR.zeroPowerBehavior = DcMotor.ZeroPowerBehavior.FLOAT
 
-        offset = pivotL.currentPosition
-        pivotPos = (pivotL.currentPosition.toDouble()) //- offset
+        pivotPos = (pivotL.currentPosition.toDouble()) + offset
         target = 0.0
     }
 
@@ -61,7 +61,7 @@ class Pivot(hardwareMap: HardwareMap) {
     fun update() {
         controller.targetPosition = target
         correctedValue = target / ticks_per_degree
-        pivotPos = (pivotL.currentPosition.toDouble()) //- offset
+        pivotPos = (pivotL.currentPosition.toDouble()) + offset
         armPower = controller.update(pivotPos) //* ((cos(Math.toRadians(correctedValue))) * fg))
         pivotL.power = armPower
         pivotR.power = armPower
@@ -92,13 +92,14 @@ class Pivot(hardwareMap: HardwareMap) {
         target = Global.PivotPresets.LOW_RUNG.pos
     }
 
-    fun action() : Action {
+    fun action(telemetry: MultipleTelemetry) : Action {
         val pivot = this
         return object : Action {
             override fun init() {}
 
             override fun update(): Boolean {
                 pivot.update()
+                pivot.telemetry(telemetry)
                 return false
             }
 
