@@ -43,10 +43,10 @@ object Global {
     val diffyRetract = DiffyPos (standardL+0.0322, standardR-0.02)
     val diffyBasket = DiffyPos(standardL+0.0211, standardR-0.0439)
     val diffySpecIntake = DiffyPos(standardL+0.026, standardR+0.026)
-    val diffySpecDepo = DiffyPos(standardL-.1023, standardR+0.0233)
+    val diffySpecDepo = DiffyPos(standardL-.0961, standardR+0.0128)
 
     const val clawOpen = 0.55
-    const val clawClosed = 1.0
+    const val clawClosed = 0.95
 
     //hardstop
     fun hardStops(value: Int, low: Int, high: Int): Int {
@@ -59,7 +59,7 @@ object Global {
     enum class SlidePresets(var pos: Double) {
         RESET(0.0), INTAKE(1000.0),
         LOW_BASKET(0.0), HIGH_BASKET(2300.0),//7
-        SPEC_INTAKE(300.0), LOW_CHAMBER(0.0), HIGH_CHAMBER(625.0), HIGH_CHAMBER_SNAP(150.0),
+        SPEC_INTAKE(300.0), LOW_CHAMBER(0.0), HIGH_CHAMBER(605.0), HIGH_CHAMBER_SNAP(150.0),
         FWINTAKE(500.0),
         HIGH_CHAMBER_AUTO(580.0),
         FWINTAKE_AUTO(525.0), HIGH_CHAMBER_DROP_AUTO(500.0),
@@ -89,7 +89,7 @@ object Global {
         SPEC_DEPOSIT(950.0),
         WALL_PICKUP(230.0),
         SPEC_DEPOSIT_AUTO(975.0),
-        WALL_PICKUP_AUTO(260.0), WALL_PICKUP_UP_AUTO(275.0),//up before pull next
+        WALL_PICKUP_AUTO(210.0), WALL_PICKUP_UP_AUTO(275.0),//up before pull next
         LOW_RUNG(0.0), HIGH_RUNG(0.0);
         fun action(pivot: Pivot) : Action {
             val x = this
