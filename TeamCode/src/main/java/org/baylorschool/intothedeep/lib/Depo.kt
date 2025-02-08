@@ -105,6 +105,9 @@ class Depo(hardwareMap: HardwareMap) {
     fun diffySpec() {
         Global.diffySpecDepo.set(diffyL, diffyR)
     }
+    fun diffyInit() {
+        Global.diffyInit.set(diffyL, diffyR)
+    }
 
     fun tuning(gamepad: Gamepad) {
         if (gamepad.dpad_up) {

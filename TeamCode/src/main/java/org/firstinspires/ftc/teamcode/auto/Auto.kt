@@ -47,7 +47,7 @@ class Auto : LinearOpMode() {
         telemetryA.update()
         driver.update()
         pivot.offset = 1100
-        depo.init
+        depo.diffyInit()
         if (gamepad1.left_bumper) {
             depo.closeClaw()
         } else if (gamepad1.right_bumper) {
