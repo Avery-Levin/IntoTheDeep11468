@@ -29,7 +29,8 @@ object Global {
         DiffyRetract(diffyRetract),
         DiffyBasket(diffyBasket),
         DiffySpecIntake(diffySpecIntake),
-        DiffySpecDepo(diffySpecDepo)
+        DiffySpecDepo(diffySpecDepo),
+        DiffyInit(diffyInit)
     }
 
     // diffy
@@ -44,6 +45,8 @@ object Global {
     val diffyBasket = DiffyPos(standardL+0.0211, standardR-0.0439)
     val diffySpecIntake = DiffyPos(standardL+0.026, standardR+0.026)
     val diffySpecDepo = DiffyPos(standardL-.0961, standardR+0.0128)
+    val diffyInit = DiffyPos(standardL-.0961, standardR+0.0128)
+
 
     const val clawOpen = 0.55
     const val clawClosed = 0.95

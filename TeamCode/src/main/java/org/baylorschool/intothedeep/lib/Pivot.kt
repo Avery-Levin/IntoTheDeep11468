@@ -66,8 +66,13 @@ class Pivot(hardwareMap: HardwareMap) {
         pivotL.power = armPower
         pivotR.power = armPower
         target = Global.hardStops(target.toInt(), low, high).toDouble()
+        /*
+        if (switch.state == true) {
+            offset = -(pivotL.currentPosition)
+        }
+         */
     }
-
+    
     fun close(): Boolean {
         return abs(target - pivotPos) < 30
     }
