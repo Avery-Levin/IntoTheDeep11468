@@ -28,13 +28,13 @@ class Auto : LinearOpMode() {
     private val push0StartPos = Pose(49.5, -44.5, 0.0)
     private val push0BezierPosA = Pose(-10.5, -56.0, 0.0)//toward human player
     private val push0BezierPosB = Pose(53.0, -23.5, 0.0)
-    private val push0EndPos = Pose(8.5, -46.5, 0.0)
+    private val push0EndPos = Pose(12.0, -46.5, 0.0)
     private val push1BezierPosA = Pose(75.0, -46.5, 0.0)
     private val push1StartPos = Pose(49.5, -56.5, 0.0)
-    private val push1EndPos = Pose(8.5, -56.5, 0.0)
+    private val push1EndPos = Pose(12.0, -56.5, 0.0)
     private val push2BezierPosA = Pose(75.0, -52.0, 0.0)
     private val push2StartPos = Pose(49.5, -62.5, 0.0)
-    private val push2EndPos = Pose(8.5, -62.5, 0.0)//47
+    private val push2EndPos = Pose(12.0, -62.5, 0.0)//47
     private val pickup0Pos = Pose(12.0, -41.0, 0.0)
     override fun runOpMode() {
         Constants.setConstants(FConstants::class.java, LConstants::class.java)
@@ -52,18 +52,7 @@ class Auto : LinearOpMode() {
 
         waitForStart()
         ActionGroup(ActionSet(
-            ensureMinTime(ActionGroup(
-                driver.runToAction(placePreloadPos),
-                Global.DiffyPosition.DiffySpecDepo.diffyPos.setAction(depo),
-                Global.PivotPresets.SPEC_DEPOSIT.action(pivot),
-                Global.SlidePresets.HIGH_CHAMBER.action(slides))
-            , 3250),
-            ensureMinTime(driver.runToAction(placePreloadPos1), 750),
-            ensureMinTime(Global.SlidePresets.HIGH_CHAMBER_DROP_AUTO.action(slides), 1000),
-            ActionGroup (
-                Global.SlidePresets.RESET.action(slides),
-                ensureMinTime(depo.setClaw(true), 2000),
-            ),
+            genPlacement(driver, pivot, slides, depo),
 
             driver.runToAction(push0StartPos, push0BezierPosA, push0BezierPosB),
             driver.runToAction(push0EndPos),
@@ -72,62 +61,17 @@ class Auto : LinearOpMode() {
             driver.runToAction(push2StartPos, push2BezierPosA),
             driver.runToAction(push2EndPos),
 
-            ensureMinTime(driver.runToAction(pickup0Pos), 2000, true),
-            Global.PivotPresets.WALL_PICKUP_AUTO.action(pivot),
-            ensureMinTime(Global.DiffyPosition.DiffySpecIntake.diffyPos.setAction(depo),1000),
-            ensureMinTime(depo.setClaw(true), 1000),
-            Global.SlidePresets.FWINTAKE.action(slides),
-            ensureMinTime(depo.setClaw(false), 1000),
-            Global.SlidePresets.RESET.action(slides),
-            ensureMinTime(ActionGroup(
-                driver.runToAction(placePreloadPos),
-                Global.DiffyPosition.DiffySpecDepo.diffyPos.setAction(depo),
-                Global.PivotPresets.SPEC_DEPOSIT.action(pivot),
-                Global.SlidePresets.HIGH_CHAMBER.action(slides))
-                , 3250),
-            ensureMinTime(depo.setClaw(true), 1000),
+            genPickup(true, driver, pivot, slides, depo),
+            genPlacement(driver, pivot, slides, depo),
 
-            ensureMinTime(driver.runToAction(pickup0Pos), 2000, true),
-            Global.PivotPresets.WALL_PICKUP_AUTO.action(pivot),
-            ensureMinTime(Global.DiffyPosition.DiffySpecIntake.diffyPos.setAction(depo),1000),
-            ensureMinTime(depo.setClaw(true), 1000),
-            Global.SlidePresets.FWINTAKE.action(slides),
-            ensureMinTime(depo.setClaw(false), 1000),
-            Global.SlidePresets.RESET.action(slides),
-            ensureMinTime(ActionGroup(
-                driver.runToAction(placePreloadPos),
-                Global.DiffyPosition.DiffySpecDepo.diffyPos.setAction(depo),
-                Global.PivotPresets.SPEC_DEPOSIT.action(pivot),
-                Global.SlidePresets.HIGH_CHAMBER.action(slides))
-                , 3250),
-            ensureMinTime(depo.setClaw(true), 1000),
+            genPickup(false, driver, pivot, slides, depo),
+            genPlacement(driver, pivot, slides, depo),
 
-            ensureMinTime(driver.runToAction(pickup0Pos), 2000, true),
-            Global.PivotPresets.WALL_PICKUP_AUTO.action(pivot),
-            ensureMinTime(Global.DiffyPosition.DiffySpecIntake.diffyPos.setAction(depo),1000),
-            ensureMinTime(depo.setClaw(true), 1000),
-            Global.SlidePresets.FWINTAKE.action(slides),
-            ensureMinTime(depo.setClaw(false), 1000),
-            Global.SlidePresets.RESET.action(slides),
-            ensureMinTime(ActionGroup(
-                driver.runToAction(placePreloadPos),
-                Global.DiffyPosition.DiffySpecDepo.diffyPos.setAction(depo),
-                Global.PivotPresets.SPEC_DEPOSIT.action(pivot),
-                Global.SlidePresets.HIGH_CHAMBER.action(slides))
-                , 3250),
-            ensureMinTime(depo.setClaw(true), 1000),/*
-            Global.PivotPresets.WALL_PICKUP_UP_AUTO.action(pivot),
-            ActionGroup (
-                Global.PivotPresets.SPEC_DEPOSIT_AUTO.action(pivot),
-                ensureMinTime(Global.DiffyPosition.DiffySpecDepo.diffyPos.setAction(depo), 1000),
-            ),
-            Global.SlidePresets.HIGH_CHAMBER_AUTO.action(slides),
-            driver.runToAction(placePreloadPos1),
-            Global.SlidePresets.HIGH_CHAMBER_DROP_AUTO.action(slides),
-            ActionGroup (
-                Global.SlidePresets.RESET.action(slides),
-                depo.setClaw(true)
-            )*/
+            genPickup(false, driver, pivot, slides, depo),
+            genPlacement(driver, pivot, slides, depo),
+
+            genPickup(false, driver, pivot, slides, depo),
+            genPlacement(driver, pivot, slides, depo),
         ), pivot.action(telemetryA), slides.action(telemetryA), driverAction(driver), object : Action {
             override fun init() {}
 
@@ -135,15 +79,41 @@ class Auto : LinearOpMode() {
                 telemetryA.update()
                 return false
             }
-        }).execute()
-        driver.holdPoint(push2EndPos)
+        }).execute { isStopRequested }
 
         while (!isStopRequested && opModeIsActive()) {
             driver.update()
             driver.telemetryDebug(telemetryA)
         }
     }
-    fun driverAction(driver: Driver) : Action {
+    private fun genPickup(useCurrentPos: Boolean, driver: Driver, pivot: Pivot, slides: Slides, depo: Depo): ActionSet {
+        return ActionSet(
+            if (!useCurrentPos) ensureMinTime(driver.runToAction(pickup0Pos), 2000, true) else nullAction(),
+            Global.PivotPresets.WALL_PICKUP_AUTO.action(pivot),
+            ensureMinTime(Global.DiffyPosition.DiffySpecIntake.diffyPos.setAction(depo),1000),
+            ensureMinTime(depo.setClaw(true), 1000),
+            Global.SlidePresets.FWINTAKE.action(slides),
+            ensureMinTime(depo.setClaw(false), 1000),
+            Global.SlidePresets.RESET.action(slides),
+        )
+    }
+    private fun genPlacement(driver: Driver, pivot: Pivot, slides: Slides, depo: Depo) : ActionSet {
+        return ActionSet(
+            ensureMinTime(ActionGroup(
+                driver.runToAction(placePreloadPos),
+                Global.DiffyPosition.DiffySpecDepo.diffyPos.setAction(depo),
+                Global.PivotPresets.SPEC_DEPOSIT.action(pivot),
+                Global.SlidePresets.HIGH_CHAMBER.action(slides))
+                , 3250),
+            ensureMinTime(driver.runToAction(placePreloadPos1), 750),
+            ensureMinTime(Global.SlidePresets.HIGH_CHAMBER_DROP_AUTO.action(slides), 1000),
+            ActionGroup (
+                Global.SlidePresets.RESET.action(slides),
+                ensureMinTime(depo.setClaw(true), 2000),
+            ),
+        )
+    }
+    private fun driverAction(driver: Driver) : Action {
         driver.update()
         return object : Action {
             override fun init() {}
@@ -152,6 +122,12 @@ class Auto : LinearOpMode() {
                 driver.update()
                 return false
             }
+        }
+    }
+    private fun nullAction(): Action = object : Action {
+        override fun init() {}
+        override fun update(): Boolean {
+            return true
         }
     }
 }

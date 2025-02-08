@@ -7,16 +7,18 @@ import java.time.Duration
  * ActionGroups execute things concurrently until everything in the group is done.
  * ActionSets execute things one at a time and the "execute()" function is blocking.
  * init() and update() should be non-blocking
+ * update() returns whether the action is done or not
  */
 interface Action {
     fun init()
     /**
+     * non-blocking.
      * @returns whether the action is done or not
      */
     fun update() : Boolean
     fun execute() {
         init()
-        while (!update()) {}
+        while (!update()) {/**/}
     }
 }
 class ActionGroup(vararg actions0: Action) : Action {
@@ -30,6 +32,14 @@ class ActionGroup(vararg actions0: Action) : Action {
         actions = actions.filterNot { it.update() }
         return actions.isEmpty()
     }
+    /**
+     * this is blocking, obviously.
+     * @param close a function. Have it return true to kill the function.
+     */
+    fun execute(close: () -> (Boolean)) {
+        init()
+        while (!update() && !close()) {/**/}
+    }
 }
 class ActionSet(vararg actions0: Action) : Action {
     private val actions = actions0.toMutableList()
@@ -41,6 +51,22 @@ class ActionSet(vararg actions0: Action) : Action {
             i.init()
             while (!i.update()) {
                 // do nothing
+            }
+        }
+    }
+
+    /**
+     * this is blocking, obviously.
+     * @param close a function. Have it return true to kill the function.
+     */
+    fun execute(close: () -> (Boolean)) {
+        for (i in actions) {
+            i.init()
+            while (!i.update() && !close()) {
+                // do nothing
+            }
+            if (close()) {
+                return
             }
         }
     }
