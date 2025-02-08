@@ -1,6 +1,8 @@
 package org.baylorschool.intothedeep
 
 import com.acmerobotics.dashboard.config.Config
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
+import com.pedropathing.follower.Follower
 import com.qualcomm.robotcore.hardware.Gamepad
 import org.baylorschool.intothedeep.Global.PivotPIDConfig.target
 import org.baylorschool.intothedeep.lib.DiffyPos
@@ -34,8 +36,8 @@ object Global {
     }
 
     // diffy
-    val standardL = 0.4583
-    val standardR = 0.5039
+    val standardL = 0.4617
+    val standardR = 0.5011
     val diffyIdle = DiffyPos(standardL, standardR)
     val diffy45 = DiffyPos(standardL+0.0511, standardR+0.0955)
     val diffy90 = DiffyPos(standardL+0.0428, standardR+0.1139)
@@ -44,8 +46,8 @@ object Global {
     val diffyRetract = DiffyPos (standardL+0.0322, standardR-0.02)
     val diffyBasket = DiffyPos(standardL+0.0211, standardR-0.0439)
     val diffySpecIntake = DiffyPos(standardL+0.026, standardR+0.026)
-    val diffySpecDepo = DiffyPos(standardL-.0961, standardR+0.0128)
-    val diffyInit = DiffyPos(standardL-.0961, standardR+0.0128)
+    val diffySpecDepo = DiffyPos(standardL-.1006, standardR+0.0161)
+    val diffyInit = DiffyPos(standardL-.0961, standardR+0.0077)
 
 
     const val clawOpen = 0.55
@@ -64,8 +66,9 @@ object Global {
         LOW_BASKET(0.0), HIGH_BASKET(2300.0),//7
         SPEC_INTAKE(300.0), LOW_CHAMBER(0.0), HIGH_CHAMBER(605.0), HIGH_CHAMBER_SNAP(150.0),
         FWINTAKE(500.0),
+        FWINTAKE_ALMOST(400.0),
         HIGH_CHAMBER_AUTO(580.0),
-        FWINTAKE_AUTO(525.0), HIGH_CHAMBER_DROP_AUTO(500.0),
+        FWINTAKE_AUTO(525.0), HIGH_CHAMBER_DROP_AUTO(150.0),
         LOW_RUNG(0.0), HIGH_RUNG(0.0),;
         fun action(slides: Slides) : Action {
             val x = this
@@ -90,9 +93,10 @@ object Global {
     enum class PivotPresets(var pos: Double) {
         RESET(0.0), DEPO(1100.0),
         SPEC_DEPOSIT(950.0),
+        SPEC_DEPOSIT_DROP(1000.0),
         WALL_PICKUP(230.0),
         SPEC_DEPOSIT_AUTO(975.0),
-        WALL_PICKUP_AUTO(210.0), WALL_PICKUP_UP_AUTO(275.0),//up before pull next
+        WALL_PICKUP_AUTO(220.0), WALL_PICKUP_UP_AUTO(275.0),//up before pull next
         LOW_RUNG(0.0), HIGH_RUNG(0.0);
         fun action(pivot: Pivot) : Action {
             val x = this
@@ -102,6 +106,25 @@ object Global {
                 }
 
                 override fun update(): Boolean = pivot.close()
+            }
+        }
+        fun action(pivot: Pivot, follower: Follower, telemetry: MultipleTelemetry) : Action {
+            //old val 600, new val 900
+            val x = this
+            val oldValue = target//600
+            val distance = oldValue - x.pos//300
+            return object : Action {
+                override fun init() {
+
+                }
+
+                override fun update(): Boolean {
+                    target = -follower.currentTValue * distance + oldValue
+                    telemetry.addData("pivot target", target)
+                    telemetry.addData("pivot distance", distance)
+                    telemetry.addData("pivot follower T", follower.currentTValue)
+                    return pivot.close(x.pos)
+                }
             }
         }
     }

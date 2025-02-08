@@ -34,7 +34,7 @@ class Depo(hardwareMap: HardwareMap) {
         diffyL = hardwareMap.get(Servo::class.java, "diffyL")
         diffyR = hardwareMap.get(Servo::class.java, "diffyR")
         diffyL.direction = Servo.Direction.REVERSE
-        claw.direction = Servo.Direction.REVERSE
+        //claw.direction = Servo.Direction.REVERSE
     }
 
     fun telemetry(telemetry: Telemetry) {

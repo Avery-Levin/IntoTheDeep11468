@@ -76,6 +76,9 @@ class Pivot(hardwareMap: HardwareMap) {
     fun close(): Boolean {
         return abs(target - pivotPos) < 30
     }
+    fun close(pos: Double): Boolean {
+        return abs(pos - pivotPos) < 30
+    }
 
     fun reset() {
         target = Global.PivotPresets.RESET.pos
