@@ -32,14 +32,14 @@ class Auto : LinearOpMode() {
     private val push0StartPos = Pose(49.5, -44.5, 0.0)
     private val push0BezierPosA = Pose(-10.5, -56.0, 0.0)//toward human player
     private val push0BezierPosB = Pose(53.0, -23.5, 0.0)
-    private val push0EndPos = Pose(12.0, -46.5, 0.0)
+    private val push0EndPos = Pose(14.0, -46.5, 0.0)
     private val push1BezierPosA = Pose(70.0, -46.5, 0.0)
     private val push1StartPos = Pose(49.5, -56.5, 0.0)
     private val push1EndPos = Pose(14.0, -56.5, 0.0)
     private val push2BezierPosA = Pose(70.0, -52.0, 0.0)
     private val push2StartPos = Pose(49.5, -62.5, 0.0)
-    private val push2EndPos = Pose(13.3, -62.5, 0.0)//47
-    private val pickup0Pos = Pose(13.0, -41.0, 0.0)
+    private val push2EndPos = Pose(15.0, -62.5, 0.0)//47
+    private val pickup0Pos = Pose(13.3, -41.0, 0.0)
     override fun runOpMode() {
         Constants.setConstants(FConstants::class.java, LConstants::class.java)
         val driver = Driver(Follower(hardwareMap), Pose(0.0, -8.0, 0.0))
@@ -61,9 +61,8 @@ class Auto : LinearOpMode() {
         while (!isStarted()) {
             driver.update()
             pivot.update()
-            depo.closeClaw()
             if (gamepad1.left_bumper) {
-                depo.claw.position = 0.9
+                depo.claw.position = 0.95
             } else if (gamepad1.right_bumper) {
                 depo.claw.position = 0.55
             }
@@ -89,7 +88,7 @@ class Auto : LinearOpMode() {
             override fun init() {}
 
             override fun update(): Boolean {
-                telemetryA.update()
+                //telemetryA.update()
                 return false
             }
         }).execute { isStopRequested }

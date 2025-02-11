@@ -37,8 +37,8 @@ object Global {
     }
 
     // diffy
-    val standardL = 0.4617
-    val standardR = 0.5011
+    val standardL = 0.4633
+    val standardR = 0.45
     val diffyIdle = DiffyPos(standardL, standardR)
     val diffy45 = DiffyPos(standardL+0.0511, standardR+0.0955)
     val diffy90 = DiffyPos(standardL+0.0428, standardR+0.1139)
@@ -49,7 +49,6 @@ object Global {
     val diffySpecIntake = DiffyPos(standardL+0.0190, standardR+0.0190)
     val diffySpecDepo = DiffyPos(standardL-.1006, standardR+0.0161)
     val diffyInit = DiffyPos(standardL-.0961, standardR+0.0077)
-
 
     const val clawOpen = 0.55
     const val clawClosed = 0.95
@@ -65,7 +64,7 @@ object Global {
     enum class SlidePresets(var pos: Double) {
         RESET(0.0), INTAKE(1000.0),
         LOW_BASKET(0.0), HIGH_BASKET(2300.0),//7
-        SPEC_INTAKE(300.0), LOW_CHAMBER(0.0), HIGH_CHAMBER(605.0), HIGH_CHAMBER_SNAP(150.0),
+        SPEC_INTAKE(300.0), LOW_CHAMBER(0.0), HIGH_CHAMBER(680.0), HIGH_CHAMBER_SNAP(150.0),
         FWINTAKE(500.0),
         FWINTAKE_ALMOST(400.0),
         HIGH_CHAMBER_AUTO(580.0),
@@ -85,7 +84,7 @@ object Global {
 
     @Config
     object SlidePIDConfig {
-        @JvmField var p: Double = 0.01
+        @JvmField var p: Double = 0.025
         @JvmField var fg: Double = 0.1
         @JvmField var target: Double = 0.0
     }
@@ -93,11 +92,11 @@ object Global {
     //pivot
     enum class PivotPresets(var pos: Double) {
         RESET(0.0), DEPO(1100.0),
-        SPEC_DEPOSIT(950.0),
+        SPEC_DEPOSIT(960.0),
         SPEC_DEPOSIT_DROP(1000.0),
         WALL_PICKUP(230.0),
         SPEC_DEPOSIT_AUTO(975.0),
-        WALL_PICKUP_AUTO(270.0), WALL_PICKUP_UP_AUTO(275.0),//up before pull next
+        WALL_PICKUP_AUTO(230.0), WALL_PICKUP_UP_AUTO(275.0),//up before pull next
         LOW_RUNG(0.0), HIGH_RUNG(0.0);
         fun action(pivot: Pivot) : Action {
             val x = this
@@ -120,10 +119,11 @@ object Global {
                 }
 
                 override fun update(): Boolean {
-                    target = -min(follower.currentTValue*1.35, 1.0) * distance + oldValue
+                    target = -min(follower.currentTValue*1.0, 1.0) * distance + oldValue
                     telemetry.addData("pivot target", target)
                     telemetry.addData("pivot distance", distance)
                     telemetry.addData("pivot follower T", follower.currentTValue)
+                    telemetry.update()
                     return pivot.close(x.pos)
                 }
             }
