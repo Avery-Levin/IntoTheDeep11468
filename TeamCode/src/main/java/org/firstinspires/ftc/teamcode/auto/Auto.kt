@@ -69,22 +69,22 @@ class Auto : LinearOpMode() {
             }
         }
         ActionGroup(ActionSet(
-            genPlacement(driver, pivot, slides, depo, usecloserpoint = true),
+            genPlacement(driver, pivot, slides, depo, telemetryA, usecloserpoint = true),
 
             /*ActionGroup(*/genPush(driver),//, Global.PivotPresets.WALL_PICKUP_AUTO.action(pivot)),
 
             //usecurrentpos is true so it drives to push2EndPos
             genPickup(true, driver, pivot, slides, depo, telemetryA),//DONT USE INTERPOLATION HERE
-            genPlacement(driver, pivot, slides, depo, true),
+            genPlacement(driver, pivot, slides, depo, telemetryA, true),
 
             genPickup(false, driver, pivot, slides, depo, telemetryA),
-            genPlacement(driver, pivot, slides, depo),
+            genPlacement(driver, pivot, slides, depo, telemetryA),
 
             genPickup(false, driver, pivot, slides, depo, telemetryA),
-            genPlacement(driver, pivot, slides, depo),
+            genPlacement(driver, pivot, slides, depo, telemetryA),
 
             genPickup(false, driver, pivot, slides, depo, telemetryA),
-            genPlacement(driver, pivot, slides, depo),
+            genPlacement(driver, pivot, slides, depo, telemetryA),
         ), pivot.action(telemetryA), slides.action(telemetryA), driverAction(driver), object : Action {
             override fun init() {}
 
@@ -113,7 +113,7 @@ class Auto : LinearOpMode() {
             Global.SlidePresets.RESET.action(slides)
         )
     }
-    private fun genPlacement(driver: Driver, pivot: Pivot, slides: Slides, depo: Depo, usebezier: Boolean = false, usecloserpoint: Boolean = false) : ActionSet {
+    private fun genPlacement(driver: Driver, pivot: Pivot, slides: Slides, depo: Depo, tele: MultipleTelemetry, usebezier: Boolean = false, usecloserpoint: Boolean = false) : ActionSet {
         val ppp = if (usecloserpoint) placePreloadPos2 else placePreloadPos1
         //2 is closer
         return ActionSet(//x5
@@ -121,7 +121,7 @@ class Auto : LinearOpMode() {
                 depo.setClaw(false),
                 if (usebezier) driver.runToAction(ppp, placePreloadPos) else driver.runToAction(ppp),
                 Global.DiffyPosition.DiffySpecDepo.diffyPos.setAction(depo),
-                Global.PivotPresets.SPEC_DEPOSIT.action(pivot),
+                Global.PivotPresets.SPEC_DEPOSIT.action(pivot, driver.follower, tele),
                 Global.SlidePresets.HIGH_CHAMBER.action(slides))
                 , 2250),
             //driver.runToAction(placePreloadPos1),
