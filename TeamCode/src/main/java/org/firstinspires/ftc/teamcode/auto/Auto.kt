@@ -35,11 +35,11 @@ class Auto : LinearOpMode() {
     private val push0EndPos = Pose(12.0, -46.5, 0.0)
     private val push1BezierPosA = Pose(70.0, -46.5, 0.0)
     private val push1StartPos = Pose(49.5, -56.5, 0.0)
-    private val push1EndPos = Pose(12.0, -56.5, 0.0)
+    private val push1EndPos = Pose(14.0, -56.5, 0.0)
     private val push2BezierPosA = Pose(70.0, -52.0, 0.0)
     private val push2StartPos = Pose(49.5, -62.5, 0.0)
-    private val push2EndPos = Pose(13.5, -62.5, 0.0)//47
-    private val pickup0Pos = Pose(12.0, -41.0, 0.0)
+    private val push2EndPos = Pose(13.3, -62.5, 0.0)//47
+    private val pickup0Pos = Pose(13.0, -41.0, 0.0)
     override fun runOpMode() {
         Constants.setConstants(FConstants::class.java, LConstants::class.java)
         val driver = Driver(Follower(hardwareMap), Pose(0.0, -8.0, 0.0))
@@ -61,6 +61,7 @@ class Auto : LinearOpMode() {
         while (!isStarted()) {
             driver.update()
             pivot.update()
+            depo.closeClaw()
             if (gamepad1.left_bumper) {
                 depo.claw.position = 0.9
             } else if (gamepad1.right_bumper) {
@@ -70,7 +71,7 @@ class Auto : LinearOpMode() {
         ActionGroup(ActionSet(
             genPlacement(driver, pivot, slides, depo, usecloserpoint = true),
 
-            ActionGroup(genPush(driver), Global.PivotPresets.WALL_PICKUP_AUTO.action(pivot)),
+            /*ActionGroup(*/genPush(driver),//, Global.PivotPresets.WALL_PICKUP_AUTO.action(pivot)),
 
             //usecurrentpos is true so it drives to push2EndPos
             genPickup(true, driver, pivot, slides, depo, telemetryA),//DONT USE INTERPOLATION HERE
@@ -117,6 +118,7 @@ class Auto : LinearOpMode() {
         //2 is closer
         return ActionSet(//x5
             ensureMinTime(ActionGroup(
+                depo.setClaw(false),
                 if (usebezier) driver.runToAction(ppp, placePreloadPos) else driver.runToAction(ppp),
                 Global.DiffyPosition.DiffySpecDepo.diffyPos.setAction(depo),
                 Global.PivotPresets.SPEC_DEPOSIT.action(pivot),

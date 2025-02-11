@@ -8,6 +8,7 @@ import org.baylorschool.intothedeep.Global.PivotPIDConfig.target
 import org.baylorschool.intothedeep.lib.DiffyPos
 import org.baylorschool.intothedeep.lib.Pivot
 import org.firstinspires.ftc.teamcode.lib.Slides
+import kotlin.math.min
 
 @Config
 object Global {
@@ -45,7 +46,7 @@ object Global {
     val diffy180 = DiffyPos(standardL+.08, standardR+0.0772)
     val diffyRetract = DiffyPos (standardL+0.0322, standardR-0.02)
     val diffyBasket = DiffyPos(standardL+0.0211, standardR-0.0439)
-    val diffySpecIntake = DiffyPos(standardL+0.026, standardR+0.026)
+    val diffySpecIntake = DiffyPos(standardL+0.0190, standardR+0.0190)
     val diffySpecDepo = DiffyPos(standardL-.1006, standardR+0.0161)
     val diffyInit = DiffyPos(standardL-.0961, standardR+0.0077)
 
@@ -96,7 +97,7 @@ object Global {
         SPEC_DEPOSIT_DROP(1000.0),
         WALL_PICKUP(230.0),
         SPEC_DEPOSIT_AUTO(975.0),
-        WALL_PICKUP_AUTO(220.0), WALL_PICKUP_UP_AUTO(275.0),//up before pull next
+        WALL_PICKUP_AUTO(270.0), WALL_PICKUP_UP_AUTO(275.0),//up before pull next
         LOW_RUNG(0.0), HIGH_RUNG(0.0);
         fun action(pivot: Pivot) : Action {
             val x = this
@@ -119,7 +120,7 @@ object Global {
                 }
 
                 override fun update(): Boolean {
-                    target = -follower.currentTValue * distance + oldValue
+                    target = -min(follower.currentTValue*1.35, 1.0) * distance + oldValue
                     telemetry.addData("pivot target", target)
                     telemetry.addData("pivot distance", distance)
                     telemetry.addData("pivot follower T", follower.currentTValue)
