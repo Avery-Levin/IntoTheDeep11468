@@ -23,7 +23,7 @@ object Global {
     const val odo = "odo"
     const val xOffset = -3.03//-4.0309
     const val yOffset = -4.21//-1.673
-    const val mass = 12.24
+    const val mass = 12.57
 
     enum class DiffyPosition(val diffyPos: DiffyPos) {
         DiffyIdle(diffyIdle),
@@ -68,6 +68,7 @@ object Global {
         SPEC_INTAKE(300.0), LOW_CHAMBER(0.0), HIGH_CHAMBER(680.0), HIGH_CHAMBER_SNAP(150.0),
         FWINTAKE(500.0),
         FWINTAKE_ALMOST(400.0),
+        FWINTAKE_ALMOST_ALMOST(200.0),
         HIGH_CHAMBER_AUTO(580.0),
         FWINTAKE_AUTO(525.0), HIGH_CHAMBER_DROP_AUTO(150.0),
         LOW_RUNG(0.0), HIGH_RUNG(0.0),;
