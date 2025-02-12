@@ -102,7 +102,6 @@ class FSM(hardwareMap: HardwareMap) {
                     slides.reset()
                     state = RobotState.INTAKE_RETRACT
                 }
-
             } RobotState.INTAKE_RETRACT -> {
                 slides.slidePos = (slides.slideR.currentPosition.toDouble() * -1)
                 difference = (slides.slidePos + lowerCheck) - Global.SlidePresets.RESET.pos
@@ -114,19 +113,16 @@ class FSM(hardwareMap: HardwareMap) {
                 } else if (gamepad.left_bumper) {
                     depo.claw.position = 0.95
                 }
-
-
-            if (transTimer.seconds() > transDelay) {
-                    if (gamepad.dpad_up) {
-                        slides.highBasket()
-                        slideThreshold = 200.0
-                        transDelay = 1.0
-                        transTimer.reset()
-                        transition = true
-                        state = RobotState.SAMPLE_DEPOSIT
+                if (transTimer.seconds() > transDelay) {
+                        if (gamepad.dpad_up) {
+                            slides.highBasket()
+                            slideThreshold = 200.0
+                            transDelay = 1.0
+                            transTimer.reset()
+                            transition = true
+                            state = RobotState.SAMPLE_DEPOSIT
+                        }
                     }
-                }
-
             } RobotState.SAMPLE_DEPOSIT -> {
                 slides.slidePos = (slides.slideR.currentPosition.toDouble() * -1)
                 difference = Global.SlidePresets.HIGH_BASKET.pos - slides.slidePos

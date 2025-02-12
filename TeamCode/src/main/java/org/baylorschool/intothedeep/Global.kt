@@ -85,7 +85,7 @@ object Global {
 
     @Config
     object SlidePIDConfig {
-        @JvmField var p: Double = 0.025
+        @JvmField var p: Double = 0.02
         @JvmField var fg: Double = 0.1
         @JvmField var target: Double = 0.0
     }
@@ -95,7 +95,7 @@ object Global {
         RESET(0.0), DEPO(1100.0),
         SPEC_DEPOSIT(950.0)/**/,
         SPEC_DEPOSIT_DROP(1000.0),
-        WALL_PICKUP(230.0),
+        WALL_PICKUP(240.0),
         SPEC_DEPOSIT_AUTO(975.0),
         WALL_PICKUP_AUTO(230.0)/**/, WALL_PICKUP_UP_AUTO(330.0),//up before pull next
         LOW_RUNG(0.0), HIGH_RUNG(0.0);
