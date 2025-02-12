@@ -4,17 +4,13 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.pedropathing.follower.Follower
 import com.pedropathing.follower.FollowerConstants
 import com.pedropathing.localization.Pose
-import com.pedropathing.pathgen.PathChain
-import com.pedropathing.pathgen.Point
 import com.pedropathing.util.Constants
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.baylorschool.intothedeep.Action
 import org.baylorschool.intothedeep.ActionGroup
 import org.baylorschool.intothedeep.ActionSet
 import org.baylorschool.intothedeep.Global
-import org.baylorschool.intothedeep.Global.PivotPIDConfig.target
 import org.baylorschool.intothedeep.ensureMinTime
 import org.baylorschool.intothedeep.lib.Depo
 import org.baylorschool.intothedeep.lib.Pivot
@@ -26,9 +22,10 @@ import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants
 @Autonomous
 class Auto : LinearOpMode() {
     //private val startPos = Pose(-32.0, -5.0*12.0, Math.toRadians(90.0))
-    private val placePreloadPos = Pose(19.0, 0.0, 0.0)
-    private val placePreloadPos1 = Pose(29.0, 0.0, 0.0)
-    private val placePreloadPos2 = Pose(29.5, 0.0, 0.0)
+    //note: the A and B points are beziers
+    private val placePreloadPosA = Pose(19.0, 0.0, 0.0)
+    private val placePreloadPos1 = Pose(29.5, 0.0, 0.0)
+    private val placePreloadPos2 = Pose(30.0, 0.0, 0.0)
     private val push0StartPos = Pose(49.5, -44.5, 0.0)
     private val push0BezierPosA = Pose(-10.5, -56.0, 0.0)//toward human player
     private val push0BezierPosB = Pose(53.0, -23.5, 0.0)
@@ -70,63 +67,57 @@ class Auto : LinearOpMode() {
         ActionGroup(ActionSet(
             genPlacement(driver, pivot, slides, depo, telemetryA, usecloserpoint = true),
 
-            /*ActionGroup(*/genPush(driver),//, Global.PivotPresets.WALL_PICKUP_AUTO.action(pivot)),
+            ActionGroup(
+                genPush(driver),
+                Global.DiffyPosition.DiffySpecIntake.diffyPos.setAction(depo),
+                Global.PivotPresets.WALL_PICKUP_AUTO.action(pivot, driver.follower, telemetryA),
+            ),
 
-            //usecurrentpos is true so it drives to push2EndPos
-            genPickup(true, driver, pivot, slides, depo, telemetryA),//DONT USE INTERPOLATION HERE
+            genPickup(driver, pivot, slides, depo, telemetryA, true),
             genPlacement(driver, pivot, slides, depo, telemetryA, true),
 
-            genPickup(false, driver, pivot, slides, depo, telemetryA),
+            genPickup(driver, pivot, slides, depo, telemetryA),
             genPlacement(driver, pivot, slides, depo, telemetryA),
 
-            genPickup(false, driver, pivot, slides, depo, telemetryA),
+            genPickup(driver, pivot, slides, depo, telemetryA),
             genPlacement(driver, pivot, slides, depo, telemetryA),
 
-            genPickup(false, driver, pivot, slides, depo, telemetryA),
+            genPickup(driver, pivot, slides, depo, telemetryA),
             genPlacement(driver, pivot, slides, depo, telemetryA),
-        ), pivot.action(telemetryA), slides.action(telemetryA), driverAction(driver), object : Action {
-            override fun init() {}
-
-            override fun update(): Boolean {
-                //telemetryA.update()
-                return false
-            }
-        }).execute { isStopRequested }
+        ), pivot.action(telemetryA), slides.action(telemetryA), driverAction(driver), telemetryAction(telemetryA)).execute { isStopRequested }
 
         while (!isStopRequested && opModeIsActive()) {
             driver.update()
             driver.telemetryDebug(telemetryA)
         }
     }
-    private fun genPickup(useCurrentPos: Boolean, driver: Driver, pivot: Pivot, slides: Slides, depo: Depo, telemetry: MultipleTelemetry): ActionSet {
+    private fun genPickup(driver: Driver, pivot: Pivot, slides: Slides, depo: Depo, telemetry: MultipleTelemetry, useFarPickupPos: Boolean = false): ActionSet {
         return ActionSet(
             ActionGroup(
-                if (!useCurrentPos) driver.runToAction(pickup0Pos) else driver.runToAction(push2EndPos),
+                if (!useFarPickupPos) driver.runToAction(pickup0Pos) else driver.runToAction(push2EndPos),
                 Global.PivotPresets.WALL_PICKUP_AUTO.action(pivot, driver.follower, telemetry),
-                ensureMinTime(Global.DiffyPosition.DiffySpecIntake.diffyPos.setAction(depo),1000),
-                ensureMinTime(depo.setClaw(true), 1000),
+                Global.DiffyPosition.DiffySpecIntake.diffyPos.setAction(depo),
+                depo.setClaw(true),
                 Global.SlidePresets.FWINTAKE_ALMOST.action(slides),
             ),
             ensureMinTime(Global.SlidePresets.FWINTAKE.action(slides), 300),
             ensureMinTime(depo.setClaw(false), 1000),
-            Global.SlidePresets.RESET.action(slides)
+            Global.PivotPresets.WALL_PICKUP_UP_AUTO.action(pivot),
+            //Global.SlidePresets.RESET.action(slides)
         )
     }
     private fun genPlacement(driver: Driver, pivot: Pivot, slides: Slides, depo: Depo, tele: MultipleTelemetry, usebezier: Boolean = false, usecloserpoint: Boolean = false) : ActionSet {
         val ppp = if (usecloserpoint) placePreloadPos2 else placePreloadPos1
-        //2 is closer
-        return ActionSet(//x5
-            ensureMinTime(ActionGroup(
+        return ActionSet(
+            ActionGroup(
                 depo.setClaw(false),
-                if (usebezier) driver.runToAction(ppp, placePreloadPos) else driver.runToAction(ppp),
+                if (usebezier) driver.runToAction(ppp, placePreloadPosA) else driver.runToAction(ppp),
                 Global.DiffyPosition.DiffySpecDepo.diffyPos.setAction(depo),
                 Global.PivotPresets.SPEC_DEPOSIT.action(pivot, driver.follower, tele),
-                Global.SlidePresets.HIGH_CHAMBER.action(slides))
-                , 2250),
-            //driver.runToAction(placePreloadPos1),
+                Global.SlidePresets.HIGH_CHAMBER.action(slides)
+            ),
             ensureMinTime(Global.SlidePresets.HIGH_CHAMBER_DROP_AUTO.action(slides), 250),
             ActionGroup (
-                //Global.PivotPresets.SPEC_DEPOSIT_DROP.action(pivot),
                 Global.SlidePresets.RESET.action(slides),
                 depo.setClaw(true),
             ),
@@ -143,6 +134,14 @@ class Auto : LinearOpMode() {
             //))
         )
     }
+    private fun telemetryAction(tele: MultipleTelemetry) : Action = object : Action {
+            override fun init() {}
+
+            override fun update(): Boolean {
+                tele.update()
+                return false
+            }
+        }
     private fun driverAction(driver: Driver) : Action {
         driver.update()
         return object : Action {

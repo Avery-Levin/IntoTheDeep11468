@@ -51,7 +51,7 @@ class ParkAuto : LinearOpMode() {
         ActionGroup(ActionSet(
             Global.DiffyPosition.DiffySpecDepo.diffyPos.setAction(depo),
             driver.runToAction(placePreloadPos),
-            Global.PivotPresets.RESET.action(pivot),
+            Global.PivotPresets.RESET.action(pivot, driver.follower, telemetryA),
             driver.runToAction(push0StartPos, push0BezierPosA, push0BezierPosB),
             driver.runToAction(push0EndPos),
             driver.runToAction(push1StartPos, push1BezierPosA),
@@ -60,7 +60,7 @@ class ParkAuto : LinearOpMode() {
             driver.runToAction(push2EndPos),
             //ensureMinTime(driver.runToAction(pickup0Pos), 2000, true),
             //driver.runToAction(Pose(1.0,12.0), Pose(10.0, 0.0)),
-            Global.PivotPresets.DEPO.action(pivot),
+            Global.PivotPresets.DEPO.action(pivot, driver.follower, telemetryA),
             //Global.SlidePresets.
             object : Action {
                 override fun init() {}

@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.Gamepad
 import org.baylorschool.intothedeep.Global.PivotPIDConfig.target
 import org.baylorschool.intothedeep.lib.DiffyPos
 import org.baylorschool.intothedeep.lib.Pivot
+import org.baylorschool.intothedeep.vision.dist
 import org.firstinspires.ftc.teamcode.lib.Slides
 import kotlin.math.min
 
@@ -92,11 +93,11 @@ object Global {
     //pivot
     enum class PivotPresets(var pos: Double) {
         RESET(0.0), DEPO(1100.0),
-        SPEC_DEPOSIT(960.0),
+        SPEC_DEPOSIT(950.0)/**/,
         SPEC_DEPOSIT_DROP(1000.0),
         WALL_PICKUP(230.0),
         SPEC_DEPOSIT_AUTO(975.0),
-        WALL_PICKUP_AUTO(230.0), WALL_PICKUP_UP_AUTO(275.0),//up before pull next
+        WALL_PICKUP_AUTO(230.0)/**/, WALL_PICKUP_UP_AUTO(330.0),//up before pull next
         LOW_RUNG(0.0), HIGH_RUNG(0.0);
         fun action(pivot: Pivot) : Action {
             val x = this
@@ -109,20 +110,30 @@ object Global {
             }
         }
         fun action(pivot: Pivot, follower: Follower, telemetry: MultipleTelemetry) : Action {
-            //old val 600, new val 900
             val x = this
-            val oldValue = target//600
-            val distance = oldValue - x.pos//300
             return object : Action {
+                var oldValue = -1.0
+                var distance = -1.0
+                var testing = -1
                 override fun init() {
-
+                    oldValue = target
+                    distance = oldValue - x.pos
+                    testing = 0
                 }
 
                 override fun update(): Boolean {
-                    target = -min(follower.currentTValue*1.0, 1.0) * distance + oldValue
-                    telemetry.addData("pivot target", target)
-                    telemetry.addData("pivot distance", distance)
-                    telemetry.addData("pivot follower T", follower.currentTValue)
+                    pivot.update()
+                    target = -min(follower.currentTValue*1.6, 1.0) * distance + oldValue
+                    testing += 1
+//                    telemetry.addData("pivot target", target)
+//                    telemetry.addData("pivot distance", distance)
+//                    telemetry.addData("pivot follower T", follower.currentTValue)
+//                    telemetry.addData("A-pivot testing", testing)
+//                    telemetry.addData("pinpoint cooked", follower.isPinpointCooked)
+//                    telemetry.addData("pivot targetpos", x.pos)
+//                    telemetry.addData("pivot pos", pivot.pivotPos)
+//                    telemetry.addData("pivot targetpos", distance)
+//                    telemetry.addData("pivot oldvalue", oldValue)
                     telemetry.update()
                     return pivot.close(x.pos)
                 }
