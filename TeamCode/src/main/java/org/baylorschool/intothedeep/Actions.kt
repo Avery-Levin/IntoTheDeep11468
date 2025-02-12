@@ -1,6 +1,7 @@
 package org.baylorschool.intothedeep
 
 import java.time.Duration
+import kotlin.jvm.Throws
 
 /**
  * This is a simple action framework.
@@ -101,6 +102,20 @@ fun initAction(id: () -> Unit): Action {
             id()
         }
         override fun update(): Boolean = true
+    }
+}
+fun wait(durms: Long): Action {
+    return object : Action {
+        var time = -1L
+        override fun init() {
+            time = System.currentTimeMillis()
+        }
+
+        override fun update(): Boolean {
+            Thread.sleep(1)
+            return System.currentTimeMillis() > time + time
+        }
+
     }
 }
 fun ensureMinTime(action: Action, durms: Long, hold: Boolean = false): Action {

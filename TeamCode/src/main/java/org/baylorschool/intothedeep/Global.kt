@@ -86,7 +86,7 @@ object Global {
 
     @Config
     object SlidePIDConfig {
-        @JvmField var p: Double = 0.025
+        @JvmField var p: Double = 0.02
         @JvmField var fg: Double = 0.1
         @JvmField var target: Double = 0.0
     }
@@ -126,15 +126,15 @@ object Global {
                     pivot.update()
                     target = -min(follower.currentTValue*1.6, 1.0) * distance + oldValue
                     testing += 1
-//                    telemetry.addData("pivot target", target)
-//                    telemetry.addData("pivot distance", distance)
-//                    telemetry.addData("pivot follower T", follower.currentTValue)
-//                    telemetry.addData("A-pivot testing", testing)
-//                    telemetry.addData("pinpoint cooked", follower.isPinpointCooked)
-//                    telemetry.addData("pivot targetpos", x.pos)
-//                    telemetry.addData("pivot pos", pivot.pivotPos)
-//                    telemetry.addData("pivot targetpos", distance)
-//                    telemetry.addData("pivot oldvalue", oldValue)
+                    telemetry.addData("pivot target", target)
+                    telemetry.addData("pivot distance", distance)
+                    telemetry.addData("pivot follower T", follower.currentTValue)
+                    telemetry.addData("A-pivot testing", testing)
+                    telemetry.addData("pinpoint cooked", follower.isPinpointCooked)
+                    telemetry.addData("pivot targetpos", x.pos)
+                    telemetry.addData("pivot pos", pivot.pivotPos)
+                    telemetry.addData("pivot targetpos", distance)
+                    telemetry.addData("pivot oldvalue", oldValue)
                     telemetry.update()
                     return pivot.close(x.pos)
                 }

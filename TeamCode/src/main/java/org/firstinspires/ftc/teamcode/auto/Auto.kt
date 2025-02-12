@@ -14,6 +14,7 @@ import org.baylorschool.intothedeep.Global
 import org.baylorschool.intothedeep.ensureMinTime
 import org.baylorschool.intothedeep.lib.Depo
 import org.baylorschool.intothedeep.lib.Pivot
+import org.baylorschool.intothedeep.wait
 import org.firstinspires.ftc.teamcode.Driver
 import org.firstinspires.ftc.teamcode.lib.Slides
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants
@@ -36,7 +37,8 @@ class Auto : LinearOpMode() {
     private val push2BezierPosA = Pose(70.0, -52.0, 0.0)
     private val push2StartPos = Pose(49.5, -62.5, 0.0)
     private val push2EndPos = Pose(15.0, -62.5, 0.0)//47
-    private val pickup0Pos = Pose(13.3, -41.0, 0.0)
+    private val pickup0Pos = Pose(13.3, -35.0, 0.0)
+    //
     override fun runOpMode() {
         Constants.setConstants(FConstants::class.java, LConstants::class.java)
         val driver = Driver(Follower(hardwareMap), Pose(0.0, -8.0, 0.0))
@@ -60,14 +62,15 @@ class Auto : LinearOpMode() {
             pivot.update()
             if (gamepad1.left_bumper) {
                 depo.claw.position = 0.95
-            } else if (gamepad1.right_bumper) {
+            } else if (gamepad1.right_bumper) {//11, 40.5
                 depo.claw.position = 0.55
             }
         }
         ActionGroup(ActionSet(
             genPlacement(driver, pivot, slides, depo, telemetryA, usecloserpoint = true),
 
-            ActionGroup(
+            genPushAlt(driver, pivot, slides, depo, telemetryA)
+            /*ActionGroup(
                 genPush(driver),
                 Global.DiffyPosition.DiffySpecIntake.diffyPos.setAction(depo),
                 Global.PivotPresets.WALL_PICKUP_AUTO.action(pivot, driver.follower, telemetryA),
@@ -85,7 +88,7 @@ class Auto : LinearOpMode() {
             genPlacement(driver, pivot, slides, depo, telemetryA),
 
             genPickup(driver, pivot, slides, depo, telemetryA),
-            genPlacement(driver, pivot, slides, depo, telemetryA),
+            genPlacement(driver, pivot, slides, depo, telemetryA),*/
         ), pivot.action(telemetryA), slides.action(telemetryA), driverAction(driver), telemetryAction(telemetryA)).execute { isStopRequested }
 
         while (!isStopRequested && opModeIsActive()) {
@@ -112,9 +115,9 @@ class Auto : LinearOpMode() {
         val ppp = if (usecloserpoint) placePreloadPos2 else placePreloadPos1
         return ActionSet(
             ActionGroup(
-                depo.setClaw(false),
+                if (usecloserpoint) ensureMinTime(depo.setClaw(false), 2500) else depo.setClaw(false),
                 if (usebezier) driver.runToAction(ppp, placePreloadPosA) else driver.runToAction(ppp),
-                Global.DiffyPosition.DiffySpecDepo.diffyPos.setAction(depo),
+                ensureMinTime(Global.DiffyPosition.DiffySpecDepo.diffyPos.setAction(depo), 1000),
                 Global.PivotPresets.SPEC_DEPOSIT.action(pivot, driver.follower, tele),
                 Global.SlidePresets.HIGH_CHAMBER.action(slides)
             ),
@@ -136,11 +139,66 @@ class Auto : LinearOpMode() {
             //))
         )
     }
+    val testing = Pose(24.0, -40.0, Math.toRadians(135.0))
+    val testingS = Pose(24.0, -40.0, Math.toRadians(45.0))
+    val testing2 = Pose(24.0, -50.0, Math.toRadians(135.0))
+    val testing2S = Pose(24.0, -50.0, Math.toRadians(45.0))
+    val testing3 = Pose(24.0, -60.0, Math.toRadians(135.0))
+    val testing3S = Pose(24.0, -60.0, Math.toRadians(45.0))
+    private fun genPushAlt(driver: Driver, pivot: Pivot, slides: Slides, depo: Depo, tele: MultipleTelemetry) : Action {
+        return ActionSet(
+            //30
+            driver.runToAction(Pose(24.5, 0.0, 0.0)),
+            ActionGroup(
+                driver.runToAction(testing, Pose(0.0, 10.0), Pose(20.0, -41.5)),
+                Global.DiffyPosition.Diffy45.diffyPos.setAction(depo),
+                Global.SlidePresets.SPEC_INTAKE.action(slides),
+                Global.PivotPresets.RESET.action(pivot, driver.follower, tele),
+            ),
+            wait(500),
+            depo.setClaw(false),
+            ActionGroup(
+                driver.runToAction(testingS),
+                Global.SlidePresets.INTAKE.action(slides),
+            ),
+            depo.setClaw(true),
+
+
+            ActionGroup(
+                driver.runToAction(testing2, Pose(0.0, 10.0), Pose(20.0, -41.5)),
+                Global.DiffyPosition.Diffy45.diffyPos.setAction(depo),
+                Global.SlidePresets.SPEC_INTAKE.action(slides),
+                Global.PivotPresets.RESET.action(pivot, driver.follower, tele),
+            ),
+            wait(500),
+            depo.setClaw(false),
+            ActionGroup(
+                driver.runToAction(testing2S),
+                Global.SlidePresets.INTAKE.action(slides),
+            ),
+            depo.setClaw(true),
+
+
+            ActionGroup(
+                driver.runToAction(testing3, Pose(0.0, 10.0), Pose(20.0, -41.5)),
+                Global.DiffyPosition.Diffy45.diffyPos.setAction(depo),
+                Global.SlidePresets.SPEC_INTAKE.action(slides),
+                Global.PivotPresets.RESET.action(pivot, driver.follower, tele),
+            ),
+            wait(500),
+            depo.setClaw(false),
+            ActionGroup(
+                driver.runToAction(testing3S),
+                Global.SlidePresets.INTAKE.action(slides),
+            ),
+            depo.setClaw(true),
+        )
+    }
     private fun telemetryAction(tele: MultipleTelemetry) : Action = object : Action {
             override fun init() {}
 
             override fun update(): Boolean {
-                tele.update()
+                //tele.update()
                 return false
             }
         }
