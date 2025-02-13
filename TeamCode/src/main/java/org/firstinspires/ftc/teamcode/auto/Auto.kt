@@ -121,7 +121,7 @@ class Auto : LinearOpMode() {
                 Global.PivotPresets.SPEC_DEPOSIT.action(pivot, driver.follower, tele),
                 Global.SlidePresets.HIGH_CHAMBER.action(slides)
             ),
-            ensureMinTime(Global.SlidePresets.HIGH_CHAMBER_DROP_AUTO.action(slides), 250),
+            ensureMinTime(Global.SlidePresets.HIGH_CHAMBER_DROP_AUTO.action(slides), 100),
             ActionGroup (
                 Global.SlidePresets.RESET.action(slides),
                 depo.setClaw(true),
@@ -139,7 +139,7 @@ class Auto : LinearOpMode() {
             //))
         )
     }
-    val testing = Pose(24.0, -38.0, Math.toRadians(135.0))
+    val testing = Pose(24.0, -3.0, Math.toRadians(135.0))
     val testingS = Pose(17.0, -38.0, Math.toRadians(45.0))
     val testing2 = Pose(24.0, -48.0, Math.toRadians(135.0))
     val testing2S = Pose(17.0, -43.0, Math.toRadians(45.0))
