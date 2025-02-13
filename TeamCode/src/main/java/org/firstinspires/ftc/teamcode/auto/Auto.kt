@@ -71,6 +71,8 @@ class Auto : LinearOpMode() {
                 genPush(driver),
                 Global.DiffyPosition.DiffySpecIntake.diffyPos.setAction(depo),
                 Global.PivotPresets.WALL_PICKUP_AUTO.action(pivot, driver.follower, telemetryA),
+                depo.setClaw(true),
+                Global.SlidePresets.FWINTAKE_ALMOST_ALMOST.action(slides),
             ),
 
             genPickup(driver, pivot, slides, depo, telemetryA, true),
