@@ -113,7 +113,7 @@ fun wait(durms: Long): Action {
 
         override fun update(): Boolean {
             Thread.sleep(1)
-            return System.currentTimeMillis() > time + time
+            return System.currentTimeMillis() > time + durms
         }
 
     }

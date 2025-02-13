@@ -25,8 +25,8 @@ class Auto : LinearOpMode() {
     //private val startPos = Pose(-32.0, -5.0*12.0, Math.toRadians(90.0))
     //note: the A and B points are beziers
     private val placePreloadPosA = Pose(19.0, 0.0, 0.0)
-    private val placePreloadPos1 = Pose(29.5, 0.0, 0.0)
-    private val placePreloadPos2 = Pose(30.0, 0.0, 0.0)
+    private val placePreloadPos1 = Pose(31.5, 0.0, 0.0)
+    private val placePreloadPos2 = Pose(31.5, 0.0, 0.0)
     private val push0StartPos = Pose(49.5, -44.5, 0.0)
     private val push0BezierPosA = Pose(-10.5, -56.0, 0.0)//toward human player
     private val push0BezierPosB = Pose(53.0, -23.5, 0.0)
@@ -115,7 +115,7 @@ class Auto : LinearOpMode() {
         val ppp = if (usecloserpoint) placePreloadPos2 else placePreloadPos1
         return ActionSet(
             ActionGroup(
-                if (usecloserpoint) ensureMinTime(depo.setClaw(false), 2500) else depo.setClaw(false),
+                if (usecloserpoint) ensureMinTime(depo.setClaw(false), 1500) else depo.setClaw(false),
                 if (usebezier) driver.runToAction(ppp, placePreloadPosA) else driver.runToAction(ppp),
                 ensureMinTime(Global.DiffyPosition.DiffySpecDepo.diffyPos.setAction(depo), 1000),
                 Global.PivotPresets.SPEC_DEPOSIT.action(pivot, driver.follower, tele),
@@ -139,12 +139,12 @@ class Auto : LinearOpMode() {
             //))
         )
     }
-    val testing = Pose(24.0, -40.0, Math.toRadians(135.0))
-    val testingS = Pose(24.0, -40.0, Math.toRadians(45.0))
-    val testing2 = Pose(24.0, -50.0, Math.toRadians(135.0))
-    val testing2S = Pose(24.0, -50.0, Math.toRadians(45.0))
-    val testing3 = Pose(24.0, -60.0, Math.toRadians(135.0))
-    val testing3S = Pose(24.0, -60.0, Math.toRadians(45.0))
+    val testing = Pose(24.0, -38.0, Math.toRadians(135.0))
+    val testingS = Pose(17.0, -38.0, Math.toRadians(45.0))
+    val testing2 = Pose(24.0, -48.0, Math.toRadians(135.0))
+    val testing2S = Pose(17.0, -43.0, Math.toRadians(45.0))
+    val testing3 = Pose(24.0, -58.0, Math.toRadians(135.0))
+    val testing3S = Pose(17.0, -38.0, Math.toRadians(45.0))
     private fun genPushAlt(driver: Driver, pivot: Pivot, slides: Slides, depo: Depo, tele: MultipleTelemetry) : Action {
         return ActionSet(
             //30
@@ -162,8 +162,6 @@ class Auto : LinearOpMode() {
                 Global.SlidePresets.INTAKE.action(slides),
             ),
             depo.setClaw(true),
-
-
             ActionGroup(
                 driver.runToAction(testing2, Pose(0.0, 10.0), Pose(20.0, -41.5)),
                 Global.DiffyPosition.Diffy45.diffyPos.setAction(depo),
@@ -178,7 +176,6 @@ class Auto : LinearOpMode() {
             ),
             depo.setClaw(true),
 
-
             ActionGroup(
                 driver.runToAction(testing3, Pose(0.0, 10.0), Pose(20.0, -41.5)),
                 Global.DiffyPosition.Diffy45.diffyPos.setAction(depo),
@@ -187,11 +184,17 @@ class Auto : LinearOpMode() {
             ),
             wait(500),
             depo.setClaw(false),
+
             ActionGroup(
                 driver.runToAction(testing3S),
                 Global.SlidePresets.INTAKE.action(slides),
             ),
             depo.setClaw(true),
+            wait(1000),
+            ActionGroup(
+                Global.SlidePresets.SPEC_INTAKE.action(slides),
+                Global.PivotPresets.WALL_PICKUP_AUTO.action(pivot, driver.follower, tele)
+            ),
         )
     }
     private fun telemetryAction(tele: MultipleTelemetry) : Action = object : Action {
