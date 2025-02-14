@@ -38,6 +38,7 @@ class Auto : LinearOpMode() {
     private val push2StartPos = Pose(49.5, -62.5, 0.0)
     private val push2EndPos = Pose(15.0, -62.5, 0.0)//47
     private val pickup0Pos = Pose(12.75, -35.0, 0.0)
+    private val pickup1Pos = Pose(12.75, -35.0, 0.0)
     //
     override fun runOpMode() {
         Constants.setConstants(FConstants::class.java, LConstants::class.java)
@@ -78,7 +79,7 @@ class Auto : LinearOpMode() {
                 Global.SlidePresets.FWINTAKE_ALMOST_ALMOST.action(slides),
             ),*/
 
-            genPickup(driver, pivot, slides, depo, telemetryA),
+            genPickup(driver, pivot, slides, depo, telemetryA, true),
             genPlacement(driver, pivot, slides, depo, telemetryA),
 
             genPickup(driver, pivot, slides, depo, telemetryA),
@@ -99,7 +100,7 @@ class Auto : LinearOpMode() {
     private fun genPickup(driver: Driver, pivot: Pivot, slides: Slides, depo: Depo, telemetry: MultipleTelemetry, useFarPickupPos: Boolean = false): ActionSet {
         return ActionSet(
             ActionGroup(
-                if (!useFarPickupPos) driver.runToAction(pickup0Pos) else driver.runToAction(push2EndPos),
+                if (useFarPickupPos) driver.runToAction(pickup1Pos) else driver.runToAction(pickup0Pos),
                 Global.PivotPresets.WALL_PICKUP_AUTO.action(pivot, driver.follower, telemetry),
                 Global.DiffyPosition.DiffySpecIntake.diffyPos.setAction(depo),
                 depo.setClaw(true),
