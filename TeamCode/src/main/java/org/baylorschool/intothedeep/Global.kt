@@ -4,6 +4,8 @@ import com.acmerobotics.dashboard.config.Config
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.pedropathing.follower.Follower
 import com.qualcomm.robotcore.hardware.Gamepad
+import org.baylorschool.intothedeep.Global.DiffyConfig.standardL
+import org.baylorschool.intothedeep.Global.DiffyConfig.standardR
 import org.baylorschool.intothedeep.Global.PivotPIDConfig.target
 import org.baylorschool.intothedeep.lib.DiffyPos
 import org.baylorschool.intothedeep.lib.Pivot
@@ -38,8 +40,11 @@ object Global {
     }
 
     // diffy
-    val standardL = 0.4694
-    val standardR = 0.4587
+    @Config
+    object DiffyConfig {
+        @JvmField var standardL: Double = 0.4056
+        @JvmField var standardR: Double = 0.4689
+    }
     val diffyIdle = DiffyPos(standardL, standardR)
     val diffy45 = DiffyPos(standardL+0.0511, standardR+0.0955)
     val diffy90 = DiffyPos(standardL+0.0428, standardR+0.1139)
@@ -48,7 +53,7 @@ object Global {
     val diffyRetract = DiffyPos (standardL+0.0322, standardR-0.02)
     val diffyBasket = DiffyPos(standardL+0.0211, standardR-0.0439)
     val diffySpecIntake = DiffyPos(standardL+0.0190, standardR+0.0190)
-    val diffySpecDepo = DiffyPos(standardL-.105, standardR+0.0107)
+    val diffySpecDepo = DiffyPos(standardL-.1039, standardR+0.0078)
     val diffyInit = DiffyPos(standardL-.0961, standardR+0.0077)
 
     const val clawOpen = 0.55
@@ -65,12 +70,12 @@ object Global {
     enum class SlidePresets(var pos: Double) {
         RESET(0.0), INTAKE(1000.0),
         LOW_BASKET(0.0), HIGH_BASKET(2300.0),//7
-        SPEC_INTAKE(300.0), LOW_CHAMBER(0.0), HIGH_CHAMBER(660.0), HIGH_CHAMBER_SNAP(150.0),
+        SPEC_INTAKE(300.0), LOW_CHAMBER(0.0), HIGH_CHAMBER(750.0), HIGH_CHAMBER_SNAP(140.0),
         FWINTAKE(500.0),
         FWINTAKE_ALMOST(400.0),
         FWINTAKE_ALMOST_ALMOST(200.0),
         HIGH_CHAMBER_AUTO(580.0),
-        FWINTAKE_AUTO(525.0), HIGH_CHAMBER_DROP_AUTO(150.0),
+        FWINTAKE_AUTO(525.0), HIGH_CHAMBER_DROP_AUTO(140.0),
         LOW_RUNG(0.0), HIGH_RUNG(0.0),;
         fun action(slides: Slides) : Action {
             val x = this
@@ -86,19 +91,19 @@ object Global {
 
     @Config
     object SlidePIDConfig {
-        @JvmField var p: Double = 0.02
+        @JvmField var p: Double = 0.018
         @JvmField var fg: Double = 0.1
         @JvmField var target: Double = 0.0
     }
 
     //pivot
     enum class PivotPresets(var pos: Double) {
-        RESET(0.0), DEPO(1100.0),
-        SPEC_DEPOSIT(950.0)/**/,
+        RESET(10.0), DEPO(1000.0),
+        SPEC_DEPOSIT(970.0)/**/,
         SPEC_DEPOSIT_DROP(1000.0),
-        WALL_PICKUP(240.0),
+        WALL_PICKUP(250.0),
         SPEC_DEPOSIT_AUTO(975.0),
-        WALL_PICKUP_AUTO(265.0)/**/, WALL_PICKUP_UP_AUTO(330.0),//up before pull next
+        WALL_PICKUP_AUTO(250.0)/**/, WALL_PICKUP_UP_AUTO(360.0),//up before pull next
         LOW_RUNG(0.0), HIGH_RUNG(0.0);
         fun action(pivot: Pivot) : Action {
             val x = this
@@ -144,9 +149,9 @@ object Global {
 
     @Config
     object PivotPIDConfig {
-        @JvmField var p: Double = 0.0225
-        @JvmField var i: Double = 0.000
-        @JvmField var d: Double = 0.00005
+        @JvmField var p: Double = 0.027
+        @JvmField var i: Double = 3.5e-8
+        @JvmField var d: Double = 0.0003
         @JvmField var fg: Double = 0.00
         @JvmField var target: Double = 0.0
     }

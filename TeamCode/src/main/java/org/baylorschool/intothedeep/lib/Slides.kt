@@ -27,7 +27,7 @@ class Slides(hardwareMap: HardwareMap) {
     private val controller = PIDFController(pControl)
     var slidePower = 0.0
     private val high: Int = 2300
-    private val low: Int = 0
+    private val low: Int = -1
 
     init {
         slideL = hardwareMap.get(DcMotorEx::class.java, "slideL")
