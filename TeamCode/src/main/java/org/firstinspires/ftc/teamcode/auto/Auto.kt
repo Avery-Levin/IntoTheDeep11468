@@ -156,7 +156,7 @@ class Auto : LinearOpMode() {
                 Global.SlidePresets.SPEC_INTAKE.action(slides),
                 Global.PivotPresets.RESET.action(pivot, driver.follower, tele),
             ),
-            wait(500),
+            wait(300),
             depo.setClaw(false),
             ActionGroup(
                 driver.runToAction(testingS),
@@ -170,7 +170,7 @@ class Auto : LinearOpMode() {
                 Global.SlidePresets.SPEC_INTAKE.action(slides),
                 Global.PivotPresets.RESET.action(pivot, driver.follower, tele),
             ),
-            wait(500),
+            wait(300),
             depo.setClaw(false),
             ActionGroup(
                 driver.runToAction(testing2S),
@@ -184,7 +184,7 @@ class Auto : LinearOpMode() {
                 Global.SlidePresets.SPEC_INTAKE.action(slides),
                 Global.PivotPresets.RESET.action(pivot, driver.follower, tele),
             ),
-            wait(500),
+            wait(300),
             depo.setClaw(false),
             ActionGroup(
                 driver.runToAction(testing3S),

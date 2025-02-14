@@ -98,7 +98,7 @@ object Global {
         SPEC_DEPOSIT_DROP(1000.0),
         WALL_PICKUP(240.0),
         SPEC_DEPOSIT_AUTO(975.0),
-        WALL_PICKUP_AUTO(255.0)/**/, WALL_PICKUP_UP_AUTO(330.0),//up before pull next
+        WALL_PICKUP_AUTO(265.0)/**/, WALL_PICKUP_UP_AUTO(330.0),//up before pull next
         LOW_RUNG(0.0), HIGH_RUNG(0.0);
         fun action(pivot: Pivot) : Action {
             val x = this
@@ -144,7 +144,7 @@ object Global {
 
     @Config
     object PivotPIDConfig {
-        @JvmField var p: Double = 0.025
+        @JvmField var p: Double = 0.0225
         @JvmField var i: Double = 0.000
         @JvmField var d: Double = 0.00005
         @JvmField var fg: Double = 0.00
