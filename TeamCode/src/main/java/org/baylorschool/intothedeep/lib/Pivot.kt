@@ -1,6 +1,7 @@
 package org.baylorschool.intothedeep.lib
 
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
+import com.qualcomm.hardware.lynx.LynxModule
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorEx
 import com.qualcomm.robotcore.hardware.DcMotorSimple
@@ -16,22 +17,25 @@ import org.baylorschool.intothedeep.Global.PivotPIDConfig.target
 import org.baylorschool.intothedeep.controllers.PIDCoefficients
 import org.baylorschool.intothedeep.controllers.PIDFController
 import org.firstinspires.ftc.robotcore.external.Telemetry
+import org.firstinspires.ftc.robotcore.external.navigation.VoltageUnit
 import kotlin.math.abs
 import kotlin.math.cos
 
 class Pivot(hardwareMap: HardwareMap) {
+    private val hubs = hardwareMap.getAll(LynxModule::class.java)
     private val ticks_per_degree =  (2786.2/1.583333) / 180.0
     private var correctedValue = target/ticks_per_degree
     val pivotL: DcMotorEx
     private val pivotR : DcMotorEx
     private val switch: DigitalChannel
     var pivotPos: Double = 0.0
-    private val control = PIDCoefficients(p, i, d)
-    private val controller = PIDFController(control)
+    private var control = PIDCoefficients(p, i, d)
+    private var controller = PIDFController(control)
     private var armPower = 0.0
     var offset = 0
     private val high: Int = 1200
     private val low: Int = -1
+    private var voltage: Double = 0.0
 
     init {
         controller.targetPosition = target
@@ -48,6 +52,8 @@ class Pivot(hardwareMap: HardwareMap) {
 
         pivotPos = (pivotL.currentPosition.toDouble()) + offset
         target = 0.0
+
+        voltage = hubs[0].getInputVoltage(VoltageUnit.VOLTS)
     }
 
     fun telemetry(telemetry: Telemetry) {
@@ -56,15 +62,22 @@ class Pivot(hardwareMap: HardwareMap) {
         telemetry.addData("arm Target Position", target)
         telemetry.addData("arm power",pivotL.power)
         telemetry.addData("switch", switch.state)
+        telemetry.addData("hub voltage", voltage)
     }
 
     fun update() {
+        voltage = hubs[0].getInputVoltage(VoltageUnit.VOLTS)
+        if (!(control.kP == p && control.kD == d && control.kI == i)) {
+            control = PIDCoefficients(p, i, d)
+            controller = PIDFController(control)
+        }
+
         controller.targetPosition = target
         correctedValue = target / ticks_per_degree
         pivotPos = (pivotL.currentPosition.toDouble()) + offset
         armPower = controller.update(pivotPos) //* ((cos(Math.toRadians(correctedValue))) * fg))
-        pivotL.power = armPower
-        pivotR.power = armPower
+        pivotL.power = (armPower * (12.55/voltage))
+        pivotR.power = (armPower * (12.55/voltage))
         target = Global.hardStops(target.toInt(), low, high).toDouble()
         /*
         if (switch.state == true) {

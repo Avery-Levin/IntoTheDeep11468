@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode
 
 import com.acmerobotics.dashboard.FtcDashboard
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
+import com.qualcomm.hardware.lynx.LynxModule
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 import org.baylorschool.intothedeep.lib.Depo
@@ -15,6 +16,10 @@ import org.firstinspires.ftc.teamcode.lib.Slides
 class TeleOp: LinearOpMode() {
     @Throws(InterruptedException::class)
     override fun runOpMode() {
+        val allHubs = hardwareMap.getAll(LynxModule::class.java)
+        for (hub in allHubs) {
+            hub.bulkCachingMode = LynxModule.BulkCachingMode.MANUAL
+        }
         val telemetryMultiple = MultipleTelemetry(telemetry, FtcDashboard.getInstance().telemetry)
         val pivot = Pivot(hardwareMap)
         val slide = Slides(hardwareMap)
@@ -28,6 +33,9 @@ class TeleOp: LinearOpMode() {
         resetRuntime()
         while (opModeIsActive()) {
             loop = System.nanoTime().toDouble()
+            for (hub in allHubs) {
+                hub.clearBulkCache()
+            }
             mecanum.mecanumLoop(gamepad1)
             fsm.loop(gamepad2, gamepad1)
 

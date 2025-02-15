@@ -6,7 +6,6 @@ import com.pedropathing.follower.Follower
 import com.qualcomm.robotcore.hardware.Gamepad
 import org.baylorschool.intothedeep.Global.DiffyConfig.standardL
 import org.baylorschool.intothedeep.Global.DiffyConfig.standardR
-import org.baylorschool.intothedeep.Global.PivotPIDConfig.target
 import org.baylorschool.intothedeep.lib.DiffyPos
 import org.baylorschool.intothedeep.lib.Pivot
 import org.baylorschool.intothedeep.vision.dist
@@ -42,8 +41,8 @@ object Global {
     // diffy
     @Config
     object DiffyConfig {
-        @JvmField var standardL: Double = 0.4056
-        @JvmField var standardR: Double = 0.4689
+        @JvmField var standardL: Double = 0.4133
+        @JvmField var standardR: Double = 0.4617
     }
     val diffyIdle = DiffyPos(standardL, standardR)
     val diffy45 = DiffyPos(standardL+0.0511, standardR+0.0955)
@@ -70,7 +69,7 @@ object Global {
     enum class SlidePresets(var pos: Double) {
         RESET(0.0), INTAKE(1000.0),
         LOW_BASKET(0.0), HIGH_BASKET(2300.0),//7
-        SPEC_INTAKE(300.0), LOW_CHAMBER(0.0), HIGH_CHAMBER(750.0), HIGH_CHAMBER_SNAP(140.0),
+        SPEC_INTAKE(300.0), LOW_CHAMBER(0.0), HIGH_CHAMBER(780.0), HIGH_CHAMBER_SNAP(140.0),
         FWINTAKE(500.0),
         FWINTAKE_ALMOST(400.0),
         FWINTAKE_ALMOST_ALMOST(200.0),
@@ -91,7 +90,7 @@ object Global {
 
     @Config
     object SlidePIDConfig {
-        @JvmField var p: Double = 0.018
+        @JvmField var p: Double = 0.0097
         @JvmField var fg: Double = 0.1
         @JvmField var target: Double = 0.0
     }
@@ -99,39 +98,39 @@ object Global {
     //pivot
     enum class PivotPresets(var pos: Double) {
         RESET(10.0), DEPO(1000.0),
-        SPEC_DEPOSIT(970.0)/**/,
+        SPEC_DEPOSIT(930.0)/**/,
         SPEC_DEPOSIT_DROP(1000.0),
         WALL_PICKUP(250.0),
         SPEC_DEPOSIT_AUTO(975.0),
-        WALL_PICKUP_AUTO(250.0)/**/, WALL_PICKUP_UP_AUTO(360.0),//up before pull next
+        WALL_PICKUP_AUTO(235.0)/**/, WALL_PICKUP_UP_AUTO(360.0),//up before pull next
         LOW_RUNG(0.0), HIGH_RUNG(0.0);
-        fun action(pivot: Pivot) : Action {
+        fun action(pivot: Pivot, auto: Boolean = true) : Action {
             val x = this
             return object : Action {
                 override fun init() {
-                    target = x.pos
+                    PivotPIDConfig.target = x.pos
                 }
 
                 override fun update(): Boolean = pivot.close()
             }
         }
-        fun action(pivot: Pivot, follower: Follower, telemetry: MultipleTelemetry) : Action {
+        fun action(pivot: Pivot, follower: Follower, telemetry: MultipleTelemetry, auto: Boolean = true) : Action {
             val x = this
             return object : Action {
                 var oldValue = -1.0
                 var distance = -1.0
                 var testing = -1
                 override fun init() {
-                    oldValue = target
+                    oldValue = PivotPIDConfig.target
                     distance = oldValue - x.pos
                     testing = 0
                 }
 
                 override fun update(): Boolean {
                     pivot.update()
-                    target = -min(follower.currentTValue*1.6, 1.0) * distance + oldValue
                     testing += 1
-                    telemetry.addData("pivot target", target)
+                    PivotPIDConfig.target = -min(follower.currentTValue * 1.6, 1.0) * distance + oldValue
+                    telemetry.addData("pivot target", PivotPIDConfig.target)
                     telemetry.addData("pivot distance", distance)
                     telemetry.addData("pivot follower T", follower.currentTValue)
                     telemetry.addData("A-pivot testing", testing)
@@ -146,12 +145,38 @@ object Global {
             }
         }
     }
-
     @Config
     object PivotPIDConfig {
-        @JvmField var p: Double = 0.027
-        @JvmField var i: Double = 3.5e-8
-        @JvmField var d: Double = 0.0003
+        var p: Double
+            get() = if (useTeleopPID) {TeleopPivotPIDConfig.p} else {AutoPivotPIDConfig.p}
+            set(_) {}
+        var i: Double
+            get() = if (useTeleopPID) {TeleopPivotPIDConfig.i} else {AutoPivotPIDConfig.i}
+            set(_) {}
+        var d: Double
+            get() = if (useTeleopPID) {TeleopPivotPIDConfig.d} else {AutoPivotPIDConfig.d}
+            set(_) {}
+        var fg: Double
+            get() = if (useTeleopPID) {TeleopPivotPIDConfig.fg} else {AutoPivotPIDConfig.fg}
+            set(_) {}
+        var target: Double
+            get() = if (useTeleopPID) {TeleopPivotPIDConfig.target} else {AutoPivotPIDConfig.target}
+            set(_) {}
+        @JvmField var useTeleopPID: Boolean = true
+    }
+    @Config
+    object TeleopPivotPIDConfig {
+        @JvmField var p: Double = 0.018
+        @JvmField var i: Double = 0.0
+        @JvmField var d: Double = 0.0
+        @JvmField var fg: Double = 0.0
+        @JvmField var target: Double = 0.0
+    }
+    @Config
+    object AutoPivotPIDConfig {
+        @JvmField var p: Double = 0.018
+        @JvmField var i: Double = 0.0004
+        @JvmField var d: Double = 0.0005
         @JvmField var fg: Double = 0.00
         @JvmField var target: Double = 0.0
     }

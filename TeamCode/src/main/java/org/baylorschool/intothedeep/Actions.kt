@@ -136,3 +136,25 @@ fun ensureMinTime(action: Action, durms: Long, hold: Boolean = false): Action {
         }
     }
 }
+fun startWithDelay(action: Action, delay: Long): Action {
+    return object : Action {
+        var time = -1L
+        override fun init() {
+            time = System.currentTimeMillis()
+        }
+        //make x and y abs more for pickup 1
+        var inited = false
+        override fun update(): Boolean {
+            if (time + delay < System.currentTimeMillis()) {
+                if (!inited) {
+                    inited = true
+                    action.init()
+                } else {
+                    return action.update()
+                }
+            }
+            return false
+        }
+
+    }
+}

@@ -14,6 +14,8 @@ import com.pedropathing.util.Drawing
 class Driver(val follower: Follower, startPose: Pose) {
     init {
         follower.setStartingPose(startPose)
+        //follower.poseUpdater.
+        //follower.
     }
     fun runToAction(pathChain: PathChain): Action {
         return object : Action {

@@ -5,6 +5,7 @@ import com.pedropathing.follower.Follower
 import com.pedropathing.follower.FollowerConstants
 import com.pedropathing.localization.Pose
 import com.pedropathing.util.Constants
+import com.qualcomm.hardware.lynx.LynxModule
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import org.baylorschool.intothedeep.Action
@@ -14,6 +15,7 @@ import org.baylorschool.intothedeep.Global
 import org.baylorschool.intothedeep.ensureMinTime
 import org.baylorschool.intothedeep.lib.Depo
 import org.baylorschool.intothedeep.lib.Pivot
+import org.baylorschool.intothedeep.startWithDelay
 import org.baylorschool.intothedeep.wait
 import org.firstinspires.ftc.teamcode.Driver
 import org.firstinspires.ftc.teamcode.lib.Slides
@@ -37,11 +39,17 @@ class Auto : LinearOpMode() {
     private val push2BezierPosA = Pose(70.0, -52.0, 0.0)
     private val push2StartPos = Pose(49.5, -62.5, 0.0)
     private val push2EndPos = Pose(15.0, -62.5, 0.0)//47
-    private val pickup0Pos = Pose(10.0, -36.75, 0.0)
-    private val pickup1Pos = Pose(10.0, -36.5, 0.0)
+    private val pickup0Pos = Pose(11.5, -36.75, 0.0)
+    private val pickup1Pos = Pose(11.5, -36.5, 0.0)
     //
     override fun runOpMode() {
         Constants.setConstants(FConstants::class.java, LConstants::class.java)
+        Global.PivotPIDConfig.useTeleopPID = false
+
+        /*val allHubs = hardwareMap.getAll(LynxModule::class.java)
+        for (hub in allHubs) {
+            hub.bulkCachingMode = LynxModule.BulkCachingMode.MANUAL
+        }*/
 
         val telemetryA = MultipleTelemetry(telemetry, FtcDashboard.getInstance().telemetry)
         val pivot = Pivot(hardwareMap)//up down
@@ -80,7 +88,7 @@ class Auto : LinearOpMode() {
             ),
              */
 
-            genPickup(driver, pivot, slides, depo, telemetryA, true),
+            genPickup(driver, pivot, slides, depo, telemetryA, ),//true
             genPlacement(driver, pivot, slides, depo, telemetryA),
 
             genPickup(driver, pivot, slides, depo, telemetryA),
@@ -92,13 +100,16 @@ class Auto : LinearOpMode() {
             genPickup(driver, pivot, slides, depo, telemetryA),
             genPlacement(driver, pivot, slides, depo, telemetryA),
 
-        ), pivot.action(telemetryA), slides.action(telemetryA), driverAction(driver), telemetryAction(telemetryA)).execute { isStopRequested }
+        ), pivot.action(telemetryA), slides.action(telemetryA), driverAction(driver), looptimeAction(telemetryA),
+            //cacheClearAction(allHubs),
+            telemetryAction(telemetryA)).execute { isStopRequested }
 
         while (!isStopRequested && opModeIsActive()) {
             driver.update()
             driver.telemetryDebug(telemetryA)
         }
     }
+
     private fun genPickup(driver: Driver, pivot: Pivot, slides: Slides, depo: Depo, telemetry: MultipleTelemetry, useFarPickupPos: Boolean = false): ActionSet {
         return ActionSet(
             ActionGroup(
@@ -106,7 +117,7 @@ class Auto : LinearOpMode() {
                 Global.PivotPresets.WALL_PICKUP_AUTO.action(pivot, driver.follower, telemetry),
                 Global.DiffyPosition.DiffySpecIntake.diffyPos.setAction(depo),
                 depo.setClaw(true),
-                Global.SlidePresets.FWINTAKE_ALMOST.action(slides),
+                startWithDelay(Global.SlidePresets.FWINTAKE_ALMOST.action(slides), 500),
             ),
             ensureMinTime(Global.SlidePresets.FWINTAKE.action(slides), 300),
             ensureMinTime(depo.setClaw(false), 500),
@@ -118,7 +129,7 @@ class Auto : LinearOpMode() {
         val ppp = if (usecloserpoint) placePreloadPos2 else placePreloadPos1
         return ActionSet(
             ActionGroup(
-                if (usecloserpoint) ensureMinTime(depo.setClaw(false), 800) else depo.setClaw(false),
+                if (usecloserpoint) ensureMinTime(depo.setClaw(false), 1) else depo.setClaw(false),
                 if (usebezier) driver.runToAction(ppp, placePreloadPosA) else driver.runToAction(ppp),
                 ensureMinTime(Global.DiffyPosition.DiffySpecDepo.diffyPos.setAction(depo), 300),
                 Global.PivotPresets.SPEC_DEPOSIT.action(pivot, driver.follower, tele),
@@ -142,21 +153,21 @@ class Auto : LinearOpMode() {
             //))
         )
     }
-    val testing = Pose(23.75, -40.0, Math.toRadians(135.0))
+    val testing = Pose(24.25, -40.5, Math.toRadians(135.0))
     val testingS = Pose(17.0, -40.0, Math.toRadians(45.0))
-    val testing2 = Pose(23.75, -49.0, Math.toRadians(135.0))
-    val testing2S = Pose(17.0, -43.0, Math.toRadians(45.0))
-    val testing3 = Pose(24.5, -59.0, Math.toRadians(135.0))
+    val testing2 = Pose(24.0, -49.5, Math.toRadians(135.0))
+    val testing2S = Pose(9.0, -43.0, Math.toRadians(45.0))
+    val testing3 = Pose(24.5, -60.25, Math.toRadians(135.0))
     //val testing3S = Pose(17.0, -38.0, Math.toRadians(45.0))
     val testing3S = Pose(12.0, -51.0, 0.0)
     private fun genPushAlt(driver: Driver, pivot: Pivot, slides: Slides, depo: Depo, tele: MultipleTelemetry) : Action {
         return ActionSet(
             //30
-            driver.runToAction(Pose(24.5, 0.0, 0.0)),
+            //driver.runToAction(Pose(24.5, 0.0, 0.0)),
             ActionGroup(
-                driver.runToAction(testing, Pose(0.0, 10.0), Pose(20.0, -41.5)),
+                driver.runToAction(testing, Pose(5.0, 0.0)),
                 Global.DiffyPosition.Diffy45.diffyPos.setAction(depo),
-                Global.SlidePresets.SPEC_INTAKE.action(slides),
+                startWithDelay(Global.SlidePresets.SPEC_INTAKE.action(slides), 500),
                 Global.PivotPresets.RESET.action(pivot, driver.follower, tele),
             ),
             depo.setClaw(false),
@@ -176,8 +187,9 @@ class Auto : LinearOpMode() {
             depo.setClaw(false),
             ActionGroup(
                 driver.runToAction(testing2S),
-                Global.SlidePresets.INTAKE.action(slides),
+                Global.SlidePresets.RESET.action(slides),
             ),
+            //Global.SlidePresets.INTAKE.action(slides),
             depo.setClaw(true),
 
             ActionGroup(
@@ -192,6 +204,8 @@ class Auto : LinearOpMode() {
                 Global.SlidePresets.RESET.action(slides),
             ),
             depo.setClaw(true),
+
+
 
             /*wait(1000),
             ActionGroup(
@@ -224,6 +238,35 @@ class Auto : LinearOpMode() {
         override fun init() {}
         override fun update(): Boolean {
             return true
+        }
+    }
+    private fun looptimeAction(tele: MultipleTelemetry): Action = object : Action {
+        var loopTime = 0.0
+        var loop: Double = 0.0
+        override fun init() {
+            loop = 0.0
+            loopTime = 0.0
+        }
+
+        override fun update(): Boolean {
+            tele.addData("frequency (hz)", 1000000000 / (loop - loopTime))
+            loopTime = loop
+            loop = System.nanoTime().toDouble()
+            return false
+        }
+    }
+
+    private fun cacheClearAction(allHubs: List<LynxModule>): Action {
+        return object : Action {
+            override fun init() {}
+
+            override fun update(): Boolean {
+                for (hub in allHubs) {
+                    hub.clearBulkCache()
+                }
+                return false
+            }
+
         }
     }
 }
