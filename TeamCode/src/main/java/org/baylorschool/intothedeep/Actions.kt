@@ -1,6 +1,7 @@
 package org.baylorschool.intothedeep
 
 import java.time.Duration
+import java.util.concurrent.atomic.AtomicInteger
 import kotlin.jvm.Throws
 
 /**
@@ -20,6 +21,23 @@ interface Action {
     fun execute() {
         init()
         while (!update()) {/**/}
+    }
+}
+class MultithreadedActionGroup(vararg actions0: Action) : Action {
+    val running = AtomicInteger(actions0.size)
+    var threads = actions0.map {
+        Thread {
+            it.execute()
+            running.decrementAndGet()
+        }
+    }
+    override fun init() {
+        for (t in threads) {
+            t.start()
+        }
+    }
+    override fun update(): Boolean {
+        return running.get() == 0
     }
 }
 class ActionGroup(vararg actions0: Action) : Action {
