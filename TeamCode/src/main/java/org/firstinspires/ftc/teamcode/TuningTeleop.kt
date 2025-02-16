@@ -5,6 +5,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.qualcomm.hardware.lynx.LynxModule
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
+import org.baylorschool.intothedeep.Global
 import org.baylorschool.intothedeep.lib.Depo
 import org.baylorschool.intothedeep.lib.FieldCentricMec
 import org.baylorschool.intothedeep.lib.Mecanum
@@ -26,6 +27,7 @@ class TuningTeleOp: LinearOpMode() {
         val depo = Depo(hardwareMap)
         var loopTime = 0.0
         var loop: Double
+        Global.PivotPIDConfig.useTeleopPID = true
         waitForStart()
         resetRuntime()
         while (opModeIsActive()) {

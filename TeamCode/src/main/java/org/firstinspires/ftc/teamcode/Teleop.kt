@@ -5,6 +5,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.qualcomm.hardware.lynx.LynxModule
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
+import org.baylorschool.intothedeep.Global
 import org.baylorschool.intothedeep.lib.Depo
 import org.baylorschool.intothedeep.lib.FSM
 import org.baylorschool.intothedeep.lib.FieldCentricMec
@@ -28,6 +29,7 @@ class TeleOp: LinearOpMode() {
         val fsm = FSM(hardwareMap)
         var loopTime = 0.0
         var loop: Double
+        Global.PivotPIDConfig.useTeleopPID = true
 
         waitForStart()
         resetRuntime()
@@ -36,7 +38,7 @@ class TeleOp: LinearOpMode() {
             for (hub in allHubs) {
                 hub.clearBulkCache()
             }
-            mecanum.mecanumLoop(gamepad1)
+            mecanum.mecanumLoop(gamepad2)
             fsm.loop(gamepad2, gamepad1)
 
             pivot.update()

@@ -41,8 +41,8 @@ object Global {
     // diffy
     @Config
     object DiffyConfig {
-        @JvmField var standardL: Double = 0.4133
-        @JvmField var standardR: Double = 0.4617
+        @JvmField var standardL: Double = 0.4178
+        @JvmField var standardR: Double = 0.4539
     }
     val diffyIdle = DiffyPos(standardL, standardR)
     val diffy45 = DiffyPos(standardL+0.0511, standardR+0.0955)
@@ -67,9 +67,9 @@ object Global {
 
     //slides
     enum class SlidePresets(var pos: Double) {
-        RESET(0.0), INTAKE(1000.0),
+        RESET(0.0), INTAKE(1000.0), TELE_INTAKE(1500.0),
         LOW_BASKET(0.0), HIGH_BASKET(2300.0),//7
-        SPEC_INTAKE(300.0), LOW_CHAMBER(0.0), HIGH_CHAMBER(780.0), HIGH_CHAMBER_SNAP(140.0),
+        SPEC_INTAKE(300.0), LOW_CHAMBER(0.0), HIGH_CHAMBER(680.0), HIGH_CHAMBER_SNAP(140.0),
         FWINTAKE(500.0),
         FWINTAKE_ALMOST(400.0),
         FWINTAKE_ALMOST_ALMOST(200.0),
@@ -90,19 +90,19 @@ object Global {
 
     @Config
     object SlidePIDConfig {
-        @JvmField var p: Double = 0.0097
-        @JvmField var fg: Double = 0.1
+        @JvmField var p: Double = 0.0115
+        @JvmField var fg: Double = 0.04
         @JvmField var target: Double = 0.0
     }
 
     //pivot
     enum class PivotPresets(var pos: Double) {
-        RESET(10.0), DEPO(1000.0),
-        SPEC_DEPOSIT(930.0)/**/,
+        RESET(0.0), DEPO(1150.0),
+        SPEC_DEPOSIT(950.0)/**/,
         SPEC_DEPOSIT_DROP(1000.0),
         WALL_PICKUP(250.0),
         SPEC_DEPOSIT_AUTO(975.0),
-        WALL_PICKUP_AUTO(235.0)/**/, WALL_PICKUP_UP_AUTO(360.0),//up before pull next
+        WALL_PICKUP_AUTO(260.0)/**/, WALL_PICKUP_UP_AUTO(360.0),//up before pull next
         LOW_RUNG(0.0), HIGH_RUNG(0.0);
         fun action(pivot: Pivot, auto: Boolean = true) : Action {
             val x = this
@@ -150,39 +150,39 @@ object Global {
         var p: Double
             get() = if (useTeleopPID) {TeleopPivotPIDConfig.p} else {AutoPivotPIDConfig.p}
             set(_) {}
-        var i: Double
-            get() = if (useTeleopPID) {TeleopPivotPIDConfig.i} else {AutoPivotPIDConfig.i}
-            set(_) {}
         var d: Double
             get() = if (useTeleopPID) {TeleopPivotPIDConfig.d} else {AutoPivotPIDConfig.d}
             set(_) {}
         var fg: Double
             get() = if (useTeleopPID) {TeleopPivotPIDConfig.fg} else {AutoPivotPIDConfig.fg}
             set(_) {}
-        var target: Double
-            get() = if (useTeleopPID) {TeleopPivotPIDConfig.target} else {AutoPivotPIDConfig.target}
+        var tunedVoltage: Double
+            get() = if (useTeleopPID) {TeleopPivotPIDConfig.tunedVoltage} else {AutoPivotPIDConfig.tunedVoltage}
             set(_) {}
+        @JvmField var target: Double = 0.0
         @JvmField var useTeleopPID: Boolean = true
     }
+
     @Config
     object TeleopPivotPIDConfig {
-        @JvmField var p: Double = 0.018
-        @JvmField var i: Double = 0.0
-        @JvmField var d: Double = 0.0
-        @JvmField var fg: Double = 0.0
-        @JvmField var target: Double = 0.0
+        @JvmField var p: Double = 0.0185
+        @JvmField var d: Double = 0.000028
+        @JvmField var fg: Double = 0.003
+        @JvmField var tunedVoltage: Double = 12.34
+        //@JvmField var target: Double = 0.0
     }
+
     @Config
     object AutoPivotPIDConfig {
-        @JvmField var p: Double = 0.018
-        @JvmField var i: Double = 0.0004
-        @JvmField var d: Double = 0.0005
-        @JvmField var fg: Double = 0.00
-        @JvmField var target: Double = 0.0
+        @JvmField var p: Double = 0.020
+        @JvmField var d: Double = 0.000023
+        @JvmField var fg: Double = 0.0025
+        @JvmField var tunedVoltage: Double = 12.55
+        //@JvmField var target: Double = 0.0
     }
 }
 
 
 
 
-// been cappin pimps since 1987 - Dr Elliot in reference to some college
+// been cappin pimps since 1987 - Dr Elliott in reference to some college

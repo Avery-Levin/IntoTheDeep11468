@@ -69,7 +69,7 @@ class FSM(hardwareMap: HardwareMap) {
                 }
             } RobotState.INTAKE -> {
                 slides.slidePos = (slides.slideR.currentPosition.toDouble() * -1)
-                difference = Global.SlidePresets.INTAKE.pos - slides.slidePos
+                difference = Global.SlidePresets.TELE_INTAKE.pos - slides.slidePos
                 if (difference < intakeThreshold && transition) {
                     depo.diffy180()
                 }
@@ -89,7 +89,7 @@ class FSM(hardwareMap: HardwareMap) {
                     } else if (gamepad.right_bumper) {
                         depo.claw.position = 0.55
                     } else if (gamepad.left_bumper) {
-                        depo.claw.position = 0.95
+                        depo.claw.position = 0.91
                     }
                 }
 
@@ -97,7 +97,7 @@ class FSM(hardwareMap: HardwareMap) {
                     rumble.rumble(10.0,1.0,400)
                     depo.retract()
                     slideThreshold = 150.0
-                    transDelay = 0.6
+                    transDelay = 0.8
                     transTimer.reset()
                     slides.reset()
                     state = RobotState.INTAKE_RETRACT
@@ -111,7 +111,7 @@ class FSM(hardwareMap: HardwareMap) {
                 if (gamepad.right_bumper) {
                     depo.claw.position = 0.55
                 } else if (gamepad.left_bumper) {
-                    depo.claw.position = 0.95
+                    depo.claw.position = 0.91
                 }
                 if (transTimer.seconds() > transDelay) {
                         if (gamepad.dpad_up) {
@@ -172,7 +172,7 @@ class FSM(hardwareMap: HardwareMap) {
                 if (gamepad.right_bumper) {
                     depo.claw.position = 0.55
                 } else if (gamepad.left_bumper) {
-                    depo.claw.position = 0.95
+                    depo.claw.position = 0.91
                 }
 
                 if (gamepad.dpad_up) {
@@ -186,7 +186,7 @@ class FSM(hardwareMap: HardwareMap) {
                     state = RobotState.SPEC_DEPOSIT
                 }
             } RobotState.SPEC_DEPOSIT ->{
-                depo.claw.position = 0.95
+                depo.claw.position = 0.91
 
                 if (gamepad.left_bumper) {
                     slides.specScore()

@@ -10,8 +10,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap
 import org.baylorschool.intothedeep.Action
 import org.baylorschool.intothedeep.Global
 import org.baylorschool.intothedeep.Global.PivotPIDConfig
-import org.baylorschool.intothedeep.Global.PivotPIDConfig.d
-import org.baylorschool.intothedeep.Global.PivotPIDConfig.i
 import org.baylorschool.intothedeep.Global.SlidePIDConfig.fg
 import org.baylorschool.intothedeep.Global.SlidePIDConfig.p
 import org.baylorschool.intothedeep.Global.SlidePIDConfig.target
@@ -23,15 +21,13 @@ import kotlin.math.abs
 
 class Slides(hardwareMap: HardwareMap) {
     private val hubs = hardwareMap.getAll(LynxModule::class.java)
-    val ticks_per_degree = 384.5 / 360.0
-    var correctedValue = target / ticks_per_degree
     val slideL: DcMotorEx
     val slideR : DcMotorEx
     var slidePos: Double = 0.0
     private var pControl = PIDCoefficients(p)
     private var controller = PIDFController(pControl)
     var slidePower = 0.0
-    private val high: Int = 2300
+    private val high: Int = 2301
     private val low: Int = -1
     private var voltage = 0.0
 
@@ -52,23 +48,22 @@ class Slides(hardwareMap: HardwareMap) {
 
     fun telemetry(telemetry: Telemetry) {
         telemetry.addData("slide Motor Position", slidePos)
-        telemetry.addData("Target Position", target)
-        telemetry.addData("slide power", slideL.power)
+        telemetry.addData("slide parget position", target)
+        //telemetry.addData("slide power", slideL.power)
     }
 
     fun update() {
         voltage = hubs[0].getInputVoltage(VoltageUnit.VOLTS)
         if (pControl.kP != p) {
-            //pControl = PIDCoefficients(p)
-            //controller = PIDFController(pControl)
+            pControl = PIDCoefficients(p)
+            controller = PIDFController(pControl)
         }
 
-        correctedValue = target / ticks_per_degree
         slidePos = (slideR.currentPosition.toDouble() * -1)
         controller.targetPosition = target
         slidePower = controller.update(slidePos) + fg
-        slideL.power = (slidePower * (12.435/voltage))
-        slideR.power = (slidePower * (12.435/voltage))
+        slideL.power = slidePower * (12.98/voltage)
+        slideR.power = slidePower * (12.98/voltage)
         target = Global.hardStops(target.toInt(), low, high).toDouble()
     }
     fun close(): Boolean {
@@ -80,7 +75,7 @@ class Slides(hardwareMap: HardwareMap) {
     }
 
     fun intake() {
-        target = Global.SlidePresets.INTAKE.pos
+        target = Global.SlidePresets.TELE_INTAKE.pos
     }
 
     fun highBasket() {

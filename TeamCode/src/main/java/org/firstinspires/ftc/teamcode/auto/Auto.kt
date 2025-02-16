@@ -27,8 +27,8 @@ class Auto : LinearOpMode() {
     //private val startPos = Pose(-32.0, -5.0*12.0, Math.toRadians(90.0))
     //note: the A and B points are beziers
     private val placePreloadPosA = Pose(19.0, 0.0, 0.0)
-    private val placePreloadPos1 = Pose(31.5, 0.0, 0.0)
-    private val placePreloadPos2 = Pose(32.0, 0.0, 0.0)
+    private val placePreloadPos1 = Pose(29.5, 0.0, 0.0)
+    private val placePreloadPos2 = Pose(31.0, 0.0, 0.0)
     private val push0StartPos = Pose(49.5, -44.5, 0.0)
     private val push0BezierPosA = Pose(-10.5, -56.0, 0.0)//toward human player
     private val push0BezierPosB = Pose(53.0, -23.5, 0.0)
@@ -39,8 +39,8 @@ class Auto : LinearOpMode() {
     private val push2BezierPosA = Pose(70.0, -52.0, 0.0)
     private val push2StartPos = Pose(49.5, -62.5, 0.0)
     private val push2EndPos = Pose(15.0, -62.5, 0.0)//47
-    private val pickup0Pos = Pose(11.5, -36.75, 0.0)
-    private val pickup1Pos = Pose(11.5, -36.5, 0.0)
+    private val pickup0Pos = Pose(11.5, -37.5, 0.0)
+    private val pickup1Pos = Pose(11.5, -37.5, 0.0)
     //
     override fun runOpMode() {
         Constants.setConstants(FConstants::class.java, LConstants::class.java)
@@ -50,7 +50,7 @@ class Auto : LinearOpMode() {
         for (hub in allHubs) {
             hub.bulkCachingMode = LynxModule.BulkCachingMode.MANUAL
         }*/
-
+        val driver = Driver(Follower(hardwareMap), Pose(0.0, -8.0, 0.0))
         val telemetryA = MultipleTelemetry(telemetry, FtcDashboard.getInstance().telemetry)
         val pivot = Pivot(hardwareMap)//up down
         val slides = Slides(hardwareMap)//forward back
@@ -68,13 +68,16 @@ class Auto : LinearOpMode() {
         while (!isStarted()) {
             //driver.update()
             pivot.update()
+            telemetry.addData("pivot target", Global.PivotPIDConfig.target)
+            telemetry.addData("pivot pos", pivot.pivotPos)
             if (gamepad1.left_bumper) {
                 depo.claw.position = 0.95
             } else if (gamepad1.right_bumper) {//11, 40.5
                 depo.claw.position = 0.55
             }
+            telemetry.update()
         }
-        val driver = Driver(Follower(hardwareMap), Pose(0.0, -8.0, 0.0))
+        driver.follower.pose = Pose(0.0, -8.0, 0.0)
         ActionGroup(ActionSet(
             genPlacement(driver, pivot, slides, depo, telemetryA, usecloserpoint = true),
 
@@ -88,7 +91,8 @@ class Auto : LinearOpMode() {
             ),
              */
 
-            genPickup(driver, pivot, slides, depo, telemetryA, ),//true
+            genPickup(driver, pivot, slides, depo, telemetryA, useFarPickupPos = true),//true
+
             genPlacement(driver, pivot, slides, depo, telemetryA),
 
             genPickup(driver, pivot, slides, depo, telemetryA),
@@ -120,7 +124,7 @@ class Auto : LinearOpMode() {
                 startWithDelay(Global.SlidePresets.FWINTAKE_ALMOST.action(slides), 500),
             ),
             ensureMinTime(Global.SlidePresets.FWINTAKE.action(slides), 300),
-            ensureMinTime(depo.setClaw(false), 500),
+            ensureMinTime(depo.setClaw(false), 200),
             Global.PivotPresets.WALL_PICKUP_UP_AUTO.action(pivot),
             //Global.SlidePresets.RESET.action(slides)
         )
@@ -129,7 +133,7 @@ class Auto : LinearOpMode() {
         val ppp = if (usecloserpoint) placePreloadPos2 else placePreloadPos1
         return ActionSet(
             ActionGroup(
-                if (usecloserpoint) ensureMinTime(depo.setClaw(false), 1) else depo.setClaw(false),
+                if (usecloserpoint) ensureMinTime(depo.setClaw(false), 500) else depo.setClaw(false),
                 if (usebezier) driver.runToAction(ppp, placePreloadPosA) else driver.runToAction(ppp),
                 ensureMinTime(Global.DiffyPosition.DiffySpecDepo.diffyPos.setAction(depo), 300),
                 Global.PivotPresets.SPEC_DEPOSIT.action(pivot, driver.follower, tele),
@@ -155,9 +159,9 @@ class Auto : LinearOpMode() {
     }
     val testing = Pose(24.25, -40.5, Math.toRadians(135.0))
     val testingS = Pose(17.0, -40.0, Math.toRadians(45.0))
-    val testing2 = Pose(24.0, -49.5, Math.toRadians(135.0))
+    val testing2 = Pose(24.0, -50.0, Math.toRadians(135.0))
     val testing2S = Pose(9.0, -43.0, Math.toRadians(45.0))
-    val testing3 = Pose(24.5, -60.25, Math.toRadians(135.0))
+    val testing3 = Pose(24.5, -60.5, Math.toRadians(135.0))
     //val testing3S = Pose(17.0, -38.0, Math.toRadians(45.0))
     val testing3S = Pose(12.0, -51.0, 0.0)
     private fun genPushAlt(driver: Driver, pivot: Pivot, slides: Slides, depo: Depo, tele: MultipleTelemetry) : Action {
@@ -205,8 +209,6 @@ class Auto : LinearOpMode() {
             ),
             depo.setClaw(true),
 
-
-
             /*wait(1000),
             ActionGroup(
                 driver.runToAction(pickup0Pos),
@@ -219,7 +221,7 @@ class Auto : LinearOpMode() {
             override fun init() {}
 
             override fun update(): Boolean {
-                //tele.update()
+                tele.update()
                 return false
             }
         }
@@ -270,3 +272,5 @@ class Auto : LinearOpMode() {
         }
     }
 }
+
+// hawk bootah! and compile on that thang
