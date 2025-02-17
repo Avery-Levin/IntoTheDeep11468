@@ -23,24 +23,10 @@ import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants
 
 @Autonomous
-class Auto : LinearOpMode() {
+class BucketAuto : LinearOpMode() {
     //private val startPos = Pose(-32.0, -5.0*12.0, Math.toRadians(90.0))
     //note: the A and B points are beziers
-    private val placePreloadPosA = Pose(19.0, 0.0, 0.0)
-    private val placePreloadPos1 = Pose(30.5, 0.0, 0.0)
-    private val placePreloadPos2 = Pose(31.0, 0.0, 0.0)
-    private val push0StartPos = Pose(49.5, -44.5, 0.0)
-    private val push0BezierPosA = Pose(-10.5, -56.0, 0.0)//toward human player
-    private val push0BezierPosB = Pose(53.0, -23.5, 0.0)
-    private val push0EndPos = Pose(14.0, -46.5, 0.0)
-    private val push1BezierPosA = Pose(70.0, -46.5, 0.0)
-    private val push1StartPos = Pose(49.5, -56.5, 0.0)
-    private val push1EndPos = Pose(14.0, -56.5, 0.0)
-    private val push2BezierPosA = Pose(70.0, -52.0, 0.0)
-    private val push2StartPos = Pose(49.5, -62.5, 0.0)
-    private val push2EndPos = Pose(15.0, -62.5, 0.0)//47
-    private val pickup0Pos = Pose(11.5, -38.0, 0.0)
-    private val pickup1Pos = Pose(11.0, -38.0, 0.0)
+    private val place = Pose(19.0, 0.0, 0.0)
     //
     override fun runOpMode() {
         Constants.setConstants(FConstants::class.java, LConstants::class.java)
@@ -77,10 +63,10 @@ class Auto : LinearOpMode() {
         //}
         waitForStart()
         driver.follower.pose = Pose(-1.33, -8.0, 0.0)
-        ActionGroup(ActionSet(
-            genPlacement(driver, pivot, slides, depo, telemetryA, usecloserpoint = true),
+        ActionGroup(ActionSet(Global.DiffyPosition.DiffySpecIntake.diffyPos.setAction(depo),
+            //genPlacement(driver, pivot, slides, depo, telemetryA, usecloserpoint = true),
 
-            genPushAlt(driver, pivot, slides, depo, telemetryA),
+            //genPushAlt(driver, pivot, slides, depo, telemetryA),
             /*ActionGroup(
                 genPush(driver),
                 Global.DiffyPosition.DiffySpecIntake.diffyPos.setAction(depo),
@@ -90,7 +76,7 @@ class Auto : LinearOpMode() {
             ),
              */
 
-            genPickup(driver, pivot, slides, depo, telemetryA, useFarPickupPos = true),//true
+            /*genPickup(driver, pivot, slides, depo, telemetryA, useFarPickupPos = true),//true
 
             genPlacement(driver, pivot, slides, depo, telemetryA),
 
@@ -110,10 +96,10 @@ class Auto : LinearOpMode() {
         while (!isStopRequested && opModeIsActive()) {
             driver.update()
             driver.telemetryDebug(telemetryA)
-        }
-    }
+        }*/))
+    }}
 
-    private fun genPickup(driver: Driver, pivot: Pivot, slides: Slides, depo: Depo, telemetry: MultipleTelemetry, useFarPickupPos: Boolean = false): ActionSet {
+    /*private fun genPickup(driver: Driver, pivot: Pivot, slides: Slides, depo: Depo, telemetry: MultipleTelemetry, useFarPickupPos: Boolean = false): ActionSet {
         return ActionSet(
             ActionGroup(
                 if (useFarPickupPos) driver.runToAction(pickup1Pos) else driver.runToAction(pickup0Pos),
@@ -207,14 +193,14 @@ class Auto : LinearOpMode() {
                 Global.SlidePresets.RESET.action(slides),
             ),
             depo.setClaw(true),
-
+*/
             /*wait(1000),
             ActionGroup(
                 driver.runToAction(pickup0Pos),
                 Global.SlidePresets.SPEC_INTAKE.action(slides),
                 Global.PivotPresets.WALL_PICKUP_AUTO.action(pivot, driver.follower, tele)
             ),*/
-        )
+        /*)
     }
     private fun telemetryAction(tele: MultipleTelemetry) : Action = object : Action {
             override fun init() {}
@@ -270,6 +256,4 @@ class Auto : LinearOpMode() {
 
         }
     }
-}
-
-// hawk bootah! and compile on that thang
+}*/
