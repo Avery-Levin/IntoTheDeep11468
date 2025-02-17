@@ -41,8 +41,8 @@ object Global {
     // diffy
     @Config
     object DiffyConfig {
-        @JvmField var standardL: Double = 0.4178
-        @JvmField var standardR: Double = 0.4539
+        @JvmField var standardL: Double = 0.4094
+        @JvmField var standardR: Double = 0.3870
     }
     val diffyIdle = DiffyPos(standardL, standardR)
     val diffy45 = DiffyPos(standardL+0.0511, standardR+0.0955)
@@ -69,7 +69,7 @@ object Global {
     enum class SlidePresets(var pos: Double) {
         RESET(0.0), INTAKE(1000.0), TELE_INTAKE(1500.0),
         LOW_BASKET(0.0), HIGH_BASKET(2300.0),//7
-        SPEC_INTAKE(300.0), LOW_CHAMBER(0.0), HIGH_CHAMBER(680.0), HIGH_CHAMBER_SNAP(140.0),
+        SPEC_INTAKE(300.0), LOW_CHAMBER(0.0), HIGH_CHAMBER(720.0), HIGH_CHAMBER_SNAP(140.0),
         FWINTAKE(500.0),
         FWINTAKE_ALMOST(400.0),
         FWINTAKE_ALMOST_ALMOST(200.0),
@@ -97,12 +97,12 @@ object Global {
 
     //pivot
     enum class PivotPresets(var pos: Double) {
-        RESET(0.0), DEPO(1150.0),
+        RESET(20.0), DEPO(1150.0),
         SPEC_DEPOSIT(950.0)/**/,
         SPEC_DEPOSIT_DROP(1000.0),
         WALL_PICKUP(250.0),
         SPEC_DEPOSIT_AUTO(975.0),
-        WALL_PICKUP_AUTO(260.0)/**/, WALL_PICKUP_UP_AUTO(360.0),//up before pull next
+        WALL_PICKUP_AUTO(250.0)/**/, WALL_PICKUP_UP_AUTO(360.0),//up before pull next
         LOW_RUNG(0.0), HIGH_RUNG(0.0);
         fun action(pivot: Pivot, auto: Boolean = true) : Action {
             val x = this
@@ -175,7 +175,7 @@ object Global {
     @Config
     object AutoPivotPIDConfig {
         @JvmField var p: Double = 0.020
-        @JvmField var d: Double = 0.000023
+        @JvmField var d: Double = 0.0000238
         @JvmField var fg: Double = 0.0025
         @JvmField var tunedVoltage: Double = 12.55
         //@JvmField var target: Double = 0.0

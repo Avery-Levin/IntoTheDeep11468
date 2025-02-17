@@ -27,7 +27,7 @@ class Auto : LinearOpMode() {
     //private val startPos = Pose(-32.0, -5.0*12.0, Math.toRadians(90.0))
     //note: the A and B points are beziers
     private val placePreloadPosA = Pose(19.0, 0.0, 0.0)
-    private val placePreloadPos1 = Pose(29.5, 0.0, 0.0)
+    private val placePreloadPos1 = Pose(30.0, 0.0, 0.0)
     private val placePreloadPos2 = Pose(31.0, 0.0, 0.0)
     private val push0StartPos = Pose(49.5, -44.5, 0.0)
     private val push0BezierPosA = Pose(-10.5, -56.0, 0.0)//toward human player
@@ -39,8 +39,8 @@ class Auto : LinearOpMode() {
     private val push2BezierPosA = Pose(70.0, -52.0, 0.0)
     private val push2StartPos = Pose(49.5, -62.5, 0.0)
     private val push2EndPos = Pose(15.0, -62.5, 0.0)//47
-    private val pickup0Pos = Pose(11.5, -37.5, 0.0)
-    private val pickup1Pos = Pose(11.5, -37.5, 0.0)
+    private val pickup0Pos = Pose(11.5, -38.0, 0.0)
+    private val pickup1Pos = Pose(11.5, -38.0, 0.0)
     //
     override fun runOpMode() {
         Constants.setConstants(FConstants::class.java, LConstants::class.java)
@@ -71,7 +71,7 @@ class Auto : LinearOpMode() {
             telemetry.addData("pivot target", Global.PivotPIDConfig.target)
             telemetry.addData("pivot pos", pivot.pivotPos)
             if (gamepad1.left_bumper) {
-                depo.claw.position = 0.95
+                depo.claw.position = 0.92
             } else if (gamepad1.right_bumper) {//11, 40.5
                 depo.claw.position = 0.55
             }
@@ -157,11 +157,11 @@ class Auto : LinearOpMode() {
             //))
         )
     }
-    val testing = Pose(24.25, -40.5, Math.toRadians(135.0))
+    val testing = Pose(25.5, -39.5, Math.toRadians(135.0))
     val testingS = Pose(17.0, -40.0, Math.toRadians(45.0))
-    val testing2 = Pose(24.0, -50.0, Math.toRadians(135.0))
+    val testing2 = Pose(25.5, -49.5, Math.toRadians(135.0))
     val testing2S = Pose(9.0, -43.0, Math.toRadians(45.0))
-    val testing3 = Pose(24.5, -60.5, Math.toRadians(135.0))
+    val testing3 = Pose(25.5, -59.5, Math.toRadians(135.0))
     //val testing3S = Pose(17.0, -38.0, Math.toRadians(45.0))
     val testing3S = Pose(12.0, -51.0, 0.0)
     private fun genPushAlt(driver: Driver, pivot: Pivot, slides: Slides, depo: Depo, tele: MultipleTelemetry) : Action {

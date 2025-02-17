@@ -38,7 +38,7 @@ class TeleOp: LinearOpMode() {
             for (hub in allHubs) {
                 hub.clearBulkCache()
             }
-            mecanum.mecanumLoop(gamepad2)
+            mecanum.mecanumLoop(gamepad1)
             fsm.loop(gamepad2, gamepad1)
 
             pivot.update()

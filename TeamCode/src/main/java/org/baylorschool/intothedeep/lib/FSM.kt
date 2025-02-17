@@ -69,7 +69,7 @@ class FSM(hardwareMap: HardwareMap) {
                 }
             } RobotState.INTAKE -> {
                 slides.slidePos = (slides.slideR.currentPosition.toDouble() * -1)
-                difference = Global.SlidePresets.TELE_INTAKE.pos - slides.slidePos
+                difference = Global.SlidePresets.INTAKE.pos - slides.slidePos
                 if (difference < intakeThreshold && transition) {
                     depo.diffy180()
                 }
@@ -90,6 +90,10 @@ class FSM(hardwareMap: HardwareMap) {
                         depo.claw.position = 0.55
                     } else if (gamepad.left_bumper) {
                         depo.claw.position = 0.91
+                    } else if (gamepad.dpad_left) {
+                        slides.intake()
+                    } else if (gamepad.dpad_right) {
+                        slides.intakeLong()
                     }
                 }
 

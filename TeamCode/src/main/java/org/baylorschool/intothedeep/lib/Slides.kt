@@ -75,8 +75,13 @@ class Slides(hardwareMap: HardwareMap) {
     }
 
     fun intake() {
+        target = Global.SlidePresets.INTAKE.pos
+    }
+
+    fun intakeLong() {
         target = Global.SlidePresets.TELE_INTAKE.pos
     }
+
 
     fun highBasket() {
         target = Global.SlidePresets.HIGH_BASKET.pos
