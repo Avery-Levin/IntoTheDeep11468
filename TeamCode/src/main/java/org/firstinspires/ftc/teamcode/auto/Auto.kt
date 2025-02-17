@@ -27,7 +27,7 @@ class Auto : LinearOpMode() {
     //private val startPos = Pose(-32.0, -5.0*12.0, Math.toRadians(90.0))
     //note: the A and B points are beziers
     private val placePreloadPosA = Pose(19.0, 0.0, 0.0)
-    private val placePreloadPos1 = Pose(30.0, 0.0, 0.0)
+    private val placePreloadPos1 = Pose(30.5, 0.0, 0.0)
     private val placePreloadPos2 = Pose(31.0, 0.0, 0.0)
     private val push0StartPos = Pose(49.5, -44.5, 0.0)
     private val push0BezierPosA = Pose(-10.5, -56.0, 0.0)//toward human player
