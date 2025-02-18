@@ -42,8 +42,8 @@ object Global {
     // diffy
     @Config
     object DiffyConfig {
-        @JvmField var standardL: Double = 0.5
-        @JvmField var standardR: Double = 0.5
+        @JvmField var standardL: Double = 0.5078
+        @JvmField var standardR: Double = 0.4911
     }
     val diffyIdle = DiffyPos(standardL, standardR)
     val diffy45 = DiffyPos(standardL+0.0511, standardR+0.0955)
@@ -52,7 +52,7 @@ object Global {
     val diffy180 = DiffyPos(standardL+.08, standardR+0.0772)
     val diffyRetract = DiffyPos (standardL+0.0322, standardR-0.02)
     val diffyBasket = DiffyPos(standardL+0.0211, standardR-0.0439)
-    val diffySpecIntake = DiffyPos(standardL+0.0139, standardR-0.0033)
+    val diffySpecIntake = DiffyPos(standardL+0.0161, standardR+0.0144)
     val diffySpecDepo = DiffyPos(standardL-.1039, standardR+0.0078)
     val diffyInit = DiffyPos(standardL-.0961, standardR+0.0077)
     val diffyAutoPickup45 = DiffyPos(standardL+.0555, standardR+0.0872)
