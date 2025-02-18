@@ -67,6 +67,14 @@ class FSM(hardwareMap: HardwareMap) {
                     transTimer.reset()
                     state = RobotState.SPEC_INTAKE
                 }
+
+                if (rumble.dpad_up){
+                    depo.diffyBasket()
+                    transition = true
+                    transDelay = 0.4
+                    transTimer.reset()
+                    state = RobotState.HANG
+                }
             } RobotState.INTAKE -> {
                 slides.slidePos = (slides.slideR.currentPosition.toDouble() * -1)
                 difference = Global.SlidePresets.INTAKE.pos - slides.slidePos
@@ -211,7 +219,12 @@ class FSM(hardwareMap: HardwareMap) {
                     state = RobotState.START
                 }
             } RobotState.HANG -> {
-
+                slides.l2Hang()
+                pivot.l2Hang()
+                if (gamepad.a) {
+                    slides.reset()
+                    pivot.reset()
+                }
             }
         }
 

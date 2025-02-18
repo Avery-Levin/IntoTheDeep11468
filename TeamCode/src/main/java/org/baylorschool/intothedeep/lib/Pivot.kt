@@ -60,8 +60,7 @@ class Pivot(hardwareMap: HardwareMap) {
         telemetry.addData("arm angle", pivotPos/ticks_per_degree)
         telemetry.addData("arm Motor Position", pivotPos)
         telemetry.addData("arm Target Position", target)
-        //telemetry.addData("arm power",pivotL.power)
-        //telemetry.addData("switch", switch.state)
+        telemetry.addData("switch", switch.state)
         telemetry.addData("hub voltage", voltage)
     }
 
@@ -76,9 +75,9 @@ class Pivot(hardwareMap: HardwareMap) {
         correctedValue = target / ticks_per_degree
         pivotPos = (pivotL.currentPosition.toDouble()) + offset
         armPower = controller.update(pivotPos) + ((cos(Math.toRadians(correctedValue))) * fg)
-        pivotL.power = armPower //* (tunedVoltage/voltage)
-        pivotR.power = armPower //* (tunedVoltage/voltage)
-        //target = Global.hardStops(target.toInt(), low, high).toDouble()
+        pivotL.power = armPower* (tunedVoltage/voltage)
+        pivotR.power = armPower * (tunedVoltage/voltage)
+        target = Global.hardStops(target.toInt(), low, high).toDouble()
         /*
         if (switch.state == true) {
             offset = -(pivotL.currentPosition)

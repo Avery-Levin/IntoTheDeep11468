@@ -42,8 +42,8 @@ object Global {
     // diffy
     @Config
     object DiffyConfig {
-        @JvmField var standardL: Double = 0.4144
-        @JvmField var standardR: Double = 0.3367
+        @JvmField var standardL: Double = 0.5
+        @JvmField var standardR: Double = 0.5
     }
     val diffyIdle = DiffyPos(standardL, standardR)
     val diffy45 = DiffyPos(standardL+0.0511, standardR+0.0955)
@@ -71,12 +71,12 @@ object Global {
     enum class SlidePresets(var pos: Double) {
         RESET(0.0), INTAKE(1000.0), TELE_INTAKE(1500.0),
         LOW_BASKET(0.0), HIGH_BASKET(2300.0),//7
-        SPEC_INTAKE(300.0), LOW_CHAMBER(0.0), HIGH_CHAMBER(720.0), HIGH_CHAMBER_SNAP(160.0),
+        SPEC_INTAKE(300.0), LOW_CHAMBER(0.0), HIGH_CHAMBER(720.0), HIGH_CHAMBER_SNAP(180.0),
         FWINTAKE(500.0),
         FWINTAKE_ALMOST(400.0),
         FWINTAKE_ALMOST_ALMOST(200.0),
         HIGH_CHAMBER_AUTO(580.0),
-        FWINTAKE_AUTO(525.0), HIGH_CHAMBER_DROP_AUTO(140.0),
+        FWINTAKE_AUTO(525.0), HIGH_CHAMBER_DROP_AUTO(180.0),
         LOW_RUNG(0.0), HIGH_RUNG(0.0),;
         fun action(slides: Slides) : Action {
             val x = this

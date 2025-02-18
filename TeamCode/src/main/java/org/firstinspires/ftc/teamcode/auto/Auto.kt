@@ -67,6 +67,7 @@ class Auto : LinearOpMode() {
         depo.claw.position = 0.55
         //Global.PivotPresets.SPEC_DEPOSIT
         while (!isStarted()) {
+            driver.follower.pose = Pose(-1.55, -8.0, 0.0)
             pivot.update()
             depo.claw.position = 0.92
             //driver.update()
@@ -76,7 +77,7 @@ class Auto : LinearOpMode() {
         //    pivot.update()
         //}
         waitForStart()
-        driver.follower.pose = Pose(-1.33, -8.0, 0.0)
+        driver.follower.pose = Pose(-1.55, -8.0, 0.0)
         ActionGroup(ActionSet(
             genPlacement(driver, pivot, slides, depo, telemetryA, usecloserpoint = true),
 
