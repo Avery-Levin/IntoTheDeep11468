@@ -28,13 +28,15 @@ class Pivot(hardwareMap: HardwareMap) {
     val pivotL: DcMotorEx
     private val pivotR : DcMotorEx
     private val switch: DigitalChannel
+    private var switchWasPressed = false
     var pivotPos: Double = 0.0
     private var control = PIDCoefficients(p, kI = 0.0, d)
     private var controller = PIDFController(control)
     private var armPower = 0.0
     var offset = 0
+    var negative = false
     private val high: Int = 1200
-    private val low: Int = -1
+    private val low: Int = -2101
     private var voltage: Double = 0.0
 
     init {
@@ -62,6 +64,7 @@ class Pivot(hardwareMap: HardwareMap) {
         telemetry.addData("arm Target Position", target)
         telemetry.addData("switch", switch.state)
         telemetry.addData("hub voltage", voltage)
+        telemetry.addData("pivot offset", offset)
     }
 
     fun update() {
@@ -70,6 +73,15 @@ class Pivot(hardwareMap: HardwareMap) {
             control = PIDCoefficients(p, kI = 0.0 ,d)
             controller = PIDFController(control)
         }
+
+        if (switch.state && !switchWasPressed) {
+            offset = -pivotL.currentPosition
+            if (negative) {
+                target = 0.0
+                negative = false
+            }
+        }
+        switchWasPressed = switch.state
 
         controller.targetPosition = target
         correctedValue = target / ticks_per_degree

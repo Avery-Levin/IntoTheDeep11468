@@ -157,11 +157,11 @@ class Auto : LinearOpMode() {
             //))
         )
     }
-    val testing = Pose(25.0, -38.75, Math.toRadians(135.0))
+    val testing = Pose(24.75, -38.75, Math.toRadians(135.0))
     val testingS = Pose(17.0, -40.0, Math.toRadians(45.0))
-    val testing2 = Pose(25.0, -48.75, Math.toRadians(135.0))
+    val testing2 = Pose(23.75, -48.75, Math.toRadians(135.0))
     val testing2S = Pose(9.0, -43.0, Math.toRadians(45.0))
-    val testing3 = Pose(25.5, -58.75, Math.toRadians(135.0))
+    val testing3 = Pose(25.0, -58.75, Math.toRadians(135.0))
     //val testing3S = Pose(17.0, -38.0, Math.toRadians(45.0))
     val testing3S = Pose(12.0, -51.0, 0.0)
     private fun genPushAlt(driver: Driver, pivot: Pivot, slides: Slides, depo: Depo, tele: MultipleTelemetry) : Action {
@@ -189,9 +189,13 @@ class Auto : LinearOpMode() {
                 Global.PivotPresets.RESET.action(pivot, driver.follower, tele),
             ),
             depo.setClaw(false),
+            startWithDelay(object : Action {
+                override fun init() {slides.reset()}
+                override fun update(): Boolean = true
+            }, 100),
             ActionGroup(
-                driver.runToAction(testing2S),
-                Global.SlidePresets.RESET.action(slides),
+                driver.runToAction(testingS),//testing2S
+                startWithDelay(Global.SlidePresets.INTAKE.action(slides), 200),
             ),
             //Global.SlidePresets.INTAKE.action(slides),
             depo.setClaw(true),

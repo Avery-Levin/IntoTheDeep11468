@@ -53,12 +53,12 @@ object Global {
     val diffyRetract = DiffyPos (standardL+0.0322, standardR-0.02)
     val diffyBasket = DiffyPos(standardL+0.0211, standardR-0.0439)
     val diffySpecIntake = DiffyPos(standardL+0.0161, standardR+0.0144)
-    val diffySpecDepo = DiffyPos(standardL-.1039, standardR+0.0078)
+    val diffySpecDepo = DiffyPos(standardL-.0972, standardR+0.0189)
     val diffyInit = DiffyPos(standardL-.0961, standardR+0.0077)
     val diffyAutoPickup45 = DiffyPos(standardL+.0555, standardR+0.0872)
 
     const val clawOpen = 0.55
-    const val clawClosed = 0.95
+    const val clawClosed = 0.92
 
     //hardstop
     fun hardStops(value: Int, low: Int, high: Int): Int {
@@ -71,7 +71,7 @@ object Global {
     enum class SlidePresets(var pos: Double) {
         RESET(0.0), INTAKE(1000.0), TELE_INTAKE(1500.0),
         LOW_BASKET(0.0), HIGH_BASKET(2300.0),//7
-        SPEC_INTAKE(300.0), LOW_CHAMBER(0.0), HIGH_CHAMBER(720.0), HIGH_CHAMBER_SNAP(180.0),
+        SPEC_INTAKE(300.0), LOW_CHAMBER(0.0), HIGH_CHAMBER(760.0), HIGH_CHAMBER_SNAP(180.0),
         FWINTAKE(500.0),
         FWINTAKE_ALMOST(400.0),
         FWINTAKE_ALMOST_ALMOST(200.0),
@@ -99,12 +99,12 @@ object Global {
 
     //pivot
     enum class PivotPresets(var pos: Double) {
-        RESET(20.0), DEPO(1150.0),
+        RESET(00.0), DEPO(1150.0),
         SPEC_DEPOSIT(950.0)/**/,
         SPEC_DEPOSIT_DROP(1000.0),
         WALL_PICKUP(260.0),
         SPEC_DEPOSIT_AUTO(975.0),
-        WALL_PICKUP_AUTO(260.0)/**/, WALL_PICKUP_UP_AUTO(360.0),//up before pull next
+        WALL_PICKUP_AUTO(230.0)/**/, WALL_PICKUP_UP_AUTO(360.0),//up before pull next
         LOW_RUNG(0.0), HIGHNG(0.0);
         fun action(pivot: Pivot, auto: Boolean = true) : Action {
             val x = this
@@ -168,7 +168,7 @@ object Global {
     @Config
     object TeleopPivotPIDConfig {
         @JvmField var p: Double = 0.0185
-        @JvmField var d: Double = 0.000028
+        @JvmField var d: Double = 0.000026
         @JvmField var fg: Double = 0.003
         @JvmField var tunedVoltage: Double = 12.34
         //@JvmField var target: Double = 0.0
@@ -176,8 +176,8 @@ object Global {
 
     @Config
     object AutoPivotPIDConfig {
-        @JvmField var p: Double = 0.02
-        @JvmField var d: Double = 0.000024
+        @JvmField var p: Double = 0.0195
+        @JvmField var d: Double = 0.000025
         @JvmField var fg: Double = 0.0025
         @JvmField var tunedVoltage: Double = 12.55
         //@JvmField var target: Double = 0.0
