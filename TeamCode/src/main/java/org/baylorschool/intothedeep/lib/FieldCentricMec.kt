@@ -93,10 +93,17 @@ class FieldCentricMec(hardwareMap: HardwareMap) {
         else if (gamepad1.start)
             reset()
 
-        power()
+        fieldCentricPower()
     }
 
-    fun power() {
+    fun robotCentricPower() {
+        flMotor.power = (y + x + turn) * s
+        blMotor.power = (y - x + turn) * s
+        frMotor.power = (y - x - turn) * s
+        brMotor.power = (y + x - turn) * s
+    }
+
+    fun fieldCentricPower() {
         botHeading =  odo.heading - offset
         rotX = (x * cos(-botHeading) - y * sin(-botHeading)) * 1.1
         rotY = x * sin(-botHeading) + y * cos(-botHeading)
