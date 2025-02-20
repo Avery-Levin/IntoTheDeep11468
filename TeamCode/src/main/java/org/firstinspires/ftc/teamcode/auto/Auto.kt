@@ -27,7 +27,7 @@ class Auto : LinearOpMode() {
     //private val startPos = Pose(-32.0, -5.0*12.0, Math.toRadians(90.0))
     //note: the A and B points are beziers
     private val placePreloadPosA = Pose(19.0, 0.0, 0.0)
-    private val placePreloadPos1 = Pose(30.5, 0.0, 0.0)
+    private val placePreloadPos1 = Pose(31.0, 0.0, 0.0)
     private val placePreloadPos2 = Pose(31.0, 0.0, 0.0)
     private val push0StartPos = Pose(49.5, -44.5, 0.0)
     private val push0BezierPosA = Pose(-10.5, -56.0, 0.0)//toward human player
@@ -39,8 +39,8 @@ class Auto : LinearOpMode() {
     private val push2BezierPosA = Pose(70.0, -52.0, 0.0)
     private val push2StartPos = Pose(49.5, -62.5, 0.0)
     private val push2EndPos = Pose(15.0, -62.5, 0.0)//47
-    private val pickup0Pos = Pose(11.5, -38.0, 0.0)
-    private val pickup1Pos = Pose(11.0, -38.0, 0.0)
+    private val pickup0Pos = Pose(11.0, -36.0, 0.0)
+    private val pickup1Pos = Pose(11.0, -36.0, 0.0)
     //
     override fun runOpMode() {
         Constants.setConstants(FConstants::class.java, LConstants::class.java)
@@ -135,11 +135,11 @@ class Auto : LinearOpMode() {
             ActionGroup(
                 if (usecloserpoint) ensureMinTime(depo.setClaw(false), 500) else depo.setClaw(false),
                 if (usebezier) driver.runToAction(ppp, placePreloadPosA) else driver.runToAction(ppp),
-                ensureMinTime(Global.DiffyPosition.DiffySpecDepo.diffyPos.setAction(depo), 300),
+                ensureMinTime(Global.DiffyPosition.DiffySpecDepo.diffyPos.setAction(depo), 200),
                 Global.PivotPresets.SPEC_DEPOSIT.action(pivot, driver.follower, tele),
                 Global.SlidePresets.HIGH_CHAMBER.action(slides)
             ),
-            ensureMinTime(Global.SlidePresets.HIGH_CHAMBER_DROP_AUTO.action(slides), 200),
+            ensureMinTime(Global.SlidePresets.HIGH_CHAMBER_DROP_AUTO.action(slides), 100),
             ActionGroup (
                 Global.SlidePresets.RESET.action(slides),
                 depo.setClaw(true),
@@ -195,7 +195,7 @@ class Auto : LinearOpMode() {
             }, 100),
             ActionGroup(
                 driver.runToAction(testingS),//testing2S
-                startWithDelay(Global.SlidePresets.INTAKE.action(slides), 200),
+                startWithDelay(Global.SlidePresets.INTAKE.action(slides), 50),
             ),
             //Global.SlidePresets.INTAKE.action(slides),
             depo.setClaw(true),

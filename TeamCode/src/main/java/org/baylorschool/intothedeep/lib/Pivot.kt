@@ -14,6 +14,7 @@ import org.baylorschool.intothedeep.Global.PivotPIDConfig.fg
 import org.baylorschool.intothedeep.Global.PivotPIDConfig.p
 import org.baylorschool.intothedeep.Global.PivotPIDConfig.target
 import org.baylorschool.intothedeep.Global.PivotPIDConfig.tunedVoltage
+import org.baylorschool.intothedeep.Global.PivotPIDConfig.useTeleopPID
 import org.baylorschool.intothedeep.controllers.PIDCoefficients
 import org.baylorschool.intothedeep.controllers.PIDFController
 import org.firstinspires.ftc.robotcore.external.Telemetry
@@ -69,16 +70,19 @@ class Pivot(hardwareMap: HardwareMap) {
 
     fun update() {
         voltage = hubs[0].getInputVoltage(VoltageUnit.VOLTS)
+        /*
         if (!(control.kP == p && control.kD == d)) {
             control = PIDCoefficients(p, kI = 0.0 ,d)
             controller = PIDFController(control)
         }
-
-        if (switch.state && !switchWasPressed) {
-            offset = -pivotL.currentPosition
-            if (negative) {
-                target = 0.0
-                negative = false
+         */
+        if (useTeleopPID) {
+            if (switch.state && !switchWasPressed) {
+                offset = -pivotL.currentPosition
+                if (negative) {
+                    target = 0.0
+                    negative = false
+                }
             }
         }
         switchWasPressed = switch.state
@@ -90,11 +94,6 @@ class Pivot(hardwareMap: HardwareMap) {
         pivotL.power = armPower* (tunedVoltage/voltage)
         pivotR.power = armPower * (tunedVoltage/voltage)
         target = Global.hardStops(target.toInt(), low, high).toDouble()
-        /*
-        if (switch.state == true) {
-            offset = -(pivotL.currentPosition)
-        }
-         */
     }
     
     fun close(): Boolean {

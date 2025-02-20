@@ -112,6 +112,6 @@ class FieldCentricMec(hardwareMap: HardwareMap) {
         flMotor.power = ((rotY + rotX + turn) ) * s
         blMotor.power = ((rotY - rotX + turn) ) * s
         frMotor.power = ((rotY - rotX - turn) ) * s
-        brMotor.power = ((rotY + rotX - turn) )* s
+        brMotor.power = ((rotY + rotX - turn) ) * s
     }
 }

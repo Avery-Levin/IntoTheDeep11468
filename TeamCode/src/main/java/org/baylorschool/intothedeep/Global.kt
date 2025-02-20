@@ -102,7 +102,7 @@ object Global {
         RESET(00.0), DEPO(1150.0),
         SPEC_DEPOSIT(950.0)/**/,
         SPEC_DEPOSIT_DROP(1000.0),
-        WALL_PICKUP(260.0),
+        WALL_PICKUP(280.0),
         SPEC_DEPOSIT_AUTO(975.0),
         WALL_PICKUP_AUTO(230.0)/**/, WALL_PICKUP_UP_AUTO(360.0),//up before pull next
         LOW_RUNG(0.0), HIGHNG(0.0);
