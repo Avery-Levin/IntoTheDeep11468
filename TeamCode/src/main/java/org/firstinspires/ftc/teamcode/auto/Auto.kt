@@ -27,7 +27,7 @@ class Auto : LinearOpMode() {
     //private val startPos = Pose(-32.0, -5.0*12.0, Math.toRadians(90.0))
     //note: the A and B points are beziers
     private val placePreloadPosA = Pose(19.0, 0.0, 0.0)
-    private val placePreloadPos1 = Pose(31.0, 0.0, 0.0)
+    private val placePreloadPos1 = Pose(30.5, 0.0, 0.0)
     private val placePreloadPos2 = Pose(31.0, 0.0, 0.0)
     private val push0StartPos = Pose(49.5, -44.5, 0.0)
     private val push0BezierPosA = Pose(-10.5, -56.0, 0.0)//toward human player
@@ -39,9 +39,9 @@ class Auto : LinearOpMode() {
     private val push2BezierPosA = Pose(70.0, -52.0, 0.0)
     private val push2StartPos = Pose(49.5, -62.5, 0.0)
     private val push2EndPos = Pose(15.0, -62.5, 0.0)//47
-    private val pickup0Pos = Pose(11.0, -36.0, 0.0)
-    private val pickup1Pos = Pose(11.0, -36.0, 0.0)
-    //
+    private val pickup0Pos = Pose(12.0, -37.0, 0.0)
+    private val pickup1Pos = Pose(12.0, -37.0, 0.0)
+
     override fun runOpMode() {
         Constants.setConstants(FConstants::class.java, LConstants::class.java)
         Global.PivotPIDConfig.useTeleopPID = false
@@ -123,8 +123,8 @@ class Auto : LinearOpMode() {
                 depo.setClaw(true),
                 startWithDelay(Global.SlidePresets.FWINTAKE_ALMOST.action(slides), 500),
             ),
-            ensureMinTime(Global.SlidePresets.FWINTAKE.action(slides), 300),
-            ensureMinTime(depo.setClaw(false), 200),
+            ensureMinTime(Global.SlidePresets.FWINTAKE.action(slides), 100),
+            ensureMinTime(depo.setClaw(false), 300),
             Global.PivotPresets.WALL_PICKUP_UP_AUTO.action(pivot),
             //Global.SlidePresets.RESET.action(slides)
         )
@@ -157,11 +157,11 @@ class Auto : LinearOpMode() {
             //))
         )
     }
-    val testing = Pose(24.75, -38.75, Math.toRadians(135.0))
+    val testing = Pose(24.75, -39.0, Math.toRadians(135.0))
     val testingS = Pose(17.0, -40.0, Math.toRadians(45.0))
-    val testing2 = Pose(23.75, -48.75, Math.toRadians(135.0))
-    val testing2S = Pose(9.0, -43.0, Math.toRadians(45.0))
-    val testing3 = Pose(25.0, -58.75, Math.toRadians(135.0))
+    val testing2 = Pose(24.25, -49.0, Math.toRadians(135.0))
+    val testing2S = Pose(17.0, -45.0, Math.toRadians(45.0))
+    val testing3 = Pose(25.0, -59.0, Math.toRadians(135.0))
     //val testing3S = Pose(17.0, -38.0, Math.toRadians(45.0))
     val testing3S = Pose(12.0, -51.0, 0.0)
     private fun genPushAlt(driver: Driver, pivot: Pivot, slides: Slides, depo: Depo, tele: MultipleTelemetry) : Action {
@@ -194,7 +194,7 @@ class Auto : LinearOpMode() {
                 override fun update(): Boolean = true
             }, 100),
             ActionGroup(
-                driver.runToAction(testingS),//testing2S
+                driver.runToAction(testing2S),//testing2S
                 startWithDelay(Global.SlidePresets.INTAKE.action(slides), 50),
             ),
             //Global.SlidePresets.INTAKE.action(slides),
