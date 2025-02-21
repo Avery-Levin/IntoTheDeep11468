@@ -136,7 +136,7 @@ object Global {
                     telemetry.addData("pivot distance", distance)
                     telemetry.addData("pivot follower T", follower.currentTValue)
                     telemetry.addData("A-pivot testing", testing)
-                    telemetry.addData("pinpoint cooked", follower.isPinpointCooked)
+                    telemetry.addData("pinpoint cooked", follower.isLocalizationNAN)
                     telemetry.addData("pivot targetpos", x.pos)
                     telemetry.addData("pivot pos", pivot.pivotPos)
                     telemetry.addData("pivot targetpos", distance)

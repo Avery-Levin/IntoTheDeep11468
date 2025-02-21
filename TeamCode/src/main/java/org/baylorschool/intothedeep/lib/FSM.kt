@@ -231,6 +231,7 @@ class FSM(hardwareMap: HardwareMap) {
                 if (gamepad.a) {
                     slides.reset()
                     pivot.reset()
+                    state = RobotState.HANG_RETRACT
                 }
             } RobotState.HANG_RETRACT -> {
                 slides.reset()

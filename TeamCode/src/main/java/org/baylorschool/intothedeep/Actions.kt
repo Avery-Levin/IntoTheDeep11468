@@ -154,6 +154,48 @@ fun ensureMinTime(action: Action, durms: Long, hold: Boolean = false): Action {
         }
     }
 }
+fun switchAfterTrue(action0: Action, action1: Action, delay: () -> (Boolean)) : Action {
+    return object : Action {
+        override fun init() {
+            action0.init()
+        }
+        var hasInited = true
+        var use1 = false
+        override fun update(): Boolean {
+            if (use1) {
+                if (hasInited) {
+                    return action1.update()
+                } else {
+                    action1.init()
+                    hasInited = true
+                }
+            } else {
+                use1 = action0.update() || delay()
+            }
+            return false
+        }
+    }
+}
+fun runOnceTrue(action: Action, delay: () -> (Boolean)) : Action {
+    return object : Action {
+        override fun init() {}
+        var hasDelayed = false
+        var hasInited = false
+        override fun update(): Boolean {
+            if (!hasDelayed) {
+                hasDelayed = delay()
+            } else {
+                if (hasInited) {
+                    hasInited = true
+                    action.init()
+                } else {
+                    return action.update()
+                }
+            }
+            return false
+        }
+    }
+}
 fun startWithDelay(action: Action, delay: Long): Action {
     return object : Action {
         var time = -1L

@@ -16,6 +16,7 @@ import org.baylorschool.intothedeep.ensureMinTime
 import org.baylorschool.intothedeep.lib.Depo
 import org.baylorschool.intothedeep.lib.Pivot
 import org.baylorschool.intothedeep.startWithDelay
+import org.baylorschool.intothedeep.switchAfterTrue
 import org.baylorschool.intothedeep.wait
 import org.firstinspires.ftc.teamcode.Driver
 import org.firstinspires.ftc.teamcode.lib.Slides
@@ -51,6 +52,7 @@ class Auto : LinearOpMode() {
             hub.bulkCachingMode = LynxModule.BulkCachingMode.MANUAL
         }*/
         val driver = Driver(Follower(hardwareMap), Pose(-1.55, -8.0, 0.0))
+        //driver.follower.t
         val telemetryA = MultipleTelemetry(telemetry, FtcDashboard.getInstance().telemetry)
         val pivot = Pivot(hardwareMap)//up down
         val slides = Slides(hardwareMap)//forward back
@@ -144,12 +146,16 @@ class Auto : LinearOpMode() {
                 if (usebezier) driver.runToAction(ppp, placePreloadPosA) else driver.runToAction(ppp),
                 Global.DiffyPosition.DiffySpecDepo.diffyPos.setAction(depo),
                 Global.PivotPresets.SPEC_DEPOSIT.action(pivot, driver.follower, tele),
-                Global.SlidePresets.HIGH_CHAMBER.action(slides)
-            ),
-            Global.SlidePresets.HIGH_CHAMBER_DROP_AUTO.action(slides),
-            ActionGroup (
-                Global.SlidePresets.RESET.action(slides),
-                depo.setClaw(true),
+                switchAfterTrue(
+                    Global.SlidePresets.HIGH_CHAMBER.action(slides),
+                    ActionSet(
+                        Global.SlidePresets.HIGH_CHAMBER_DROP_AUTO.action(slides),
+                        ActionGroup (
+                            Global.SlidePresets.RESET.action(slides),
+                            depo.setClaw(true),
+                        ),
+                    )
+                ) {driver.follower.currentTValue > 0.5 && driver.follower.velocity.magnitude < 0.5}
             ),
         )
     }
