@@ -38,7 +38,7 @@ class ParkAuto : LinearOpMode() {
     private val pickup0Pos = Pose(12.0, -45.5, 0.0)
     override fun runOpMode() {
         Constants.setConstants(FConstants::class.java, LConstants::class.java)
-        val driver = Driver(Follower(hardwareMap), Pose(-2.0, 0.0, 0.0))
+        val driver = Driver(Follower(hardwareMap, FConstants::class.java, LConstants::class.java), Pose(-2.0, 0.0, 0.0))
         val telemetryA = MultipleTelemetry(telemetry, FtcDashboard.getInstance().telemetry)
         val pivot = Pivot(hardwareMap)//up down
         val slides = Slides(hardwareMap)//forward back

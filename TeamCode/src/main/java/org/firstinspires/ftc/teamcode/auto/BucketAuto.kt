@@ -36,7 +36,7 @@ class BucketAuto : LinearOpMode() {
         for (hub in allHubs) {
             hub.bulkCachingMode = LynxModule.BulkCachingMode.MANUAL
         }*/
-        val driver = Driver(Follower(hardwareMap), Pose(-1.55, -8.0, 0.0))
+        val driver = Driver(Follower(hardwareMap, FConstants::class.java, LConstants::class.java), Pose(-1.55, -8.0, 0.0))
         val telemetryA = MultipleTelemetry(telemetry, FtcDashboard.getInstance().telemetry)
         val pivot = Pivot(hardwareMap)//up down
         val slides = Slides(hardwareMap)//forward back

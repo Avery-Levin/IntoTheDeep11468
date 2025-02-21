@@ -16,6 +16,8 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName
 import com.pedropathing.follower.Follower
 import com.pedropathing.localization.Pose
 import com.pedropathing.util.Drawing
+import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants
+import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants
 import org.firstinspires.ftc.vision.VisionPortal
 
 
@@ -55,7 +57,7 @@ class VisionTest : LinearOpMode() {
                 "${overheadProcessor.width} ${overheadProcessor.height}"
             )
             telemetry.update()
-            val driver = Driver(Follower(hardwareMap), Pose(0.0, 0.0, 0.0))//55 is diagonal
+            val driver = Driver(Follower(hardwareMap, FConstants::class.java, LConstants::class.java), Pose(0.0, 0.0, 0.0))//55 is diagonal
             cameraDataToRealPosition(
                 11.0,
                 0.0,

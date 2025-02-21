@@ -24,7 +24,7 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-core:2.18.1")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.18.1")
 
-    implementation 'com.pedropathing:beta:1.0.8-beta3'
+    implementation 'com.pedropathing:dev:1.0.9-beta1'
 
 }
 

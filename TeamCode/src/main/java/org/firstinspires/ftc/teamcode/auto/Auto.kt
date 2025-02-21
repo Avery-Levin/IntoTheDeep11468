@@ -51,7 +51,7 @@ class Auto : LinearOpMode() {
         for (hub in allHubs) {
             hub.bulkCachingMode = LynxModule.BulkCachingMode.MANUAL
         }*/
-        val driver = Driver(Follower(hardwareMap), Pose(-1.55, -8.0, 0.0))
+        val driver = Driver(Follower(hardwareMap, FConstants::class.java, LConstants::class.java), Pose(-1.55, -8.0, 0.0))
         //driver.follower.t
         val telemetryA = MultipleTelemetry(telemetry, FtcDashboard.getInstance().telemetry)
         val pivot = Pivot(hardwareMap)//up down
@@ -155,7 +155,7 @@ class Auto : LinearOpMode() {
                             depo.setClaw(true),
                         ),
                     )
-                ) {driver.follower.currentTValue > 0.5 && driver.follower.velocity.magnitude < 0.5}
+                ) {driver.follower.currentTValue > 0.5 && driver.follower.velocity.magnitude < 0.1}
             ),
         )
     }

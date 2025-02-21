@@ -29,7 +29,7 @@ class AutoPivotTest : LinearOpMode() {
     fun int(b: Boolean) = if (b) 1 else 0
     override fun runOpMode() {
         Constants.setConstants(FConstants::class.java, LConstants::class.java)
-        val driver = Driver(Follower(hardwareMap), Pose(0.0, 0.0, 0.0))
+        val driver = Driver(Follower(hardwareMap, FConstants::class.java, LConstants::class.java), Pose(0.0, 0.0, 0.0))
 
         val telemetryA = MultipleTelemetry(telemetry, FtcDashboard.getInstance().telemetry)
         val pivot = Pivot(hardwareMap)
