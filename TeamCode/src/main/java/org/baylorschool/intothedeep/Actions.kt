@@ -161,6 +161,7 @@ fun switchAfterTrue(action0: Action, action1: Action, delay: () -> (Boolean)) : 
         }
         var hasInited = true
         var use1 = false
+        var done1 = false
         override fun update(): Boolean {
             if (use1) {
                 if (hasInited) {
@@ -170,7 +171,10 @@ fun switchAfterTrue(action0: Action, action1: Action, delay: () -> (Boolean)) : 
                     hasInited = true
                 }
             } else {
-                use1 = action0.update() || delay()
+                if (!done1) {
+                    done1 = action0.update()
+                }
+                use1 = delay()
             }
             return false
         }

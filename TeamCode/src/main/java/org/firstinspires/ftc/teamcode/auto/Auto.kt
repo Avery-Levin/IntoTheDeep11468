@@ -27,9 +27,9 @@ import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants
 class Auto : LinearOpMode() {
     //private val startPos = Pose(-32.0, -5.0*12.0, Math.toRadians(90.0))
     //note: the A and B points are beziers
-    private val placePreloadPosA = Pose(19.0, -5.0, 0.0)
-    private val placePreloadPos1 = Pose(30.5, -5.0, 0.0)
-    private val placePreloadPos2 = Pose(30.5, -5.0, 0.0)
+    private val placePreloadPosA = Pose(25.0, -7.0, 0.0)
+    private val placePreloadPos1 = Pose(31.0, -5.0, 0.0)
+    private val placePreloadPos2 = Pose(31.0, -5.0, 0.0)
     private val push0StartPos = Pose(49.5, -44.5, 0.0)
     private val push0BezierPosA = Pose(-10.5, -56.0, 0.0)//toward human player
     private val push0BezierPosB = Pose(53.0, -23.5, 0.0)
@@ -95,16 +95,16 @@ class Auto : LinearOpMode() {
 
             genPickup(driver, pivot, slides, depo, telemetryA, useFarPickupPos = true),//true
 
-            genPlacement(driver, pivot, slides, depo, telemetryA),
+            genPlacement(driver, pivot, slides, depo, telemetryA, usebezier = true),
 
             genPickup(driver, pivot, slides, depo, telemetryA),
-            genPlacement(driver, pivot, slides, depo, telemetryA),
+            genPlacement(driver, pivot, slides, depo, telemetryA, usebezier = true),
 
             genPickup(driver, pivot, slides, depo, telemetryA),
-            genPlacement(driver, pivot, slides, depo, telemetryA),
+            genPlacement(driver, pivot, slides, depo, telemetryA, usebezier = true),
 
-            genPickup(driver, pivot, slides, depo, telemetryA),
-            genPlacement(driver, pivot, slides, depo, telemetryA),
+            //genPickup(driver, pivot, slides, depo, telemetryA),
+            //genPlacement(driver, pivot, slides, depo, telemetryA, usebezier = true),
 
             object : Action {
                 override fun init() {
@@ -112,7 +112,7 @@ class Auto : LinearOpMode() {
                 }
                 override fun update(): Boolean = true
             }
-        ), pivot.action(telemetryA), slides.action(telemetryA), driverAction(driver), looptimeAction(telemetryA),
+        ), pivot.action(telemetryA), slides.action(telemetryA), driverAction(driver, telemetryA), looptimeAction(telemetryA),
             //cacheClearAction(allHubs),
             telemetryAction(telemetryA)).execute { isStopRequested }
 
@@ -123,15 +123,16 @@ class Auto : LinearOpMode() {
     }
 
     private fun genPickup(driver: Driver, pivot: Pivot, slides: Slides, depo: Depo, telemetry: MultipleTelemetry, useFarPickupPos: Boolean = false): ActionSet {
+        val spline = Pose(15.0, -37.0, 0.0)
         return ActionSet(
             ActionGroup(
-                if (useFarPickupPos) driver.runToAction(pickup1Pos) else driver.runToAction(pickup0Pos),
-                Global.PivotPresets.WALL_PICKUP_AUTO.action(pivot, driver.follower, telemetry),
+                if (useFarPickupPos) driver.runToAction(pickup1Pos, spline) else driver.runToAction(pickup0Pos, spline),
+                Global.PivotPresets.WALL_PICKUP_AUTO.action(pivot, driver.follower, telemetry, multi = 1.6),
                 Global.DiffyPosition.DiffySpecIntake.diffyPos.setAction(depo),
                 depo.setClaw(true),
-                startWithDelay(Global.SlidePresets.FWINTAKE/*_ALMOST*/.action(slides), 500),
+                startWithDelay(Global.SlidePresets.FWINTAKE_ALMOST.action(slides), 500),
             ),
-            //ensureMinTime(Global.SlidePresets.FWINTAKE.action(slides), 100),
+            ensureMinTime(startWithDelay(Global.SlidePresets.FWINTAKE.action(slides), 200), 450),
             ensureMinTime(depo.setClaw(false), 200),
             Global.PivotPresets.WALL_PICKUP_UP_AUTO.action(pivot),
             //Global.SlidePresets.RESET.action(slides)
@@ -153,9 +154,15 @@ class Auto : LinearOpMode() {
                         ActionGroup (
                             Global.SlidePresets.RESET.action(slides),
                             depo.setClaw(true),
+                            object : Action {
+                                override fun init() {
+                                    driver.follower.breakFollowing()
+                                }
+                                override fun update(): Boolean = true
+                            }
                         ),
                     )
-                ) {driver.follower.currentTValue > 0.5 && driver.follower.velocity.magnitude < 0.1}
+                ) {driver.follower.currentTValue > 0.50 && driver.follower.velocity.magnitude < 5.0}
             ),
         )
     }
@@ -170,9 +177,9 @@ class Auto : LinearOpMode() {
             //))
         )
     }
-    val testing = Pose(24.75, -39.0, Math.toRadians(135.0))
+    val testing = Pose(25.25, -39.0, Math.toRadians(135.0))
     val testingS = Pose(20.5, -40.0, Math.toRadians(45.0))
-    val testing2 = Pose(24.25, -49.0, Math.toRadians(135.0))
+    val testing2 = Pose(24.75, -49.0, Math.toRadians(135.0))
     val testing2S = Pose(20.0, -45.0, Math.toRadians(45.0))
     val testing3 = Pose(25.0, -59.0, Math.toRadians(135.0))
     //val testing3S = Pose(17.0, -38.0, Math.toRadians(45.0))
@@ -182,9 +189,9 @@ class Auto : LinearOpMode() {
             //30
             //driver.runToAction(Pose(24.5, 0.0, 0.0)),
             ActionGroup(
-                driver.runToAction(testing, Pose(5.0, 0.0)),
+                driver.runToAction(testing, Pose(20.0, -5.0)),
                 Global.DiffyPosition.DiffyAutoPickup45.diffyPos.setAction(depo),
-                startWithDelay(Global.SlidePresets.SPEC_INTAKE.action(slides), 500),
+                startWithDelay(Global.SlidePresets.SPEC_INTAKE.action(slides), 150),
                 Global.PivotPresets.RESET.action(pivot, driver.follower, tele),
             ),
             depo.setClaw(false),
@@ -196,7 +203,7 @@ class Auto : LinearOpMode() {
             depo.setClaw(true),
 
             ActionGroup(
-                driver.runToAction(testing2, Pose(0.0, 10.0), Pose(20.0, -41.5)),
+                driver.runToAction(testing2, ),//Pose(0.0, 10.0), Pose(20.0, -41.5)),
                 Global.DiffyPosition.DiffyAutoPickup45.diffyPos.setAction(depo),
                 Global.SlidePresets.SPEC_INTAKE.action(slides),
                 Global.PivotPresets.RESET.action(pivot, driver.follower, tele),
@@ -214,7 +221,7 @@ class Auto : LinearOpMode() {
             depo.setClaw(true),
 
             ActionGroup(
-                driver.runToAction(testing3, Pose(0.0, 10.0), Pose(20.0, -41.5)),
+                driver.runToAction(testing3, ),//Pose(0.0, 10.0), Pose(20.0, -41.5)),
                 Global.DiffyPosition.DiffyAutoPickup45.diffyPos.setAction(depo),
                 Global.SlidePresets.SPEC_INTAKE.action(slides),
                 Global.PivotPresets.RESET.action(pivot, driver.follower, tele),
@@ -242,13 +249,17 @@ class Auto : LinearOpMode() {
                 return false
             }
         }
-    private fun driverAction(driver: Driver) : Action {
+    private fun driverAction(driver: Driver, tele: MultipleTelemetry) : Action {
         driver.update()
         return object : Action {
             override fun init() {}
 
             override fun update(): Boolean {
                 driver.update()
+                tele.addData("TEST-VELOCITY", driver.follower.velocity.magnitude)
+                tele.addData("TEST-TVALUE", driver.follower.currentTValue)
+                tele.addData("TEST-HEADING", driver.follower.pose.heading)
+                //tele.addData("TEST-VELOCITY", driver.follower.velocity.magnitude)
                 return false
             }
         }

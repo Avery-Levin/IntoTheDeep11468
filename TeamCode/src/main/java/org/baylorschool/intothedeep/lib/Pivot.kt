@@ -79,7 +79,7 @@ class Pivot(hardwareMap: HardwareMap) {
          */
         if (useTeleopPID) {
             if (switch.state && !switchWasPressed) {
-                offset = -pivotL.currentPosition
+                offset = -pivotL.currentPosition - 22
                 if (negative) {
                     target = 0.0
                     negative = false

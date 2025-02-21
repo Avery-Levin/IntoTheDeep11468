@@ -42,8 +42,8 @@ object Global {
     // diffy
     @Config
     object DiffyConfig {
-        @JvmField var standardL: Double = 0.5078
-        @JvmField var standardR: Double = 0.4911
+        @JvmField var standardL: Double = 0.5061
+        @JvmField var standardR: Double = 0.3767
     }
     val diffyIdle = DiffyPos(standardL, standardR)
     val diffy45 = DiffyPos(standardL+0.0511, standardR+0.0955)
@@ -71,9 +71,9 @@ object Global {
     enum class SlidePresets(var pos: Double) {
         RESET(0.0), INTAKE(1000.0), TELE_INTAKE(1500.0),
         LOW_BASKET(0.0), HIGH_BASKET(2300.0),//7
-        SPEC_INTAKE(300.0), LOW_CHAMBER(0.0), HIGH_CHAMBER(760.0), HIGH_CHAMBER_SNAP(180.0),
+        SPEC_INTAKE(300.0), LOW_CHAMBER(0.0), HIGH_CHAMBER(700.0), HIGH_CHAMBER_SNAP(180.0),
         FWINTAKE(500.0),
-        FWINTAKE_ALMOST(400.0),
+        FWINTAKE_ALMOST(300.0),
         FWINTAKE_ALMOST_ALMOST(200.0),
         HIGH_CHAMBER_AUTO(580.0),
         FWINTAKE_AUTO(525.0), HIGH_CHAMBER_DROP_AUTO(180.0),
@@ -102,7 +102,7 @@ object Global {
         RESET(00.0), DEPO(1150.0),
         SPEC_DEPOSIT(950.0)/**/,
         SPEC_DEPOSIT_DROP(1000.0),
-        WALL_PICKUP(280.0),
+        WALL_PICKUP(400.0),
         SPEC_DEPOSIT_AUTO(975.0),
         WALL_PICKUP_AUTO(230.0)/**/, WALL_PICKUP_UP_AUTO(360.0),//up before pull next
         LOW_RUNG(700.0), LOW_RUNG_RETRACT(200.0), HIGH_RUNG(0.0);
@@ -116,7 +116,7 @@ object Global {
                 override fun update(): Boolean = pivot.close()
             }
         }
-        fun action(pivot: Pivot, follower: Follower, telemetry: MultipleTelemetry, auto: Boolean = true) : Action {
+        fun action(pivot: Pivot, follower: Follower, telemetry: MultipleTelemetry, auto: Boolean = true, multi: Double = 1.6) : Action {
             val x = this
             return object : Action {
                 var oldValue = -1.0
@@ -131,7 +131,7 @@ object Global {
                 override fun update(): Boolean {
                     pivot.update()
                     testing += 1
-                    PivotPIDConfig.target = -min(follower.currentTValue * 1.3, 1.0) * distance + oldValue
+                    PivotPIDConfig.target = -min(follower.currentTValue * multi, 1.0) * distance + oldValue
                     telemetry.addData("pivot target", PivotPIDConfig.target)
                     telemetry.addData("pivot distance", distance)
                     telemetry.addData("pivot follower T", follower.currentTValue)
@@ -177,7 +177,7 @@ object Global {
     @Config
     object AutoPivotPIDConfig {
         @JvmField var p: Double = 0.0195
-        @JvmField var d: Double = 0.000028
+        @JvmField var d: Double = 0.000026
         @JvmField var fg: Double = 0.0025
         @JvmField var tunedVoltage: Double = 12.55
         //@JvmField var target: Double = 0.0
