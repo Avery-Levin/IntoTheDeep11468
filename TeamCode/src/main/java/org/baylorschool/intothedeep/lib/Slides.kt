@@ -108,7 +108,7 @@ class Slides(hardwareMap: HardwareMap) {
     }
 
     fun l2Hang() {
-        PivotPIDConfig.target = Global.PivotPresets.LOW_RUNG.pos
+        target = Global.SlidePresets.LOW_RUNG.pos
     }
 
     fun action(telemetry: MultipleTelemetry) : Action {

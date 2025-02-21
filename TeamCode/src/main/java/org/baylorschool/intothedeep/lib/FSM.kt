@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.lib.Slides
 class FSM(hardwareMap: HardwareMap) {
 
     enum class RobotState {
-        START, INTAKE, SPEC_INTAKE, INTAKE_RETRACT, SAMPLE_DEPOSIT, SAMPLE_RETRACT, SPEC_DEPOSIT, SPEC_RETRACT, HANG
+        START, INTAKE, SPEC_INTAKE, INTAKE_RETRACT, SAMPLE_DEPOSIT, SAMPLE_RETRACT, SPEC_DEPOSIT, SPEC_RETRACT, HANG, HANG_RETRACT
     }
 
     private val slides = Slides(hardwareMap)
@@ -232,6 +232,9 @@ class FSM(hardwareMap: HardwareMap) {
                     slides.reset()
                     pivot.reset()
                 }
+            } RobotState.HANG_RETRACT -> {
+                slides.reset()
+                pivot.l2HangRetract()
             }
         }
 

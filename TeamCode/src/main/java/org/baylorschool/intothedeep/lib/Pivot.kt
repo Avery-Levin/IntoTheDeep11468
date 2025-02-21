@@ -1,5 +1,6 @@
 package org.baylorschool.intothedeep.lib
 
+import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry
 import com.qualcomm.hardware.lynx.LynxModule
 import com.qualcomm.robotcore.hardware.DcMotor
@@ -121,6 +122,10 @@ class Pivot(hardwareMap: HardwareMap) {
 
     fun l2Hang() {
         target = Global.PivotPresets.LOW_RUNG.pos
+    }
+
+    fun l2HangRetract(){
+        target = Global.PivotPresets.LOW_RUNG_RETRACT.pos
     }
 
     fun action(telemetry: MultipleTelemetry) : Action {

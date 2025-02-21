@@ -57,7 +57,7 @@ object Global {
     val diffyInit = DiffyPos(standardL-.0961, standardR+0.0077)
     val diffyAutoPickup45 = DiffyPos(standardL+.0555, standardR+0.0872)
 
-    const val clawOpen = 0.55
+    const val clawOpen = 0.40
     const val clawClosed = 0.92
 
     //hardstop
@@ -77,7 +77,7 @@ object Global {
         FWINTAKE_ALMOST_ALMOST(200.0),
         HIGH_CHAMBER_AUTO(580.0),
         FWINTAKE_AUTO(525.0), HIGH_CHAMBER_DROP_AUTO(180.0),
-        LOW_RUNG(0.0), HIGH_RUNG(0.0),;
+        LOW_RUNG(1000.0), HIGH_RUNG(0.0),;
         fun action(slides: Slides) : Action {
             val x = this
             return object : Action {
@@ -105,7 +105,7 @@ object Global {
         WALL_PICKUP(280.0),
         SPEC_DEPOSIT_AUTO(975.0),
         WALL_PICKUP_AUTO(230.0)/**/, WALL_PICKUP_UP_AUTO(360.0),//up before pull next
-        LOW_RUNG(0.0), HIGHNG(0.0);
+        LOW_RUNG(700.0), LOW_RUNG_RETRACT(200.0), HIGH_RUNG(0.0);
         fun action(pivot: Pivot, auto: Boolean = true) : Action {
             val x = this
             return object : Action {
@@ -131,7 +131,7 @@ object Global {
                 override fun update(): Boolean {
                     pivot.update()
                     testing += 1
-                    PivotPIDConfig.target = -min(follower.currentTValue * 1.6, 1.0) * distance + oldValue
+                    PivotPIDConfig.target = -min(follower.currentTValue * 1.3, 1.0) * distance + oldValue
                     telemetry.addData("pivot target", PivotPIDConfig.target)
                     telemetry.addData("pivot distance", distance)
                     telemetry.addData("pivot follower T", follower.currentTValue)
@@ -177,7 +177,7 @@ object Global {
     @Config
     object AutoPivotPIDConfig {
         @JvmField var p: Double = 0.0195
-        @JvmField var d: Double = 0.000025
+        @JvmField var d: Double = 0.000028
         @JvmField var fg: Double = 0.0025
         @JvmField var tunedVoltage: Double = 12.55
         //@JvmField var target: Double = 0.0

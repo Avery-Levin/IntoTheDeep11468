@@ -26,9 +26,9 @@ import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants
 class Auto : LinearOpMode() {
     //private val startPos = Pose(-32.0, -5.0*12.0, Math.toRadians(90.0))
     //note: the A and B points are beziers
-    private val placePreloadPosA = Pose(19.0, 0.0, 0.0)
-    private val placePreloadPos1 = Pose(30.5, 0.0, 0.0)
-    private val placePreloadPos2 = Pose(31.0, 0.0, 0.0)
+    private val placePreloadPosA = Pose(19.0, -5.0, 0.0)
+    private val placePreloadPos1 = Pose(30.5, -5.0, 0.0)
+    private val placePreloadPos2 = Pose(30.5, -5.0, 0.0)
     private val push0StartPos = Pose(49.5, -44.5, 0.0)
     private val push0BezierPosA = Pose(-10.5, -56.0, 0.0)//toward human player
     private val push0BezierPosB = Pose(53.0, -23.5, 0.0)
@@ -64,7 +64,7 @@ class Auto : LinearOpMode() {
         pivot.offset = 0
         pivot.specDeposit()
         depo.diffySpec()
-        depo.claw.position = 0.55
+        depo.claw.position = 0.40
         //Global.PivotPresets.SPEC_DEPOSIT
         while (!isStarted()) {
             driver.follower.pose = Pose(-1.55, -8.0, 0.0)
@@ -72,11 +72,11 @@ class Auto : LinearOpMode() {
             depo.claw.position = 0.92
             //driver.update()
         }
-        val start = System.currentTimeMillis()
         //while (start + 5000 > System.currentTimeMillis()) {
         //    pivot.update()
         //}
         waitForStart()
+        val start = System.currentTimeMillis()
         driver.follower.pose = Pose(-1.55, -8.0, 0.0)
         ActionGroup(ActionSet(
             genPlacement(driver, pivot, slides, depo, telemetryA, usecloserpoint = true),
@@ -104,6 +104,12 @@ class Auto : LinearOpMode() {
             genPickup(driver, pivot, slides, depo, telemetryA),
             genPlacement(driver, pivot, slides, depo, telemetryA),
 
+            object : Action {
+                override fun init() {
+                    telemetryA.addLine("Total time: ${System.currentTimeMillis()-start}")
+                }
+                override fun update(): Boolean = true
+            }
         ), pivot.action(telemetryA), slides.action(telemetryA), driverAction(driver), looptimeAction(telemetryA),
             //cacheClearAction(allHubs),
             telemetryAction(telemetryA)).execute { isStopRequested }
@@ -121,10 +127,10 @@ class Auto : LinearOpMode() {
                 Global.PivotPresets.WALL_PICKUP_AUTO.action(pivot, driver.follower, telemetry),
                 Global.DiffyPosition.DiffySpecIntake.diffyPos.setAction(depo),
                 depo.setClaw(true),
-                startWithDelay(Global.SlidePresets.FWINTAKE_ALMOST.action(slides), 500),
+                startWithDelay(Global.SlidePresets.FWINTAKE/*_ALMOST*/.action(slides), 500),
             ),
-            ensureMinTime(Global.SlidePresets.FWINTAKE.action(slides), 100),
-            ensureMinTime(depo.setClaw(false), 300),
+            //ensureMinTime(Global.SlidePresets.FWINTAKE.action(slides), 100),
+            ensureMinTime(depo.setClaw(false), 200),
             Global.PivotPresets.WALL_PICKUP_UP_AUTO.action(pivot),
             //Global.SlidePresets.RESET.action(slides)
         )
@@ -133,13 +139,14 @@ class Auto : LinearOpMode() {
         val ppp = if (usecloserpoint) placePreloadPos2 else placePreloadPos1
         return ActionSet(
             ActionGroup(
-                if (usecloserpoint) ensureMinTime(depo.setClaw(false), 500) else depo.setClaw(false),
+                //if (usecloserpoint) ensureMinTime(depo.setClaw(false), 1) else depo.setClaw(false),
+                depo.setClaw(false),
                 if (usebezier) driver.runToAction(ppp, placePreloadPosA) else driver.runToAction(ppp),
-                ensureMinTime(Global.DiffyPosition.DiffySpecDepo.diffyPos.setAction(depo), 200),
+                Global.DiffyPosition.DiffySpecDepo.diffyPos.setAction(depo),
                 Global.PivotPresets.SPEC_DEPOSIT.action(pivot, driver.follower, tele),
                 Global.SlidePresets.HIGH_CHAMBER.action(slides)
             ),
-            ensureMinTime(Global.SlidePresets.HIGH_CHAMBER_DROP_AUTO.action(slides), 100),
+            Global.SlidePresets.HIGH_CHAMBER_DROP_AUTO.action(slides),
             ActionGroup (
                 Global.SlidePresets.RESET.action(slides),
                 depo.setClaw(true),
@@ -158,9 +165,9 @@ class Auto : LinearOpMode() {
         )
     }
     val testing = Pose(24.75, -39.0, Math.toRadians(135.0))
-    val testingS = Pose(17.0, -40.0, Math.toRadians(45.0))
+    val testingS = Pose(20.5, -40.0, Math.toRadians(45.0))
     val testing2 = Pose(24.25, -49.0, Math.toRadians(135.0))
-    val testing2S = Pose(17.0, -45.0, Math.toRadians(45.0))
+    val testing2S = Pose(20.0, -45.0, Math.toRadians(45.0))
     val testing3 = Pose(25.0, -59.0, Math.toRadians(135.0))
     //val testing3S = Pose(17.0, -38.0, Math.toRadians(45.0))
     val testing3S = Pose(12.0, -51.0, 0.0)
