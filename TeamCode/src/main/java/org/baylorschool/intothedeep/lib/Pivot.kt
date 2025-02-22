@@ -36,7 +36,7 @@ class Pivot(hardwareMap: HardwareMap) {
     private var controller = PIDFController(control)
     private var armPower = 0.0
     var offset = 0
-    var negative = false
+    var resetting = false
     private val high: Int = 1200
     private val low: Int = -2101
     private var voltage: Double = 0.0
@@ -77,13 +77,13 @@ class Pivot(hardwareMap: HardwareMap) {
             controller = PIDFController(control)
         }
          */
-        if (useTeleopPID) {
-            if (switch.state && !switchWasPressed) {
+        if (useTeleopPID && resetting) {
+            if (switch.state) {
                 offset = -pivotL.currentPosition - 22
-                if (negative) {
-                    target = 0.0
-                    negative = false
-                }
+                target = 0.0
+                resetting = false
+            } else {
+                target--
             }
         }
         switchWasPressed = switch.state
@@ -105,7 +105,9 @@ class Pivot(hardwareMap: HardwareMap) {
     }
 
     fun reset() {
-        target = Global.PivotPresets.RESET.pos
+        if (!resetting) {
+            target = Global.PivotPresets.RESET.pos
+        }
     }
 
     fun deposit() {
@@ -140,5 +142,8 @@ class Pivot(hardwareMap: HardwareMap) {
             }
 
         }
+    }
+    fun resetPosition() {
+        resetting = true
     }
 }

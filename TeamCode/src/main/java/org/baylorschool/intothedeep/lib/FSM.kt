@@ -50,9 +50,7 @@ class FSM(hardwareMap: HardwareMap) {
         when(state) {
             RobotState.START -> {
                 depo.idle()
-                if (Global.PivotPIDConfig.target != -1200.0) {
-                    pivot.reset()
-                }
+                pivot.reset()
                 slides.reset()
                 if (gamepad.a) {
                     transition = true
@@ -71,8 +69,7 @@ class FSM(hardwareMap: HardwareMap) {
                 }
 
                 if (gamepad.dpad_down) {
-                    Global.PivotPIDConfig.target = -1200.0
-                    pivot.negative = true
+                    pivot.resetPosition()
                 }
 
                 if (rumble.dpad_up){

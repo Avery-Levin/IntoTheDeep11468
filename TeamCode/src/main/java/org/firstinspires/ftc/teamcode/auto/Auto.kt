@@ -28,8 +28,8 @@ class Auto : LinearOpMode() {
     //private val startPos = Pose(-32.0, -5.0*12.0, Math.toRadians(90.0))
     //note: the A and B points are beziers
     private val placePreloadPosA = Pose(25.0, -7.0, 0.0)
-    private val placePreloadPos1 = Pose(31.0, -5.0, 0.0)
-    private val placePreloadPos2 = Pose(31.0, -5.0, 0.0)
+    private val placePreloadPos1 = Pose(30.0, -5.0, 0.0)
+    private val placePreloadPos2 = Pose(30.0, -5.0, 0.0)
     private val push0StartPos = Pose(49.5, -44.5, 0.0)
     private val push0BezierPosA = Pose(-10.5, -56.0, 0.0)//toward human player
     private val push0BezierPosB = Pose(53.0, -23.5, 0.0)
@@ -147,22 +147,12 @@ class Auto : LinearOpMode() {
                 if (usebezier) driver.runToAction(ppp, placePreloadPosA) else driver.runToAction(ppp),
                 Global.DiffyPosition.DiffySpecDepo.diffyPos.setAction(depo),
                 Global.PivotPresets.SPEC_DEPOSIT.action(pivot, driver.follower, tele),
-                switchAfterTrue(
-                    Global.SlidePresets.HIGH_CHAMBER.action(slides),
-                    ActionSet(
-                        Global.SlidePresets.HIGH_CHAMBER_DROP_AUTO.action(slides),
-                        ActionGroup (
-                            Global.SlidePresets.RESET.action(slides),
-                            depo.setClaw(true),
-                            object : Action {
-                                override fun init() {
-                                    driver.follower.breakFollowing()
-                                }
-                                override fun update(): Boolean = true
-                            }
-                        ),
-                    )
-                ) {driver.follower.currentTValue > 0.50 && driver.follower.velocity.magnitude < 5.0}
+                Global.SlidePresets.HIGH_CHAMBER.action(slides)
+            ),
+            ensureMinTime(Global.SlidePresets.HIGH_CHAMBER_DROP_AUTO.action(slides), 200),
+            ActionGroup (
+                Global.SlidePresets.RESET.action(slides),
+                depo.setClaw(true),
             ),
         )
     }
