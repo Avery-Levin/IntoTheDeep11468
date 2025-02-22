@@ -167,8 +167,8 @@ object Global {
 
     @Config
     object TeleopPivotPIDConfig {
-        @JvmField var p: Double = 0.0195
-        @JvmField var d: Double = 0.000027
+        @JvmField var p: Double = 0.0188
+        @JvmField var d: Double = 0.0000265
         @JvmField var fg: Double = 0.003
         @JvmField var tunedVoltage: Double = 12.45
         //@JvmField var target: Double = 0.0
