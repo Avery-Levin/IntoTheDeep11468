@@ -35,29 +35,29 @@ object Global {
         DiffyBasket(diffyBasket),
         DiffySpecIntake(diffySpecIntake),
         DiffySpecDepo(diffySpecDepo),
-        DiffyInit(diffyInit),
+       // DiffyInit(diffyInit),
         DiffyAutoPickup45(diffyAutoPickup45)
     }
 
     // diffy
     @Config
     object DiffyConfig {
-        @JvmField var standardL: Double = 0.5061
-        @JvmField var standardR: Double = 0.3767
+        @JvmField var standardL: Double = 0.5661
+        @JvmField var standardR: Double = 0.5906
     }
     val diffyIdle = DiffyPos(standardL, standardR)
-    val diffy45 = DiffyPos(standardL+0.0511, standardR+0.0955)
-    val diffy90 = DiffyPos(standardL+0.0428, standardR+0.1139)
-    val diffy135 = DiffyPos(standardL+0.0956, standardR+0.0611)
-    val diffy180 = DiffyPos(standardL+.08, standardR+0.0772)
-    val diffyRetract = DiffyPos (standardL+0.0322, standardR-0.02)
-    val diffyBasket = DiffyPos(standardL+0.0211, standardR-0.0439)
+    val diffy45 = DiffyPos(standardL-.28, standardR-0.3695)
+    val diffy90 = DiffyPos(standardL-0.5311, standardR-0.2067)
+    val diffy135 = DiffyPos(standardL-0.4355, standardR-0.3023)
+    val diffy180 = DiffyPos(standardL-.3683, standardR-0.3695)
+    val diffyRetract = DiffyPos (standardL+0.1422, standardR-0.1606)
+    val diffyBasket = DiffyPos(standardL+0.2872, standardR-0.0178)
     val diffySpecIntake = DiffyPos(standardL+0.0161, standardR+0.0144)
-    val diffySpecDepo = DiffyPos(standardL-.0972, standardR+0.0189)
-    val diffyInit = DiffyPos(standardL-.0961, standardR+0.0077)
+    val diffySpecDepo = DiffyPos(standardL+.2795, standardR+.2838)
+    //val diffyInit = DiffyPos(standardL-.0961, standardR+0.0077)
     val diffyAutoPickup45 = DiffyPos(standardL+.0555, standardR+0.0872)
 
-    const val clawOpen = 0.40
+    const val clawOpen = 0.4
     const val clawClosed = 0.92
 
     //hardstop
@@ -92,7 +92,7 @@ object Global {
 
     @Config
     object SlidePIDConfig {
-        @JvmField var p: Double = 0.0115
+        @JvmField var p: Double = 0.0105
         @JvmField var fg: Double = 0.04
         @JvmField var target: Double = 0.0
     }
@@ -102,7 +102,7 @@ object Global {
         RESET(00.0), DEPO(1150.0),
         SPEC_DEPOSIT(950.0)/**/,
         SPEC_DEPOSIT_DROP(1000.0),
-        WALL_PICKUP(400.0),
+        WALL_PICKUP(240.0),
         SPEC_DEPOSIT_AUTO(975.0),
         WALL_PICKUP_AUTO(230.0)/**/, WALL_PICKUP_UP_AUTO(360.0),//up before pull next
         LOW_RUNG(700.0), LOW_RUNG_RETRACT(200.0), HIGH_RUNG(0.0);
@@ -167,10 +167,10 @@ object Global {
 
     @Config
     object TeleopPivotPIDConfig {
-        @JvmField var p: Double = 0.0185
-        @JvmField var d: Double = 0.000026
+        @JvmField var p: Double = 0.0195
+        @JvmField var d: Double = 0.000027
         @JvmField var fg: Double = 0.003
-        @JvmField var tunedVoltage: Double = 12.34
+        @JvmField var tunedVoltage: Double = 12.45
         //@JvmField var target: Double = 0.0
     }
 

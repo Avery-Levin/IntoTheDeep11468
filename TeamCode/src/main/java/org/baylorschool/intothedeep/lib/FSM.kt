@@ -46,7 +46,7 @@ class FSM(hardwareMap: HardwareMap) {
         telemetry.addData("difference", difference)
     }
 
-    fun loop(gamepad: Gamepad, rumble: Gamepad) {
+    fun loop(gamepad: Gamepad, rumble: Gamepad, telemetry: Telemetry) {
         when(state) {
             RobotState.START -> {
                 depo.idle()
@@ -69,7 +69,7 @@ class FSM(hardwareMap: HardwareMap) {
                 }
 
                 if (gamepad.dpad_down) {
-                    pivot.resetPosition()
+                    Pivot.resetting = !Pivot.resetting
                 }
 
                 if (rumble.dpad_up){

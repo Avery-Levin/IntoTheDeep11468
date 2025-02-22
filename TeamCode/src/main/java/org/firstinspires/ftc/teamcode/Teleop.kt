@@ -39,7 +39,7 @@ class TeleOp: LinearOpMode() {
                 hub.clearBulkCache()
             }
             mecanum.mecanumLoop(gamepad1)
-            fsm.loop(gamepad2, gamepad1)
+            fsm.loop(gamepad2, gamepad1, telemetryMultiple)
 
             pivot.update()
             slide.update()

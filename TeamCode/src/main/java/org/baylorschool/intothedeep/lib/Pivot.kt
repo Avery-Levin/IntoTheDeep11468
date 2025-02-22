@@ -22,6 +22,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry
 import org.firstinspires.ftc.robotcore.external.navigation.VoltageUnit
 import kotlin.math.abs
 import kotlin.math.cos
+import kotlin.random.Random
 
 class Pivot(hardwareMap: HardwareMap) {
     private val hubs = hardwareMap.getAll(LynxModule::class.java)
@@ -36,10 +37,11 @@ class Pivot(hardwareMap: HardwareMap) {
     private var controller = PIDFController(control)
     private var armPower = 0.0
     var offset = 0
-    var resetting = false
+    companion object {var resetting = false}
     private val high: Int = 1200
     private val low: Int = -2101
     private var voltage: Double = 0.0
+    val rand = Random.nextInt()
 
     init {
         controller.targetPosition = target
@@ -67,23 +69,23 @@ class Pivot(hardwareMap: HardwareMap) {
         telemetry.addData("switch", switch.state)
         telemetry.addData("hub voltage", voltage)
         telemetry.addData("pivot offset", offset)
+        telemetry.addData("resetting", resetting)
+        telemetry.addData("pivot random", rand)
     }
 
     fun update() {
         voltage = hubs[0].getInputVoltage(VoltageUnit.VOLTS)
-        /*
         if (!(control.kP == p && control.kD == d)) {
             control = PIDCoefficients(p, kI = 0.0 ,d)
             controller = PIDFController(control)
         }
-         */
         if (useTeleopPID && resetting) {
             if (switch.state) {
-                offset = -pivotL.currentPosition - 22
+                offset = -pivotL.currentPosition - 20
                 target = 0.0
                 resetting = false
             } else {
-                target--
+                target -= 6
             }
         }
         switchWasPressed = switch.state
@@ -114,6 +116,7 @@ class Pivot(hardwareMap: HardwareMap) {
         target = Global.PivotPresets.DEPO.pos
     }
 
+
     fun specIntake() {
         target = Global.PivotPresets.WALL_PICKUP.pos
     }
@@ -143,6 +146,7 @@ class Pivot(hardwareMap: HardwareMap) {
 
         }
     }
+
     fun resetPosition() {
         resetting = true
     }

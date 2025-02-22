@@ -105,22 +105,22 @@ class Depo(hardwareMap: HardwareMap) {
         Global.diffySpecDepo.set(diffyL, diffyR)
     }
     fun diffyInit() {
-        Global.diffyInit.set(diffyL, diffyR)
+        //Global.diffyInit.set(diffyL, diffyR)
     }
 
     fun tuning(gamepad: Gamepad) {
         if (gamepad.dpad_up) {
-            diffyL.position += 0.0003
-            diffyR.position += 0.0003
+            diffyL.position += 0.003
+            diffyR.position += 0.003
         } else if (gamepad.dpad_down) {
-            diffyL.position -= 0.0003
-            diffyR.position -= 0.0003
+            diffyL.position -= 0.003
+            diffyR.position -= 0.003
         } else if (gamepad.dpad_right) {
-            diffyL.position -= 0.0003
-            diffyR.position += 0.0003
+            diffyL.position -= 0.003
+            diffyR.position += 0.003
         } else if (gamepad.dpad_left) {
-            diffyL.position += 0.0003
-            diffyR.position -= 0.0003
+            diffyL.position += 0.003
+            diffyR.position -= 0.003
         } else if (gamepad.a) {
             diffy180()
         } else if (gamepad.left_bumper) {
