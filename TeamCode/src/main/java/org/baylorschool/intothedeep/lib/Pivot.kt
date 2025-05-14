@@ -85,7 +85,7 @@ class Pivot(hardwareMap: HardwareMap) {
                 target = 0.0
                 resetting = false
             } else {
-                target -= 6
+                target -= 10
             }
         }
         switchWasPressed = switch.state

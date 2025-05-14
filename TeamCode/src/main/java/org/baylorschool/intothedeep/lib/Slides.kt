@@ -132,4 +132,8 @@ class Slides(hardwareMap: HardwareMap) {
             target--
         }
     }
+
+    fun highChamberTele() {
+        target = Global.SlidePresets.HIGH_CHAMBER_TELE.pos
+    }
 }

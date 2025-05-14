@@ -42,8 +42,8 @@ object Global {
     // diffy
     @Config
     object DiffyConfig {
-        @JvmField var standardL: Double = 0.5661
-        @JvmField var standardR: Double = 0.5906
+        @JvmField var standardL: Double = 0.6622
+        @JvmField var standardR: Double = 0.6322
     }
     val diffyIdle = DiffyPos(standardL, standardR)
     val diffy45 = DiffyPos(standardL-.28, standardR-0.3695)
@@ -52,10 +52,10 @@ object Global {
     val diffy180 = DiffyPos(standardL-.3683, standardR-0.3695)
     val diffyRetract = DiffyPos (standardL+0.1422, standardR-0.1606)
     val diffyBasket = DiffyPos(standardL+0.2872, standardR-0.0178)
-    val diffySpecIntake = DiffyPos(standardL+0.0161, standardR+0.0144)
+    val diffySpecIntake = DiffyPos(standardL-0.4222, standardR+0.2605)
     val diffySpecDepo = DiffyPos(standardL+.2795, standardR+.2838)
     //val diffyInit = DiffyPos(standardL-.0961, standardR+0.0077)
-    val diffyAutoPickup45 = DiffyPos(standardL+.0555, standardR+0.0872)
+    val diffyAutoPickup45 = DiffyPos(standardL-.2833, standardR-0.4545)
 
     const val clawOpen = 0.4
     const val clawClosed = 0.92
@@ -71,13 +71,14 @@ object Global {
     enum class SlidePresets(var pos: Double) {
         RESET(0.0), INTAKE(1000.0), TELE_INTAKE(1500.0),
         LOW_BASKET(0.0), HIGH_BASKET(2300.0),//7
-        SPEC_INTAKE(300.0), LOW_CHAMBER(0.0), HIGH_CHAMBER(700.0), HIGH_CHAMBER_SNAP(180.0),
+        SPEC_INTAKE(300.0), LOW_CHAMBER(0.0), HIGH_CHAMBER_TELE(760.0)
+        , HIGH_CHAMBER(700.0), HIGH_CHAMBER_SNAP(180.0),
         FWINTAKE(500.0),
         FWINTAKE_ALMOST(300.0),
         FWINTAKE_ALMOST_ALMOST(200.0),
         HIGH_CHAMBER_AUTO(580.0),
         FWINTAKE_AUTO(525.0), HIGH_CHAMBER_DROP_AUTO(180.0),
-        LOW_RUNG(1000.0), HIGH_RUNG(0.0),;
+        LOW_RUNG(1200.0), HIGH_RUNG(0.0),;
         fun action(slides: Slides) : Action {
             val x = this
             return object : Action {
@@ -102,10 +103,10 @@ object Global {
         RESET(00.0), DEPO(1150.0),
         SPEC_DEPOSIT(950.0)/**/,
         SPEC_DEPOSIT_DROP(1000.0),
-        WALL_PICKUP(240.0),
-        SPEC_DEPOSIT_AUTO(975.0),
-        WALL_PICKUP_AUTO(230.0)/**/, WALL_PICKUP_UP_AUTO(360.0),//up before pull next
-        LOW_RUNG(700.0), LOW_RUNG_RETRACT(200.0), HIGH_RUNG(0.0);
+        WALL_PICKUP(230.0),
+        SPEC_DEPOSIT_AUTO(985.0),
+        WALL_PICKUP_AUTO(250.0)/**/, WALL_PICKUP_UP_AUTO(370.0),//up before pull next
+    LOW_RUNG(800.0), LOW_RUNG_RETRACT(200.0), HIGH_RUNG(0.0);
         fun action(pivot: Pivot, auto: Boolean = true) : Action {
             val x = this
             return object : Action {
